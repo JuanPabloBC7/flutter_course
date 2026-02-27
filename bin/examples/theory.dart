@@ -1,4 +1,4 @@
-
+// ignore_for_file: avoid_print
 import '../examples/interfaces/models.dart';
 
 /* ===== List Examples ===== */
