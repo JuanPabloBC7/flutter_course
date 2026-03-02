@@ -37,6 +37,17 @@ flutter pub get
 flutter run
 ```
 
+### Running Application
+When the application is already running, you can use these letters to easy access commands.
+```
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+```
+
 ### Command Line
 - Use ```flutter run``` to execute.
 - Use ```flutter pub get``` to execute and download dependencies.
