@@ -9,11 +9,11 @@ void main() {
     print("|================================================================================|");
     print("|                                      Menu                                      |");
     print("| 1: Simple list.                                                                |");
-    print("| 2: List, Set, cycles and objects functions.                                    |");
-    print("| 3: Async and await.                                                            |");
-    print("| 4:                                                                             |");
-    print("| 5:                                                                             |");
-    print("| 6:                                                                             |");
+    print("| 2: Simple Set.                                                                 |");
+    print("| 3: Simple Map.                                                                 |");
+    print("| 4: List.                                                                       |");
+    print("| 5: List, Set, cycles and objects functions.                                    |");
+    print("| 6: Async and await.                                                            |");
     print("| 7:                                                                             |");
     print("| 8:                                                                             |");
     print("| 9:                                                                             |");
@@ -24,18 +24,25 @@ void main() {
     option = int.tryParse(stdin.readLineSync()!);
 
     clearConsole();
+    printTitle(option.toString());
 
     switch (option) {
       case 1:
-        printTitle(option.toString());
-        ex.listExamples();
+        ex.simpleListExamples();
         break;
       case 2:
-        printTitle(option.toString());
-        ex.cycleExamples([]);
+        ex.simpleSetExamples();
         break;
       case 3:
-        printTitle(option.toString());
+        ex.simpleMapExamples();
+        break;
+      case 4:
+        ex.listExamples();
+        break;
+      case 5:
+        ex.cycleExamples([]);
+        break;
+      case 6:
         ex.asyncAndAwait();
         return;
       case 0:

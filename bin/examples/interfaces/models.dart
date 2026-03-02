@@ -21,6 +21,16 @@ class BankAccount {
   });
 }
 
+class Movement {
+  String id; 
+  DateTime date; 
+  double amount; 
+  String type; 
+  String channel; 
+
+  Movement(this.id, this.date, this.amount, this.type, this.channel,);
+}
+
 class Student {
   String name;
   int age;

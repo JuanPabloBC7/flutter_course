@@ -1,6 +1,95 @@
 // ignore_for_file: avoid_print
 import '../examples/interfaces/models.dart';
 
+/* ===== Simple List Examples ===== */
+void simpleListExamples() {
+  final List<Movement> movements = [];
+
+  movements.add(
+    Movement(
+      'TX-9001',
+      DateTime(2026, 1, 20, 9, 15),
+      120000.00,
+      'deposit',
+      'APP',
+    )
+  );
+  movements.add(
+    Movement(
+      'TX-9002',
+      DateTime(2026, 1, 20, 11, 40),
+      250000.00,
+      'payment',
+      'PSE',
+    )
+  );
+
+  for (var mov in movements) {
+    print('{ id: ${mov.id}, date: ${mov.date}, amount: ${mov.amount}, type: ${mov.type}, channel: ${mov.channel} }');
+  }
+
+  print('');
+  print('Deleting the last element of the movements list');
+  movements.removeLast(); // delete last element of the list
+  for (var mov in movements) {
+    print('{ id: ${mov.id}, date: ${mov.date}, amount: ${mov.amount}, type: ${mov.type}, channel: ${mov.channel} }');
+  }
+}
+/* ===== End Simple List Examples ===== */
+
+/* ===== Simple Set Examples ===== */
+void simpleSetExamples() {
+  final Set<Movement> movements = {};
+
+  movements.add(
+    Movement(
+      'TX-9001',
+      DateTime(2026, 1, 20, 9, 15),
+      120000.00,
+      'deposit',
+      'APP',
+    )
+  );
+  movements.add(
+    Movement(
+      'TX-9002',
+      DateTime(2026, 1, 20, 11, 40),
+      250000.00,
+      'payment',
+      'PSE',
+    )
+  );
+
+  for (var mov in movements) {
+    print('{ id: ${mov.id}, date: ${mov.date}, amount: ${mov.amount}, type: ${mov.type}, channel: ${mov.channel} }');
+  }
+}
+/* ===== End Simple Set Examples ===== */
+
+/* ===== Simple Set Examples ===== */
+void simpleMapExamples() {
+  final Map<String, Map<String, String>> currency = {
+    "quetzales": { 'name': 'quetzal', 'value': 'Q', 'city': 'Guatemala' },
+    "dollar": { 'name': 'quetzal', 'value': 'Q', 'city': 'Guatemala' },
+  };
+
+  print(currency);
+
+  print('');
+  final Map<int, String> days = {
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+    7: 'Sunday',
+  };
+  
+  print(days);
+}
+/* ===== End Simple Set Examples ===== */
+
 /* ===== List Examples ===== */
 void listExamples() {
   List<String> students = ['Ana', 'Luis', 'Ana', 'Carlos', 'Luis'];
