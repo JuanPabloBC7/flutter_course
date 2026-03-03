@@ -9,7 +9,7 @@ void simpleListExamples() {
     Movement(
       'TX-9001',
       DateTime(2026, 1, 20, 9, 15),
-      120000.00,
+      1200000.00,
       'deposit',
       'APP',
     )
@@ -18,7 +18,7 @@ void simpleListExamples() {
     Movement(
       'TX-9002',
       DateTime(2026, 1, 20, 11, 40),
-      250000.00,
+      2500000.00,
       'payment',
       'PSE',
     )
@@ -27,6 +27,60 @@ void simpleListExamples() {
   for (var mov in movements) {
     print('{ id: ${mov.id}, date: ${mov.date}, amount: ${mov.amount}, type: ${mov.type}, channel: ${mov.channel} }');
   }
+
+  // Using where to filter transactions by rules
+  print('');
+  final bigWithdrawal = movements
+    .where((m) => m.type == "payment" && m.amount.abs() >= 2000000)
+    .toList();
+  print('The big withdrawal of all movements is: $bigWithdrawal');
+
+  // Using map to transform data reports
+  print('');
+  final summary = movements.map((m) {
+    return "${m.date.toIso8601String()} | ${m.type} | ${m.amount}";
+  }).toList();
+  print('Summary of transactions: $summary');
+
+  // Using fold to accumulation with context (key financial pattern)
+  print('');
+  double totalCommissions = movements
+    .where((m) => m.type == "transferencia")
+    .fold(0.0, (acc, m) => acc + (m.amount.abs() * 0.003));
+  print('Calculate all commissions by transfer: $totalCommissions');
+
+  // Using reduce to consolidate, but be careful
+  print('');
+  double total = movements
+    .map((m) => m.amount)
+    .reduce((a, b) => a + b);
+  print('Consolidation: $total');
+
+  // Using functional chaning for business "rules"
+  print('');
+  double expensesApp = movements
+    .where((m) => m.channel == "APP" && m.amount < 0)
+    .map((m) => m.amount.abs())
+    .fold(0.0, (a, b) => a + b);
+  print('Consolidation: $expensesApp');
+
+  // Using any, every, firstWhere to validations and compliance rules
+  print('');
+  // Example: Verify that all transactions have a define channel 
+  bool validBatch = movements.every((m) => m.channel.isNotEmpty);
+  print('Valid batch: $validBatch');
+  // Example: Detect if has a deny transaction
+  bool denyTransaction = movements.any((m) => m.type == "payment");
+  print('Deny transaction: $denyTransaction');
+  // Example: Find a specific transaction
+  Movement? findTransaction(String id) {
+  try {
+    return movements.firstWhere((m) => m.id == id);
+  } catch (_) {
+    return null;
+    }
+  }
+  print('Consolidation: ${findTransaction('TX-9001')}');
 
   print('');
   print('Deleting the last element of the movements list');
