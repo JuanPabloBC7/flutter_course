@@ -249,6 +249,56 @@ Future<double> getBalance(String name) async {
 }
 /* ===== End Async and Await Examples ===== */
 
+/* ===== Other Movements ===== */
+// Create a stream in financial context
+Stream<double> movementsFlow() async* {
+  yield 500000.0; // deposit
+  await Future.delayed(Duration(seconds: 1));
+  yield -120000.0; // withdrawal
+  await Future.delayed(Duration(seconds: 1));
+  yield -30000.0; // payment
+}
+
+void listenMovements() {
+  // Using stream
+  movementsFlow().listen((amount) {
+    print('Movement received: $amount');
+  });
+
+  // Flow control: pause, cancel and close
+  final subscription = movementsFlow().listen((m) {
+    print(m);
+  });
+  // Cancel when not necessary
+  subscription.cancel();
+}
+
+// Stream accumulations
+Stream<double> realTimeBalance(double initialBalance) async* {
+  double balance = initialBalance;
+  await for (final movement in movementsFlow()) {
+  balance += movement;
+  yield balance;
+  }
+}
+
+// StreamBuilder<double>(
+//   stream: saldoEnTiempoReal(1000000.0),
+//   builder: (context, snapshot) {
+//   if (snapshot.hasError) {
+//   return Text("Error al obtener saldo");
+//   }
+//   if (!snapshot.hasData) {
+//   return CircularProgressIndicator();
+//   }
+//   return Text(
+//   "Saldo actual: ${snapshot.data}",
+//   style: TextStyle(fontSize: 20),
+//   );
+//   },
+// );
+/* ===== End Other Movements ===== */
+
 /* ===== New Examples ===== */
 void newExamples() {
   

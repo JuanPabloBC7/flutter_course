@@ -14,7 +14,7 @@ void main() {
     print("| 4: List.                                                                       |");
     print("| 5: List, Set, cycles and objects functions.                                    |");
     print("| 6: Async and await.                                                            |");
-    print("| 7:                                                                             |");
+    print("| 7: Other movements examples                                                    |");
     print("| 8:                                                                             |");
     print("| 9:                                                                             |");
     print("| 0: Exit                                                                        |");
@@ -44,6 +44,9 @@ void main() {
         break;
       case 6:
         ex.asyncAndAwait();
+        return;
+      case 7:
+        ex.listenMovements();
         return;
       case 0:
         print("Exiting program...");
