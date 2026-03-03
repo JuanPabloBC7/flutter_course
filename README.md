@@ -21,6 +21,14 @@ samples, guidance on mobile development, and a full API reference.
 - Find dart dependencies in [pub.dev](https://pub.dev/).
 - Test code with [Try Dart in your browser](https://dart.dev/#try-dart).
 - Design your site with [Material components](https://docs.flutter.dev/ui/widgets/material).
+- Types of [variables](https://dart.dev/language/variables).
+- [Figma designs](https://www.figma.com/community/mobile-apps?resource_type=mixed&editor_type=all&price=all&sort_by=all_time&creators=all) for project. 
+
+#### Variables and concepts
+| Type    | Description                                                                            |
+| ------- |:--------------------------------------------------------------------------------------:|
+| final   | This variable used for execution time, that is, it consume RAM memory of the device.   |
+| concept | This variable used for compilation time, that is, it consume ROM memory of the device. |
 
 ### Run Dart File
 In this case the filename is "main.dart" you cand fin it in "./lib/main.dart". The command to run console is:
