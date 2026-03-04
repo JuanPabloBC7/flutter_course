@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/assets.dart';
+import 'package:flutter_course/features/login/presentation/widgets/social_media_widget.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -10,6 +11,12 @@ class LoginView extends StatelessWidget {
     return Scaffold(
       body: ListView(children: [
         Image.asset(Assets.loginBackground),
+        // Image.asset(
+        //   Assets.loginBackground,
+        //   height: 500,
+        //   fit: BoxFit.cover,
+        //   alignment: Alignment.center,
+        // ),
         BodyWidget()
       ],)
     );
@@ -136,20 +143,32 @@ class BodyWidget extends StatelessWidget {
           Divider(),
           Text('Or continue with', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14)),
           const SizedBox(height: 24,),
-          SocialMedia()
+          SocialMediaRow()
         ],
       )
     );
   }
 }
 
-class SocialMedia extends StatelessWidget {
-  const SocialMedia({super.key});
+class SocialMediaRow extends StatelessWidget {
+  const SocialMediaRow({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SocialMediaWidget(lColor: Colors.red, lImage: Assets.googleIcon),
+        SizedBox(width: 12,),
+        SocialMediaWidget(lColor: Colors.black, lImage: Assets.appleIcon),
+        SizedBox(width: 12,),
+        SocialMediaWidget(lColor: Color(0xFF006FFD), lImage: Assets.facebookIcon),
+        // SocialMediaWidget.google(),
+        // SizedBox(width: 12,),
+        // SocialMediaWidget.apple(),
+        // SizedBox(width: 12,),
+        // SocialMediaWidget.facebook(),
+      ]
     );
   }
 }
