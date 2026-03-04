@@ -1,0 +1,10 @@
+{
+  "welcome": "Bienvenido!",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "forgotPassword": "Olvido su contraseña?",
+  "login": "Iniciar sesión",
+  "notMember": "No eres miembro? ",
+  "registerNow": "Registrate ahora",
+  "orContinueWith": "O continue con"
+}

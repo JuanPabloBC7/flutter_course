@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/assets.dart';
 import 'package:flutter_course/features/login/presentation/widgets/social_media_widget.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -40,7 +41,7 @@ class BodyWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Welcome!',
+            AppLocalizations.of(context)!.welcome,
             style: TextStyle(
               fontSize: 24,
               color: Colors.black,
@@ -50,14 +51,14 @@ class BodyWidget extends StatelessWidget {
           const SizedBox(height: 24,),
           TextField(
             decoration: InputDecoration(
-              hintText: 'Email Address',
+              hintText: AppLocalizations.of(context)!.email,
               border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16,),
           TextField(
             decoration: InputDecoration(
-              hintText: 'Password',
+              hintText: AppLocalizations.of(context)!.password,
               border: OutlineInputBorder(),
               suffixIcon: Icon(Icons.visibility_off)
             ),
@@ -65,7 +66,7 @@ class BodyWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16,),
           Text(
-            'Forgot password?',
+            AppLocalizations.of(context)!.forgotPassword,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
@@ -78,19 +79,19 @@ class BodyWidget extends StatelessWidget {
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Color(0xFF006FFD))
             ),
-            child: Text('Login', style: TextStyle(color: Colors.white),),
+            child: Text(AppLocalizations.of(context)!.login, style: TextStyle(color: Colors.white),),
           ),
           const SizedBox(height: 16,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Not a member? '),
+              Text(AppLocalizations.of(context)!.notMember),
               InkWell(
                 onTap: () {
                   print('Go to registration page.');
                 },
                 child: Text(
-                  'Register now',
+                  AppLocalizations.of(context)!.registerNow,
                   style: TextStyle(
                     color: Color(0xFF006FFD),
                     fontWeight: FontWeight.bold
@@ -102,11 +103,11 @@ class BodyWidget extends StatelessWidget {
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
-              text: 'Not a member? ',
+              text: AppLocalizations.of(context)!.notMember,
               style: TextStyle(color: Colors.black, fontSize: 14),
               children: [
                 TextSpan(
-                  text: 'Register now',
+                  text: AppLocalizations.of(context)!.registerNow,
                   recognizer: tapGestureRecognizer,
                   // recognizer: TapGestureRecognizer()..onTap = () {
                   //   print('Go to registration page.');
@@ -122,11 +123,11 @@ class BodyWidget extends StatelessWidget {
           Text.rich(
             textAlign: TextAlign.center,
             TextSpan(
-              text: 'Not a member? ',
+              text: AppLocalizations.of(context)!.notMember,
               style: TextStyle(color: Colors.black, fontSize: 14),
               children: [
                 TextSpan(
-                  text: 'Register now',
+                  text: AppLocalizations.of(context)!.registerNow,
                   recognizer: tapGestureRecognizer,
                   // recognizer: TapGestureRecognizer()..onTap = () {
                   //   print('Go to registration page.');
@@ -141,7 +142,7 @@ class BodyWidget extends StatelessWidget {
           ),
           const SizedBox(height: 24,),
           Divider(),
-          Text('Or continue with', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Text(AppLocalizations.of(context)!.orContinueWith, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14)),
           const SizedBox(height: 24,),
           SocialMediaRow()
         ],
