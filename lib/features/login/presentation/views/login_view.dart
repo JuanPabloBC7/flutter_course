@@ -49,6 +49,13 @@ class BodyWidget extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          Text(
+            Environment.appMode,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.black,
+            ),
+          ),
           const SizedBox(height: 24,),
           TextField(
             decoration: InputDecoration(
@@ -143,7 +150,11 @@ class BodyWidget extends StatelessWidget {
           ),
           const SizedBox(height: 24,),
           Divider(),
-          Text(AppLocalizations.of(context)!.orContinueWith, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Text(
+            AppLocalizations.of(context)!.orContinueWith,
+            textAlign: TextAlign.center, 
+            style: TextStyle(color: Colors.grey, fontSize: 14)
+          ),
           const SizedBox(height: 24,),
           SocialMediaRow()
         ],

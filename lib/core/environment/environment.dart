@@ -45,13 +45,12 @@ class Environment {
         fileName = 'env_prod.json';
         break;
     }
-    _values = await load(fileName);
+    _values = await load('assets/environment/$fileName');
   }
 
-  static Future<Map<String, dynamic>> load (String fileName) async {
+  static Future<Map<String, dynamic>> load(String assetPath) async {
     // Cargar el archivo JSON correspondiente al entorno
-    return rootBundle.loadString(fileName).then((jsonString) {
-      return json.decode(jsonString);
-    });
+    final jsonString = await rootBundle.loadString(assetPath);
+    return json.decode(jsonString) as Map<String, dynamic>;
   }
 }
