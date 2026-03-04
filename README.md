@@ -24,12 +24,6 @@ samples, guidance on mobile development, and a full API reference.
 - Types of [variables](https://dart.dev/language/variables).
 - [Figma designs](https://www.figma.com/community/mobile-apps?resource_type=mixed&editor_type=all&price=all&sort_by=all_time&creators=all) for project. 
 
-#### Variables and concepts
-| Type    | Description                                                                            |
-| ------- |:--------------------------------------------------------------------------------------:|
-| final   | This variable used for execution time, that is, it consume RAM memory of the device.   |
-| concept | This variable used for compilation time, that is, it consume ROM memory of the device. |
-
 ### Run Dart File
 In this case the filename is "main.dart" you cand fin it in "./lib/main.dart". The command to run console is:
 
@@ -45,7 +39,7 @@ flutter pub get
 flutter run
 ```
 
-### Running Application
+### Shortcut commands
 When the application is already running, you can use these letters to easy access commands.
 ```
 r Hot reload. 🔥🔥🔥
@@ -55,6 +49,9 @@ d Detach (terminate "flutter run" but leave application running).
 c Clear the screen
 q Quit (terminate the application on the device).
 ```
+
+#### Commands
+Use ```stl``` in code to create a new ```Flutter Stateless Widget``` easily.
 
 ### Command Line
 - Use ```flutter run``` to execute.
@@ -89,6 +86,15 @@ FlutterCourse/                |
 └── pubspec.yaml              | (Where u can find all dependencies installed) 
 ```
 
+### Theory
+#### Variables and concepts
+| Type    | Description                                                                            |
+| ------- |:--------------------------------------------------------------------------------------:|
+| final   | This variable used for execution time, that is, it consume RAM memory of the device.   |
+| concept | This variable used for compilation time, that is, it consume ROM memory of the device. |
+
+---
+---
 # Project Statement
 ### Historias de Usuario y Entregables
 #### HU 1.1 – Configuración profesional del proyecto

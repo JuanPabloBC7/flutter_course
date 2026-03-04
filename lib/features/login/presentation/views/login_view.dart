@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/assets.dart';
 
@@ -7,7 +8,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
+      body: ListView(children: [
         Image.asset(Assets.loginBackground),
         BodyWidget()
       ],)
@@ -20,6 +21,11 @@ class BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
+    tapGestureRecognizer.onTap = () {
+      print('Go to registration page.');
+    };
+
     return Container(
       decoration: BoxDecoration(color: Colors.white),
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 40),
@@ -37,7 +43,7 @@ class BodyWidget extends StatelessWidget {
           const SizedBox(height: 24,),
           TextField(
             decoration: InputDecoration(
-              hintText: 'Email Address', 
+              hintText: 'Email Address',
               border: OutlineInputBorder(),
             ),
           ),
@@ -54,21 +60,96 @@ class BodyWidget extends StatelessWidget {
           Text(
             'Forgot password?',
             style: TextStyle(
-              fontSize: 12, 
-              fontWeight: FontWeight.w700, 
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
               color: Color(0xFF006FFD)
             ),
           ),
           const SizedBox(height: 24,),
           ElevatedButton(
-            onPressed: () {}, 
+            onPressed: () {},
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Color(0xFF006FFD))
             ),
             child: Text('Login', style: TextStyle(color: Colors.white),),
-          )
+          ),
+          const SizedBox(height: 16,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Not a member? '),
+              InkWell(
+                onTap: () {
+                  print('Go to registration page.');
+                },
+                child: Text(
+                  'Register now',
+                  style: TextStyle(
+                    color: Color(0xFF006FFD),
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              ),
+            ],
+          ),
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: 'Not a member? ',
+              style: TextStyle(color: Colors.black, fontSize: 14),
+              children: [
+                TextSpan(
+                  text: 'Register now',
+                  recognizer: tapGestureRecognizer,
+                  // recognizer: TapGestureRecognizer()..onTap = () {
+                  //   print('Go to registration page.');
+                  // },
+                  style: TextStyle(
+                    color: Color(0xFF006FFD),
+                    fontSize: 14
+                  ),
+                )
+              ]
+            )
+          ),
+          Text.rich(
+            textAlign: TextAlign.center,
+            TextSpan(
+              text: 'Not a member? ',
+              style: TextStyle(color: Colors.black, fontSize: 14),
+              children: [
+                TextSpan(
+                  text: 'Register now',
+                  recognizer: tapGestureRecognizer,
+                  // recognizer: TapGestureRecognizer()..onTap = () {
+                  //   print('Go to registration page.');
+                  // },
+                  style: TextStyle(
+                    color: Color(0xFF006FFD),
+                    fontSize: 14
+                  ),
+                )
+              ]
+            )
+          ),
+          const SizedBox(height: 24,),
+          Divider(),
+          Text('Or continue with', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 14)),
+          const SizedBox(height: 24,),
+          SocialMedia()
         ],
       )
+    );
+  }
+}
+
+class SocialMedia extends StatelessWidget {
+  const SocialMedia({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
     );
   }
 }
