@@ -25,3 +25,5 @@ flutter:
   assets:
     - assets/login/
     - assets/social_media/
+    - assets/environment/env_dev.json
+    - assets/environment/env_prod.json

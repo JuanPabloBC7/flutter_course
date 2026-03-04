@@ -93,6 +93,9 @@ FlutterCourse/                |
 | final   | This variable used for execution time, that is, it consume RAM memory of the device.   |
 | concept | This variable used for compilation time, that is, it consume ROM memory of the device. |
 
+#### Tips
+To create a ```launch.json``` file, you need to go to debug option in VS Code, then press ```create a launch.json file```. If you can't see it, create it manually.
+
 ---
 ---
 # Project Statement

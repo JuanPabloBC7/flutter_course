@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/assets.dart';
+import 'package:flutter_course/core/environment/environment.dart';
 import 'package:flutter_course/features/login/presentation/widgets/social_media_widget.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 
@@ -31,7 +32,7 @@ class BodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
     tapGestureRecognizer.onTap = () {
-      print('Go to registration page.');
+      print('You are running in. ${Environment.appMode} environment');
     };
 
     return Container(
