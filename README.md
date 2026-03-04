@@ -66,7 +66,7 @@ Use ```stl``` in code to create a new ```Flutter Stateless Widget``` easily.
 
 ### Project Structure
 ```
-FlutterCourse/                | 
+flutter_course/                | 
 ├── bin/                      | 
 | └── examples/               | 
 | | └── main/                 | 
@@ -87,14 +87,102 @@ FlutterCourse/                |
 ```
 
 ### Theory
+#### Rules
+**Files**
+- Use ```snake_case``` to named files. Ex (repository_transfer.dart, usescase_validate_founds.dart).
+
+**Variables**:
+- Use ```camelCase``` to named variables or methods and be specific as you can. Ex (aviableBalance, calculateTaxes()).
+
+**Classes**
+- Use ```PascalCase``` to named files. Ex (RepositoryTransfer, UsesCaseValidateFounds).
+
+**Constants**
+- Use ```lowerCamelCase``` or ```SCREAMING_SNAKE_CASE``` to named constansts. Ex (aviableBalance, calculateTaxes, AVIABLE_BALANCE, CALCULATE_TATEX).
+
+**Status**
+- Use ```PascalCase``` or ```SCREAMING_SNAKE_CASE``` to named status. Ex [Success or Info: (TransferLoading, TransferSuccess, TransferFailure), Error: (INSUFFICIENT_FUNDS, ACCOUNT_BLOCKED, SERVICE_DOWN)].
+
+#### Tips
+To create a ```launch.json``` file, you need to go to debug option in VS Code, then press ```create a launch.json file```. If you can't see it, create it manually.
+
 #### Variables and concepts
 | Type    | Description                                                                            |
 | ------- |:--------------------------------------------------------------------------------------:|
 | final   | This variable used for execution time, that is, it consume RAM memory of the device.   |
 | concept | This variable used for compilation time, that is, it consume ROM memory of the device. |
 
-#### Tips
-To create a ```launch.json``` file, you need to go to debug option in VS Code, then press ```create a launch.json file```. If you can't see it, create it manually.
+#### Project correctly structured in Flutter
+```
+flutter_course/
+└─ lib/
+  ├─ core/
+  │ ├─ errors/
+  │ ├─ network/
+  │ ├─ theme/
+  │ │ └─ assets/
+  │ │   ├─ images/
+  │ │   │ ├─ branding/ 
+  │ │   │ │ ├─ logo_primary.png
+  │ │   │ │ └─ logo_white.png
+  │ │   │ ├─ icons/
+  │ │   │ │ ├─ transfer.png
+  │ │   │ │ ├─ payment.png
+  │ │   │ │ └─ card.png
+  │ │   │ ├─ states/
+  │ │   │ │ ├─ success.png
+  │ │   │ │ ├─ error.png
+  │ │   │ │ └─ warning.png
+  │ │   │ └─ illustrations/
+  │ │   ├─ animations/
+  │ │   ├─ data/
+  │ │   │ └─ banks.json
+  │ │   └─ fonts/
+  │ │     ├─ Inter-Regular.ttf
+  │ │     ├─ Inter-Medium.ttf
+  │ │     ├─ Inter-SemiBold.ttf
+  │ │     └─ Inter-Bold.ttf
+  │ ├─ routing/
+  │ └─ utils/
+  ├─ features/
+  │ ├─ accounts/
+  │ │ ├─ data/
+  │ │ ├─ domain/
+  │ │ └─ presentation/
+  │ ├─ transfers/
+  │ │ ├─ data/
+  │ │ ├─ domain/
+  │ │ └─ presentation/
+  │ ├─ payments/
+  │ │ ├─ data/
+  │ │ ├─ domain/
+  │ │ └─ presentation/
+  │ ├─ auth/
+  │ │ ├─ data/
+  │ │ ├─ domain/
+  │ │ └─ presentation/
+  │ └─ client_profile/
+  │   ├─ data/
+  │   │ ├─ datasources/
+  │   │ ├─ models/
+  │   │ └─ repositories_impl/
+  │   ├─ domain/
+  │   │ ├─ entities/
+  │   │ ├─ repositories/
+  │   │ └─ usecases/
+  │   └─ presentation/
+  │     ├─ screens/
+  │     ├─ widgets/
+  │     └─ state/
+  └─ main.dart
+```
+
+| Folder       | Description                                                                                                                                                              |
+| ------------ |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| core         | Contains that you share, like ```network (HTTP client, interceptors), global error handling, logging, routes, theme, utilities, shared components “really common”...```. |
+| domain       | Contains rules and is stable.                                                                                                                                            |
+| data         | Changes with APIs, providers and thecnical regulations.                                                                                                                  |
+| presentation | UX, but it shouldn't touch on financial logic.                                                                                                                           |
 
 ---
 ---
