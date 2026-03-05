@@ -39,6 +39,18 @@ flutter pub get
 flutter run
 ```
 
+### Run Project with launch.json file
+To run project use: 
+```
+flutter run -t lib/main_dev.dart
+```
+
+or 
+
+```
+flutter run -t lib/main_prod.dart
+```
+
 ### Shortcut commands
 When the application is already running, you can use these letters to easy access commands.
 ```
@@ -66,7 +78,7 @@ Use ```stl``` in code to create a new ```Flutter Stateless Widget``` easily.
 
 ### Project Structure
 ```
-flutter_course/                | 
+flutter_course/               | 
 ├── bin/                      | 
 | └── examples/               | 
 | | └── main/                 | 

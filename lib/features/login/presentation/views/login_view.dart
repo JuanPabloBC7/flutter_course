@@ -25,8 +25,15 @@ class LoginView extends StatelessWidget {
   }
 }
 
-class BodyWidget extends StatelessWidget {
+class BodyWidget extends StatefulWidget {
   const BodyWidget({super.key});
+
+  @override
+  State<BodyWidget> createState() => _BodyWidgetState();
+}
+
+class _BodyWidgetState extends State<BodyWidget> {
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +75,14 @@ class BodyWidget extends StatelessWidget {
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.password,
               border: OutlineInputBorder(),
-              suffixIcon: Icon(Icons.visibility_off)
+              suffixIcon: IconButton(
+                icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                onPressed: () {
+                  setState(() => _obscurePassword = !_obscurePassword);
+                },
+              ),
             ),
-            obscureText: true,
+            obscureText: _obscurePassword,
           ),
           const SizedBox(height: 16,),
           Text(
