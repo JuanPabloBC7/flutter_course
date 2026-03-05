@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TransferView extends StatelessWidget {
-  const TransferView({super.key});
+class TransfersView extends StatelessWidget {
+  const TransfersView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(children: [
-        TransferBodyWidget()
+        TransfersBodyWidget()
       ],)
     );
   }
 }
 
-class TransferBodyWidget extends StatelessWidget {
-  const TransferBodyWidget({super.key});
+class TransfersBodyWidget extends StatelessWidget {
+  const TransfersBodyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class TransferBodyWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Hello world transfer view',
+            'Hello world transfers view',
             style: TextStyle(
               fontSize: 16,
               color: Colors.black,
