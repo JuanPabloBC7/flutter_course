@@ -20,7 +20,7 @@ class TransfersBodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(color: Colors.white),
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 100),
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_course/features/auth/login/views/login_view.dart';
+// import 'package:flutter_course/features/auth/login/views/login_view.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
+import 'package:flutter_course/temp_view.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const LoginView(),
+      home: const TempViewWidget(),
+      // home: const LoginView(),
     );
   }
 }
