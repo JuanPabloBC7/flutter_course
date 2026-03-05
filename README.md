@@ -129,6 +129,7 @@ To create a ```launch.json``` file, you need to go to debug option in VS Code, t
 flutter_course/
 └─ lib/
   ├─ core/
+  │ ├─ environments/
   │ ├─ errors/
   │ ├─ network/
   │ ├─ theme/
@@ -155,8 +156,10 @@ flutter_course/
   │ │     ├─ Inter-SemiBold.ttf
   │ │     └─ Inter-Bold.ttf
   │ ├─ routing/
-  │ └─ utils/
+  │ ├─ utils/
+  │ └─ widgets/
   ├─ features/
+  │ ├─ l10n/
   │ ├─ accounts/
   │ │ ├─ data/
   │ │ ├─ domain/
@@ -183,7 +186,7 @@ flutter_course/
   │   │ ├─ repositories/
   │   │ └─ usecases/
   │   └─ presentation/
-  │     ├─ screens/
+  │     ├─ screens or views/
   │     ├─ widgets/
   │     └─ state/
   └─ main.dart
