@@ -18,8 +18,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get loginPassword => 'Contraseña';
 
   @override
-  String get loginForgotPassword => 'Olvidó su contraseña';
+  String get loginForgotPassword => 'Olvidó su contraseña?';
 
   @override
   String get loginLogin => 'Iniciar Sesión';
+
+  @override
+  String get loginQuote =>
+      'Presione el link de Olvidó su contraseña? o el botón de Iniciar Sesión, para navegar detro de la app.';
+
+  @override
+  String get commonGoBack => 'Regresar';
 }

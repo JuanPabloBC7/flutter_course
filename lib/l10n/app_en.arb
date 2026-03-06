@@ -2,6 +2,8 @@
   "loginWelcome": "Welcome!",
   "loginUsername": "Username",
   "loginPassword": "Password",
-  "loginForgotPassword": "Forgot password",
-  "loginLogin": "Login"
+  "loginForgotPassword": "Forgot password?",
+  "loginLogin": "Login",
+  "loginQuote": "Press the Forgot password? link or the Login button to navigate within the app.",
+  "commonGoBack": "Go back"
 }

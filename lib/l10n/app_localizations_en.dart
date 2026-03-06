@@ -18,8 +18,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginPassword => 'Password';
 
   @override
-  String get loginForgotPassword => 'Forgot password';
+  String get loginForgotPassword => 'Forgot password?';
 
   @override
   String get loginLogin => 'Login';
+
+  @override
+  String get loginQuote =>
+      'Press the Forgot password? link or the Login button to navigate within the app.';
+
+  @override
+  String get commonGoBack => 'Go back';
 }

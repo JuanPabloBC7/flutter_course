@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 
@@ -27,11 +26,6 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
-    tapGestureRecognizer.onTap = () {
-      print('You are running in. environment');
-    };
-
     return Container(
       decoration: BoxDecoration(color: Colors.white),
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 200),
@@ -68,21 +62,37 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
             obscureText: _obscurePassword,
           ),
           const SizedBox(height: 16,),
-          Text(
-            AppLocalizations.of(context)!.loginForgotPassword,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF006FFD)
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/forgot-password');
+            },
+            child: Text(
+              AppLocalizations.of(context)!.loginForgotPassword,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF006FFD)
+              ),
             ),
           ),
           const SizedBox(height: 24,),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/temporal-route');
+            },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Color(0xFF006FFD))
             ),
             child: Text(AppLocalizations.of(context)!.loginLogin, style: TextStyle(color: Colors.white),),
+          ),
+          const SizedBox(height: 2,),
+          Text(
+            AppLocalizations.of(context)!.loginQuote,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.blueGrey,
+            ),
           ),
         ],
       )

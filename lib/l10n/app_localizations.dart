@@ -119,7 +119,7 @@ abstract class AppLocalizations {
   /// No description provided for @loginForgotPassword.
   ///
   /// In en, this message translates to:
-  /// **'Forgot password'**
+  /// **'Forgot password?'**
   String get loginForgotPassword;
 
   /// No description provided for @loginLogin.
@@ -127,6 +127,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login'**
   String get loginLogin;
+
+  /// No description provided for @loginQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the Forgot password? link or the Login button to navigate within the app.'**
+  String get loginQuote;
+
+  /// No description provided for @commonGoBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get commonGoBack;
 }
 
 class _AppLocalizationsDelegate

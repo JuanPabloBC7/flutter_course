@@ -6,6 +6,9 @@ class ForgotPasswordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Forgot Password'),
+      ),
       body: ListView(children: [
         ForgotPasswordBodyWidget()
       ],)

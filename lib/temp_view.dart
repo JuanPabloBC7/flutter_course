@@ -17,9 +17,6 @@ class TempViewWidget extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          LoginBodyWidget(),
-          const SizedBox(height: 24,),
-          ForgotPasswordBodyWidget(),
           const SizedBox(height: 24,),
           DashboardBodyWidget(),
           const SizedBox(height: 24,),
