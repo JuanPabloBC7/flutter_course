@@ -3,8 +3,6 @@ import 'package:flutter_course/features/admin/configuration/views/configuration_
 import 'package:flutter_course/features/admin/dashboard/views/dashboard_view.dart';
 import 'package:flutter_course/features/admin/history/views/history_view.dart';
 import 'package:flutter_course/features/admin/trasnfers/views/trasnfers_view.dart';
-import 'package:flutter_course/features/auth/forgot_password/views/forgot_password_view.dart';
-import 'package:flutter_course/features/auth/login/views/login_view.dart';
 
 class TempViewWidget extends StatelessWidget {
   const TempViewWidget({super.key});
