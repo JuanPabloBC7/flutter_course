@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -13,27 +15,77 @@ class LoginView extends StatelessWidget {
   }
 }
 
-class LoginBodyWidget extends StatelessWidget {
+class LoginBodyWidget extends StatefulWidget {
   const LoginBodyWidget({super.key});
 
   @override
+  State<LoginBodyWidget> createState() => _LoginBodyWidgetState();
+}
+
+class _LoginBodyWidgetState extends State<LoginBodyWidget> {
+  bool _obscurePassword = true;
+
+  @override
   Widget build(BuildContext context) {
+    final TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
+    tapGestureRecognizer.onTap = () {
+      print('You are running in. environment');
+    };
+
     return Container(
       decoration: BoxDecoration(color: Colors.white),
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 25),
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 200),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Hello world login view',
+            AppLocalizations.of(context)!.loginWelcome,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 24,
               color: Colors.black,
-              fontWeight: FontWeight.normal,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ]
-      ),
+          const SizedBox(height: 24,),
+          TextField(
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.loginUsername,
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16,),
+          TextField(
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.loginPassword,
+              border: OutlineInputBorder(),
+              suffixIcon: IconButton(
+                icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                onPressed: () {
+                  setState(() => _obscurePassword = !_obscurePassword);
+                },
+              ),
+            ),
+            obscureText: _obscurePassword,
+          ),
+          const SizedBox(height: 16,),
+          Text(
+            AppLocalizations.of(context)!.loginForgotPassword,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF006FFD)
+            ),
+          ),
+          const SizedBox(height: 24,),
+          ElevatedButton(
+            onPressed: () {},
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Color(0xFF006FFD))
+            ),
+            child: Text(AppLocalizations.of(context)!.loginLogin, style: TextStyle(color: Colors.white),),
+          ),
+        ],
+      )
     );
   }
 }

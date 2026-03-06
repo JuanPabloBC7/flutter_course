@@ -1,3 +1,7 @@
 {
-  "helloWorld": "Hola mundo!"
+  "loginWelcome": "Bienvenido!",
+  "loginUsername": "Usuario",
+  "loginPassword": "Contraseña",
+  "loginForgotPassword": "Olvidó su contraseña",
+  "loginLogin": "Iniciar Sesión"
 }
