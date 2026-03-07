@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 class Onboarding extends StatelessWidget {
   @override
@@ -51,23 +51,46 @@ class Onboarding extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 16.0),
                   child: SizedBox(
                     width: double.infinity,
-                    child: FlatButton(
-                      textColor: ArgonColors.text,
-                      color: ArgonColors.secondary,
+                    child: 
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.pushReplacementNamed(context, '/home');
                       },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: ArgonColors.text,
+                        backgroundColor: ArgonColors.secondary,
+                        elevation: 0, 
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                        // padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                       ),
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 16.0, right: 16.0, top: 12, bottom: 12),
-                          child: Text("GET STARTED",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16.0))),
-                    ),
+                      child: Text(
+                        "GET STARTED",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    )
+                    // FlatButton(
+                    //   textColor: ArgonColors.text,
+                    //   color: ArgonColors.secondary,
+                    //   onPressed: () {
+                    //     Navigator.pushReplacementNamed(context, '/home');
+                    //   },
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(4.0),
+                    //   ),
+                    //   child: Padding(
+                    //       padding: EdgeInsets.only(
+                    //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                    //       child: Text("GET STARTED",
+                    //           style: TextStyle(
+                    //               fontWeight: FontWeight.w600,
+                    //               fontSize: 16.0))),
+                    // ),
                   ),
                 )
               ],

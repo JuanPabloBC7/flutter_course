@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 class Input extends StatelessWidget {
-  final String placeholder;
-  final Widget suffixIcon;
-  final Widget prefixIcon;
-  final Function onTap;
-  final Function onChanged;
-  final TextEditingController controller;
+  final String? placeholder;
+  final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final VoidCallback? onTap;
+  final Function? onChanged;
+  final TextEditingController? controller;
   final bool autofocus;
   final Color borderColor;
 
@@ -26,7 +26,7 @@ class Input extends StatelessWidget {
     return TextField(
         cursorColor: ArgonColors.muted,
         onTap: onTap,
-        onChanged: onChanged,
+        onChanged: onChanged as ValueChanged<String>?,
         controller: controller,
         autofocus: autofocus,
         style:

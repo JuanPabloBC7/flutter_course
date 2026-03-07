@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 class Pro extends StatelessWidget {
   _launchURL() async {
@@ -83,21 +83,41 @@ class Pro extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 16.0),
                   child: SizedBox(
                     width: double.infinity,
-                    child: FlatButton(
-                      textColor: ArgonColors.white,
-                      color: ArgonColors.info,
+                    child: ElevatedButton(
                       onPressed: _launchURL,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: ArgonColors.white,
+                        backgroundColor: ArgonColors.info,
+                        elevation: 0, 
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                        // padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                       ),
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 16.0, right: 16.0, top: 12, bottom: 12),
-                          child: Text("BUY NOW",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16.0))),
-                    ),
+                      child: Text(
+                        "BUY NOW",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0, // Tamaño de fuente un poco más grande
+                        ),
+                      ),
+                    )
+                    // FlatButton(
+                    //   textColor: ArgonColors.white,
+                    //   color: ArgonColors.info,
+                    //   onPressed: _launchURL,
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(4.0),
+                    //   ),
+                    //   child: Padding(
+                    //       padding: EdgeInsets.only(
+                    //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                    //       child: Text("BUY NOW",
+                    //           style: TextStyle(
+                    //               fontWeight: FontWeight.w600,
+                    //               fontSize: 16.0))),
+                    // ),
                   ),
                 )
               ],

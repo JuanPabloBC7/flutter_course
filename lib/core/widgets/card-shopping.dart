@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 class CardShopping extends StatelessWidget {
   CardShopping(
@@ -13,7 +13,7 @@ class CardShopping extends StatelessWidget {
   final bool stock;
   final String price;
   final String img;
-  final Function deleteOnPress;
+  final Function? deleteOnPress;
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +36,33 @@ class CardShopping extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(3.0)),
                       )),
-                  FlatButton(
-                    textColor: ArgonColors.white,
-                    color: ArgonColors.initial,
+                  ElevatedButton(
                     onPressed: () {},
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ArgonColors.white, 
+                      backgroundColor: ArgonColors.initial, 
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.only(
                           left: 5.0, right: 5.0, top: 12, bottom: 12),
-                      child: Dropdown(),
+                      elevation: 0, 
                     ),
+                    child: Dropdown(),
                   ),
+                  // FlatButton(
+                  //   textColor: ArgonColors.white,
+                  //   color: ArgonColors.initial,
+                  //   onPressed: () {},
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(4.0),
+                  //   ),
+                  //   child: Padding(
+                  //     padding: EdgeInsets.only(
+                  //         left: 5.0, right: 5.0, top: 12, bottom: 12),
+                  //     child: Dropdown(),
+                  //   ),
+                  // ),
                 ]),
           ),
           Expanded(
@@ -97,38 +111,79 @@ class CardShopping extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        FlatButton(
-                          textColor: ArgonColors.white,
-                          color: ArgonColors.initial,
+                        ElevatedButton(
                           onPressed: () {
-                            deleteOnPress();
+                            deleteOnPress!();
                           },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: ArgonColors.white,
+                            backgroundColor: ArgonColors.initial,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 12.0,),
+                            // padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 12, bottom: 12),
+                            elevation: 0, 
                           ),
-                          child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 5.0, right: 5.0, top: 12, bottom: 12),
-                              child: Text("DELETE",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 11.0))),
+                          child: Text(
+                            "DELETE",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 11.0,
+                            ),
+                          ),
                         ),
-                        FlatButton(
-                          textColor: ArgonColors.white,
-                          color: ArgonColors.initial,
+                        // FlatButton(
+                        //   textColor: ArgonColors.white,
+                        //   color: ArgonColors.initial,
+                        //   onPressed: () {
+                        //     deleteOnPress();
+                        //   },
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(4.0),
+                        //   ),
+                        //   child: Padding(
+                        //       padding: EdgeInsets.only(
+                        //           left: 5.0, right: 5.0, top: 12, bottom: 12),
+                        //       child: Text("DELETE",
+                        //           style: TextStyle(
+                        //               fontWeight: FontWeight.w600,
+                        //               fontSize: 11.0))),
+                        // ),
+                        ElevatedButton(
                           onPressed: () {},
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: ArgonColors.white,
+                            backgroundColor: ArgonColors.initial,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 12.0,),
+                            // padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 12, bottom: 12),
                           ),
-                          child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 5.0, right: 5.0, top: 12, bottom: 12),
-                              child: Text("SAVE FOR LATER",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 11.0))),
-                        )
+                          child: Text(
+                            "SAVE FOR LATER",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 11.0,
+                            ),
+                          ),
+                        ),
+                        // FlatButton(
+                        //   textColor: ArgonColors.white,
+                        //   color: ArgonColors.initial,
+                        //   onPressed: () {},
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(4.0),
+                        //   ),
+                        //   child: Padding(
+                        //       padding: EdgeInsets.only(
+                        //           left: 5.0, right: 5.0, top: 12, bottom: 12),
+                        //       child: Text("SAVE FOR LATER",
+                        //           style: TextStyle(
+                        //               fontWeight: FontWeight.w700,
+                        //               fontSize: 11.0))),
+                        // )
                       ],
                     )
                   ]),
@@ -153,7 +208,7 @@ class CardShopping extends StatelessWidget {
 }
 
 class Dropdown extends StatefulWidget {
-  Dropdown({Key key}) : super(key: key);
+  Dropdown({Key? key}) : super(key: key);
 
   @override
   _DropdownState createState() => _DropdownState();
@@ -183,9 +238,9 @@ class _DropdownState extends State<Dropdown> {
             iconSize: 20,
             elevation: 1,
             style: TextStyle(color: ArgonColors.white),
-            onChanged: (String newValue) {
+            onChanged: (String? newValue) {
               setState(() {
-                dropdownValue = newValue;
+                dropdownValue = newValue ?? '';
               });
             },
             items: <String>['1', '2', '3', '4']

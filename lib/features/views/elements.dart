@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 //widgets
-import 'package:argon_flutter/widgets/navbar.dart';
-import 'package:argon_flutter/widgets/drawer.dart';
-import 'package:argon_flutter/widgets/input.dart';
-import 'package:argon_flutter/widgets/table-cell.dart';
+import 'package:flutter_course/core/widgets/navbar.dart';
+import 'package:flutter_course/core/widgets/drawer.dart';
+import 'package:flutter_course/core/widgets/input.dart';
+import 'package:flutter_course/core/widgets/table-cell.dart';
 
 class Elements extends StatefulWidget {
   @override
@@ -14,8 +14,8 @@ class Elements extends StatefulWidget {
 }
 
 class _ElementsState extends State<Elements> {
-  bool switchValueOne;
-  bool switchValueTwo;
+  bool? switchValueOne;
+  bool? switchValueTwo;
 
   void initState() {
     setState(() {
@@ -55,23 +55,44 @@ class _ElementsState extends State<Elements> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 34.0, right: 34.0, top: 16),
-                  child: RaisedButton(
-                    textColor: ArgonColors.white,
-                    color: ArgonColors.initial,
+                  child: 
+                  ElevatedButton(
                     onPressed: () {
-                      // Respond to button press
                       Navigator.pushReplacementNamed(context, '/home');
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ArgonColors.white,
+                      backgroundColor: ArgonColors.initial,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                     ),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 12, bottom: 12),
-                        child: Text("DEFAULT",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16.0))),
+                    child: Text(
+                      "DEFAULT",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
+                  // RaisedButton(
+                  //   textColor: ArgonColors.white,
+                  //   color: ArgonColors.initial,
+                  //   onPressed: () {
+                  //     // Respond to button press
+                  //     Navigator.pushReplacementNamed(context, '/home');
+                  //   },
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(4.0),
+                  //   ),
+                  //   child: Padding(
+                  //       padding: EdgeInsets.only(
+                  //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                  //       child: Text("DEFAULT",
+                  //           style: TextStyle(
+                  //               fontWeight: FontWeight.w600, fontSize: 16.0))),
+                  // ),
                 ),
               ),
               SizedBox(
@@ -79,23 +100,44 @@ class _ElementsState extends State<Elements> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 34.0, right: 34.0, top: 8),
-                  child: RaisedButton(
-                    textColor: ArgonColors.text,
-                    color: ArgonColors.secondary,
+                  child: 
+                  ElevatedButton(
                     onPressed: () {
-                      // Respond to button press
                       Navigator.pushReplacementNamed(context, '/home');
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ArgonColors.text,
+                      backgroundColor: ArgonColors.secondary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                     ),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 12, bottom: 12),
-                        child: Text("SECONDARY",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16.0))),
+                    child: Text(
+                      "SECONDARY",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
+                  // RaisedButton(
+                  //   textColor: ArgonColors.text,
+                  //   color: ArgonColors.secondary,
+                  //   onPressed: () {
+                  //     // Respond to button press
+                  //     Navigator.pushReplacementNamed(context, '/home');
+                  //   },
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(4.0),
+                  //   ),
+                  //   child: Padding(
+                  //       padding: EdgeInsets.only(
+                  //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                  //       child: Text("SECONDARY",
+                  //           style: TextStyle(
+                  //               fontWeight: FontWeight.w600, fontSize: 16.0))),
+                  // ),
                 ),
               ),
               SizedBox(
@@ -103,23 +145,44 @@ class _ElementsState extends State<Elements> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 34.0, right: 34.0, top: 8),
-                  child: RaisedButton(
-                    textColor: ArgonColors.white,
-                    color: ArgonColors.primary,
+                  child: 
+                  ElevatedButton(
                     onPressed: () {
-                      // Respond to button press
                       Navigator.pushReplacementNamed(context, '/home');
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ArgonColors.white,
+                      backgroundColor: ArgonColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                     ),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 12, bottom: 12),
-                        child: Text("PRIMARY",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16.0))),
+                    child: Text(
+                      "PRIMARY",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
+                  // RaisedButton(
+                  //   textColor: ArgonColors.white,
+                  //   color: ArgonColors.primary,
+                  //   onPressed: () {
+                  //     // Respond to button press
+                  //     Navigator.pushReplacementNamed(context, '/home');
+                  //   },
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(4.0),
+                  //   ),
+                  //   child: Padding(
+                  //       padding: EdgeInsets.only(
+                  //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                  //       child: Text("PRIMARY",
+                  //           style: TextStyle(
+                  //               fontWeight: FontWeight.w600, fontSize: 16.0))),
+                  // ),
                 ),
               ),
               SizedBox(
@@ -127,23 +190,44 @@ class _ElementsState extends State<Elements> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 34.0, right: 34.0, top: 8),
-                  child: RaisedButton(
-                    textColor: ArgonColors.white,
-                    color: ArgonColors.info,
+                  child: 
+                  ElevatedButton(
                     onPressed: () {
-                      // Respond to button press
                       Navigator.pushReplacementNamed(context, '/home');
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ArgonColors.white,
+                      backgroundColor: ArgonColors.info,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                     ),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 12, bottom: 12),
-                        child: Text("INFO",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16.0))),
+                    child: Text(
+                      "INFO",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
+                  // RaisedButton(
+                  //   textColor: ArgonColors.white,
+                  //   color: ArgonColors.info,
+                  //   onPressed: () {
+                  //     // Respond to button press
+                  //     Navigator.pushReplacementNamed(context, '/home');
+                  //   },
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(4.0),
+                  //   ),
+                  //   child: Padding(
+                  //       padding: EdgeInsets.only(
+                  //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                  //       child: Text("INFO",
+                  //           style: TextStyle(
+                  //               fontWeight: FontWeight.w600, fontSize: 16.0))),
+                  // ),
                 ),
               ),
               SizedBox(
@@ -151,23 +235,44 @@ class _ElementsState extends State<Elements> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 34.0, right: 34.0, top: 8),
-                  child: RaisedButton(
-                    textColor: ArgonColors.white,
-                    color: ArgonColors.success,
+                  child: 
+                  ElevatedButton(
                     onPressed: () {
-                      // Respond to button press
                       Navigator.pushReplacementNamed(context, '/home');
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ArgonColors.white,
+                      backgroundColor: ArgonColors.success,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                     ),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 12, bottom: 12),
-                        child: Text("SUCCESS",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16.0))),
+                    child: Text(
+                      "SUCCESS",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
+                  // RaisedButton(
+                  //   textColor: ArgonColors.white,
+                  //   color: ArgonColors.success,
+                  //   onPressed: () {
+                  //     // Respond to button press
+                  //     Navigator.pushReplacementNamed(context, '/home');
+                  //   },
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(4.0),
+                  //   ),
+                  //   child: Padding(
+                  //       padding: EdgeInsets.only(
+                  //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                  //       child: Text("SUCCESS",
+                  //           style: TextStyle(
+                  //               fontWeight: FontWeight.w600, fontSize: 16.0))),
+                  // ),
                 ),
               ),
               SizedBox(
@@ -175,23 +280,44 @@ class _ElementsState extends State<Elements> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 34.0, right: 34.0, top: 8),
-                  child: RaisedButton(
-                    textColor: ArgonColors.white,
-                    color: ArgonColors.warning,
+                  child: 
+                  ElevatedButton(
                     onPressed: () {
-                      // Respond to button press
                       Navigator.pushReplacementNamed(context, '/home');
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ArgonColors.white,
+                      backgroundColor: ArgonColors.warning,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                     ),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 12, bottom: 12),
-                        child: Text("WARNING",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16.0))),
+                    child: Text(
+                      "WARNING",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
+                  // RaisedButton(
+                  //   textColor: ArgonColors.white,
+                  //   color: ArgonColors.warning,
+                  //   onPressed: () {
+                  //     // Respond to button press
+                  //     Navigator.pushReplacementNamed(context, '/home');
+                  //   },
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(4.0),
+                  //   ),
+                  //   child: Padding(
+                  //       padding: EdgeInsets.only(
+                  //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                  //       child: Text("WARNING",
+                  //           style: TextStyle(
+                  //               fontWeight: FontWeight.w600, fontSize: 16.0))),
+                  // ),
                 ),
               ),
               SizedBox(
@@ -199,23 +325,44 @@ class _ElementsState extends State<Elements> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 34.0, right: 34.0, top: 8),
-                  child: RaisedButton(
-                    textColor: ArgonColors.white,
-                    color: ArgonColors.error,
+                  child: 
+                  ElevatedButton(
                     onPressed: () {
-                      // Respond to button press
                       Navigator.pushReplacementNamed(context, '/home');
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: ArgonColors.white,
+                      backgroundColor: ArgonColors.error,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                     ),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 12, bottom: 12),
-                        child: Text("ERROR",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16.0))),
+                    child: Text(
+                      "ERROR",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
+                  // RaisedButton(
+                  //   textColor: ArgonColors.white,
+                  //   color: ArgonColors.error,
+                  //   onPressed: () {
+                  //     // Respond to button press
+                  //     Navigator.pushReplacementNamed(context, '/home');
+                  //   },
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(4.0),
+                  //   ),
+                  //   child: Padding(
+                  //       padding: EdgeInsets.only(
+                  //           left: 16.0, right: 16.0, top: 12, bottom: 12),
+                  //       child: Text("ERROR",
+                  //           style: TextStyle(
+                  //               fontWeight: FontWeight.w600, fontSize: 16.0))),
+                  // ),
                 ),
               ),
               Padding(
@@ -339,7 +486,7 @@ class _ElementsState extends State<Elements> {
                   Text("Switch is ON",
                       style: TextStyle(color: ArgonColors.text)),
                   Switch.adaptive(
-                    value: switchValueOne,
+                    value: switchValueOne ?? false,
                     onChanged: (bool newValue) =>
                         setState(() => switchValueOne = newValue),
                     activeColor: ArgonColors.primary,
@@ -352,7 +499,7 @@ class _ElementsState extends State<Elements> {
                   Text("Switch is OFF",
                       style: TextStyle(color: ArgonColors.text)),
                   Switch.adaptive(
-                    value: switchValueTwo,
+                    value: switchValueTwo ?? false,
                     onChanged: (bool newValue) =>
                         setState(() => switchValueTwo = newValue),
                     activeColor: ArgonColors.primary,

@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 const double defaultBorderRadius = 3.0;
 
 class StretchableButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double borderRadius;
-  final double buttonPadding;
-  final Color buttonColor, splashColor;
-  final Color buttonBorderColor;
+  final double? buttonPadding;
+  final Color? buttonColor, splashColor;
+  final Color? buttonBorderColor;
   final List<Widget> children;
 
   StretchableButton({
-    @required this.buttonColor,
-    @required this.borderRadius,
-    @required this.children,
+    required this.buttonColor,
+    required this.borderRadius,
+    required this.children,
     this.splashColor,
     this.buttonBorderColor,
     this.onPressed,
@@ -35,7 +35,7 @@ class StretchableButton extends StatelessWidget {
         BorderSide bs;
         if (buttonBorderColor != null) {
           bs = BorderSide(
-            color: buttonBorderColor,
+            color: buttonBorderColor ?? Colors.black,
           );
         } else {
           bs = BorderSide.none;
@@ -43,19 +43,30 @@ class StretchableButton extends StatelessWidget {
 
         return ButtonTheme(
           height: 40.0,
-          padding: EdgeInsets.all(buttonPadding),
+          padding: EdgeInsets.all(buttonPadding ?? 0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
             side: bs,
           ),
-          child: RaisedButton(
+          // child: RaisedButton(
+          //   onPressed: onPressed,
+          //   color: buttonColor,
+          //   splashColor: splashColor,
+          //   child: Row(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: contents,
+          //   ),
+          // ),
+          child: ElevatedButton(
             onPressed: onPressed,
-            color: buttonColor,
-            splashColor: splashColor,
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(buttonColor),
+              foregroundColor: MaterialStateProperty.all(splashColor),
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: contents,
-            ),
+            )
           ),
         );
       },

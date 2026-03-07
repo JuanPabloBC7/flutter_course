@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 //widgets
-import 'package:argon_flutter/widgets/navbar.dart';
-import 'package:argon_flutter/widgets/drawer.dart';
+import 'package:flutter_course/core/widgets/navbar.dart';
+import 'package:flutter_course/core/widgets/drawer.dart';
 
 class Profile extends StatelessWidget {
   @override

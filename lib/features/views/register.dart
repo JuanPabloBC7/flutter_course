@@ -2,13 +2,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 //widgets
-import 'package:argon_flutter/widgets/navbar.dart';
-import 'package:argon_flutter/widgets/input.dart';
+import 'package:flutter_course/core/widgets/navbar.dart';
+import 'package:flutter_course/core/widgets/input.dart';
 
-import 'package:argon_flutter/widgets/drawer.dart';
+import 'package:flutter_course/core/widgets/drawer.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -76,76 +76,142 @@ class _RegisterState extends State<Register> {
                                         Container(
                                           // width: 0,
                                           height: 36,
-                                          child: RaisedButton(
-                                              textColor: ArgonColors.primary,
-                                              color: ArgonColors.secondary,
-                                              onPressed: () {},
+                                          child: ElevatedButton(
+                                            onPressed: () {},
+                                            style: ElevatedButton.styleFrom(
+                                              foregroundColor: ArgonColors.primary,
+                                              backgroundColor: ArgonColors.secondary,
+                                              elevation: 2, 
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4)),
-                                              child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 10,
-                                                      left: 14,
-                                                      right: 14),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      Icon(
-                                                          FontAwesomeIcons
-                                                              .github,
-                                                          size: 13),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Text("GITHUB",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 13))
-                                                    ],
-                                                  ))),
+                                                borderRadius: BorderRadius.circular(4),
+                                              ),
+                                              padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                                              // padding: const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Icon(
+                                                  FontAwesomeIcons.github,
+                                                  size: 13,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  "GITHUB",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          // RaisedButton(
+                                          //     textColor: ArgonColors.primary,
+                                          //     color: ArgonColors.secondary,
+                                          //     onPressed: () {},
+                                          //     shape: RoundedRectangleBorder(
+                                          //         borderRadius:
+                                          //             BorderRadius.circular(4)),
+                                          //     child: Padding(
+                                          //         padding: EdgeInsets.only(
+                                          //             bottom: 10,
+                                          //             top: 10,
+                                          //             left: 14,
+                                          //             right: 14),
+                                          //         child: Row(
+                                          //           mainAxisAlignment:
+                                          //               MainAxisAlignment
+                                          //                   .spaceAround,
+                                          //           children: [
+                                          //             Icon(
+                                          //                 FontAwesomeIcons
+                                          //                     .github,
+                                          //                 size: 13),
+                                          //             SizedBox(
+                                          //               width: 5,
+                                          //             ),
+                                          //             Text("GITHUB",
+                                          //                 style: TextStyle(
+                                          //                     fontWeight:
+                                          //                         FontWeight
+                                          //                             .w600,
+                                          //                     fontSize: 13))
+                                          //           ],
+                                          //         ))),
                                         ),
                                         Container(
                                           // width: 0,
                                           height: 36,
-                                          child: RaisedButton(
-                                              textColor: ArgonColors.primary,
-                                              color: ArgonColors.secondary,
-                                              onPressed: () {},
+                                          child: ElevatedButton(
+                                            onPressed: () {},
+                                            style: ElevatedButton.styleFrom(
+                                              foregroundColor: ArgonColors.primary,
+                                              backgroundColor: ArgonColors.secondary,
+                                              elevation: 2, 
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4)),
-                                              child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 10,
-                                                      left: 8,
-                                                      right: 8),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      Icon(
-                                                          FontAwesomeIcons
-                                                              .facebook,
-                                                          size: 13),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Text("FACEBOOK",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 13))
-                                                    ],
-                                                  ))),
+                                                borderRadius: BorderRadius.circular(4),
+                                              ),
+                                              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+                                              // padding: const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 10),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min, // Evita que el botón se estire a todo el ancho
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Icon(
+                                                  FontAwesomeIcons.facebook,
+                                                  size: 13,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  "FACEBOOK",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600, 
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          // RaisedButton(
+                                          //     textColor: ArgonColors.primary,
+                                          //     color: ArgonColors.secondary,
+                                          //     onPressed: () {},
+                                          //     shape: RoundedRectangleBorder(
+                                          //         borderRadius:
+                                          //             BorderRadius.circular(4)),
+                                          //     child: Padding(
+                                          //         padding: EdgeInsets.only(
+                                          //             bottom: 10,
+                                          //             top: 10,
+                                          //             left: 8,
+                                          //             right: 8),
+                                          //         child: Row(
+                                          //           mainAxisAlignment:
+                                          //               MainAxisAlignment
+                                          //                   .spaceAround,
+                                          //           children: [
+                                          //             Icon(
+                                          //                 FontAwesomeIcons
+                                          //                     .facebook,
+                                          //                 size: 13),
+                                          //             SizedBox(
+                                          //               width: 5,
+                                          //             ),
+                                          //             Text("FACEBOOK",
+                                          //                 style: TextStyle(
+                                          //                     fontWeight:
+                                          //                         FontWeight
+                                          //                             .w600,
+                                          //                     fontSize: 13))
+                                          //           ],
+                                          //         ))),
                                         ),
                                       ],
                                     ),
@@ -231,10 +297,10 @@ class _RegisterState extends State<Register> {
                                             Checkbox(
                                                 activeColor:
                                                     ArgonColors.primary,
-                                                onChanged: (bool newValue) =>
+                                                onChanged: (bool? newValue) =>
                                                     setState(() =>
                                                         _checkboxValue =
-                                                            newValue),
+                                                            newValue ?? false),
                                                 value: _checkboxValue),
                                             Text("I agree with the",
                                                 style: TextStyle(
@@ -260,30 +326,53 @@ class _RegisterState extends State<Register> {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 16),
                                         child: Center(
-                                          child: FlatButton(
-                                            textColor: ArgonColors.white,
-                                            color: ArgonColors.primary,
+                                          child: ElevatedButton(
                                             onPressed: () {
                                               // Respond to button press
-                                              Navigator.pushNamed(
-                                                  context, '/home');
+                                              Navigator.pushNamed(context, '/home');
                                             },
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
+                                            style: ElevatedButton.styleFrom(
+                                              foregroundColor: ArgonColors.white,
+                                              backgroundColor: ArgonColors.primary,
+                                              elevation: 2, 
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(4.0),
+                                              ),
+                                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                                              // padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
                                             ),
-                                            child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 16.0,
-                                                    right: 16.0,
-                                                    top: 12,
-                                                    bottom: 12),
-                                                child: Text("REGISTER",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 16.0))),
-                                          ),
+                                            child: Text(
+                                              "REGISTER",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16.0,
+                                              ),
+                                            ),
+                                          )
+                                          // FlatButton(
+                                          //   textColor: ArgonColors.white,
+                                          //   color: ArgonColors.primary,
+                                          //   onPressed: () {
+                                          //     // Respond to button press
+                                          //     Navigator.pushNamed(
+                                          //         context, '/home');
+                                          //   },
+                                          //   shape: RoundedRectangleBorder(
+                                          //     borderRadius:
+                                          //         BorderRadius.circular(4.0),
+                                          //   ),
+                                          //   child: Padding(
+                                          //       padding: EdgeInsets.only(
+                                          //           left: 16.0,
+                                          //           right: 16.0,
+                                          //           top: 12,
+                                          //           bottom: 12),
+                                          //       child: Text("REGISTER",
+                                          //           style: TextStyle(
+                                          //               fontWeight:
+                                          //                   FontWeight.w600,
+                                          //               fontSize: 16.0))),
+                                          // ),
                                         ),
                                       )
                                     ],

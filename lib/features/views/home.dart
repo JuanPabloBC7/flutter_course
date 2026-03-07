@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 //widgets
-import 'package:argon_flutter/widgets/navbar.dart';
-import 'package:argon_flutter/widgets/card-horizontal.dart';
-import 'package:argon_flutter/widgets/card-small.dart';
-import 'package:argon_flutter/widgets/card-square.dart';
-import 'package:argon_flutter/widgets/drawer.dart';
+import 'package:flutter_course/core/widgets/navbar.dart';
+import 'package:flutter_course/core/widgets/card-horizontal.dart';
+import 'package:flutter_course/core/widgets/card-small.dart';
+import 'package:flutter_course/core/widgets/card-square.dart';
+import 'package:flutter_course/core/widgets/drawer.dart';
 
 final Map<String, Map<String, String>> homeCards = {
   "Ice Cream": {
@@ -60,8 +60,8 @@ class Home extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 16.0),
                   child: CardHorizontal(
                       cta: "View article",
-                      title: homeCards["Ice Cream"]['title'],
-                      img: homeCards["Ice Cream"]['image'],
+                      title: homeCards["Ice Cream"]?['title'] ?? "",
+                      img: homeCards["Ice Cream"]?['image'] ?? "",
                       tap: () {
                         Navigator.pushNamed(context, '/pro');
                       }),
@@ -72,15 +72,15 @@ class Home extends StatelessWidget {
                   children: [
                     CardSmall(
                         cta: "View article",
-                        title: homeCards["Makeup"]['title'],
-                        img: homeCards["Makeup"]['image'],
+                        title: homeCards["Makeup"]?['title'] ?? "",
+                        img: homeCards["Makeup"]?['image'] ?? "",
                         tap: () {
                           Navigator.pushNamed(context, '/pro');
                         }),
                     CardSmall(
                         cta: "View article",
-                        title: homeCards["Coffee"]['title'],
-                        img: homeCards["Coffee"]['image'],
+                        title: homeCards["Coffee"]?['title'] ?? "",
+                        img: homeCards["Coffee"]?['image'] ?? "",
                         tap: () {
                           Navigator.pushNamed(context, '/pro');
                         })
@@ -89,8 +89,8 @@ class Home extends StatelessWidget {
                 SizedBox(height: 8.0),
                 CardHorizontal(
                     cta: "View article",
-                    title: homeCards["Fashion"]['title'],
-                    img: homeCards["Fashion"]['image'],
+                    title: homeCards["Fashion"]?['title'] ?? "",
+                    img: homeCards["Fashion"]?['image'] ?? "",
                     tap: () {
                       Navigator.pushNamed(context, '/pro');
                     }),
@@ -99,8 +99,8 @@ class Home extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 32.0),
                   child: CardSquare(
                       cta: "View article",
-                      title: homeCards["Argon"]['title'],
-                      img: homeCards["Argon"]['image'],
+                      title: homeCards["Argon"]?['title'] ?? "",
+                      img: homeCards["Argon"]?['image'] ?? "",
                       tap: () {
                         Navigator.pushNamed(context, '/pro');
                       }),

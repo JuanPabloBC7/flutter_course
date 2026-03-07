@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:argon_flutter/constants/Theme.dart';
+import 'package:flutter_course/core/constants/Theme.dart';
 
 class TableCellSettings extends StatelessWidget {
-  final String title;
-  final Function onTap;
+  final String? title;
+  final VoidCallback? onTap;
   TableCellSettings({this.title, this.onTap});
 
   @override
@@ -16,7 +16,7 @@ class TableCellSettings extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: TextStyle(color: ArgonColors.text)),
+            Text(title ?? '', style: TextStyle(color: ArgonColors.text)),
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Icon(Icons.arrow_forward_ios,
