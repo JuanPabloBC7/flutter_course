@@ -7,6 +7,50 @@ flutter pub get
 flutter run
 ```
 
+## Sprints Delivery Videos
+Here you will find the list of deliveries, sprint by sprint.
+- [Content](https://github.com/JuanPabloBC7/flutter_course/tree/feature/transversal_project)
+- [Sprint 1 - Proyecto integrador](https://drive.google.com/file/d/1YatGbW-SEUROhhDvGQt40QAryPF_YNx2/view?usp=drive_link)
+
+## Project Structure
+```
+flutter_course/
+└─ lib/
+  ├─ core/
+  │ ├─ network/
+  │ │ └─ services.dart
+  │ └─ routing/
+  │   └─ routes.dart
+  ├─ features/
+  │ ├─ admin/
+  │ │ ├─ configuration/
+  │ │ │ └─ views/
+  │ │ │   └─  configuration_view.dart
+  │ │ ├─ dashboard/
+  │ │ │ └─ views/
+  │ │ │   └─  dashboard_view.dart
+  │ │ ├─ history/
+  │ │ │ └─ views/
+  │ │ │   └─  history_view.dart
+  │ │ └─ transfers/
+  │ │   └─ views/
+  │ │     └─  transfers_view.dart
+  │ └─ auth/
+  │   ├─ forgot_password/
+  │   │ └─ views/
+  │   │   └─  forgot_password_view.dart
+  │   └─ login/
+  │     └─ views/
+  │       └─ login_view.dart
+  ├─ l10n/
+  │ ├─ app_en.arb
+  │ ├─ app_es.arb
+  │ ├─ app_localizations_en.dart
+  │ ├─ app_localizations_es.dart
+  │ └─ app_localizations.dart
+  └─ main.dart
+```
+
 # Project Statement
 ## Proyecto Transversal Flutter Avanzado
 BAM (Bancolombia Guatemala)
