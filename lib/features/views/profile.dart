@@ -22,7 +22,7 @@ class Profile extends StatelessWidget {
               decoration: BoxDecoration(
                   image: DecorationImage(
                       alignment: Alignment.topCenter,
-                      image: AssetImage("assets/img/profile-screen-bg.png"),
+                      image: AssetImage("lib/core/assets/img/profile-screen-bg.png"),
                       fit: BoxFit.fitWidth))),
           SafeArea(
             child: ListView(children: [
@@ -338,7 +338,7 @@ class Profile extends StatelessWidget {
                           child: Align(
                             child: CircleAvatar(
                               backgroundImage: AssetImage(
-                                  "assets/img/profile-screen-avatar.jpg"),
+                                  "lib/core/assets/img/profile-screen-avatar.jpg"),
                               radius: 65.0,
                               // maxRadius: 200.0,
                             ),

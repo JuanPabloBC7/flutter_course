@@ -1,245 +1,200 @@
 # flutter_course
+Creative tim repository
+https://github.com/creativetimofficial/argon-flutter/tree/master
+
+# [Argon Flutter](https://creativetimofficial.github.io/argon-flutter/docs/#) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?text=Start%20Your%20Development%20With%20A%20Badass%20Flutter%20app%20inspired%20by%20Argon%20Design%20System.%0Ahttps%3A//demos.creative-tim.com/argon-flutter/)
+
+
+ ![version](https://img.shields.io/badge/version-1.0.1-blue.svg)  [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/argon-flutter.svg?style=flat)](https://github.com/creativetimofficial/argon-flutter/issues?q=is%3Aopen+is%3Aissue) [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/argon-flutter.svg?maxAge=2592000)](https://github.com/creativetimofficial/argon-flutter/issues?q=is%3Aissue+is%3Aclosed)
+
+
+![Product Gif](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-flutter/arg-flutter-thumbnail.jpg)
+
+Argon Flutter is a free mobile UI template built with Google's [Flutter](https://flutter.dev/) allowing you to create powerful and beautiful mobile applications.. We have redesigned all the usual components in order to make it look like Argon's Design System, minimalistic and easy to use.
+
+Start your development with a badass Design System for Flutter inspired by Argon Design System. If you like Argon's Design System, you will love this Flutter app template! It features a huge number of components and screens built to fit together and look amazing. 
+
+### FULLY CODED COMPONENTS
+
+Argon Flutter features over 100 variations of widgets like buttons, inputs, cards, navigations etc, giving you the freedom of choosing and combining. All components can take variations in colour, that you can easily modify inside our theme file.
+
+You will save a lot of time going from prototyping to full-functional code, because all elements are implemented. We wanted the design process to be seamless, so switching from image to the real page is very easy to do.
+
+### Widgets & Cards
+Argon Flutter comes packed with a large number of components and cards. Putting together a mobile app has never been easier than matching together different widgets. From the profile screen to a settings screen, you can easily customise and build your screens. We have created multiple options for you to put together and customise into pixel perfect screens. 
+
+View [ all widgets/cards here](https://demos.creative-tim.com/argon-flutter/index.html#cards?ref=argon-flutter-readme).
+
+### Example Screens
+If you want to get inspiration or just show something directly to your clients, you can jump start your development with our pre-built example screens. From onboarding screens to profile or discover screens, you will be able to quickly set up the basic structure for your Flutter mobile project. 
+
+View [all screens here](https://demos.creative-tim.com/argon-flutter/index.html#screens?ref=argon-flutter-readme).
+
+
+Let us know your thoughts below. And good luck with development!
+
+
+## Table of Contents
+
+* [Versions](#versions) 
+* [Demo](#demo)
+* [Quick Start](#quick-start)
+* [Documentation](#documentation)
+* [File Structure](#file-structure)
+* [OS Support](#os-support)
+* [Resources](#resources)
+* [Reporting Issues](#reporting-issues)
+* [Technical Support or Questions](#technical-support-or-questions)
+* [Licensing](#licensing)
+* [Useful Links](#useful-links)
+
+## Versions
+
+[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/html-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-design-system)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/vue-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/vue-argon-design-system)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/react-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-design-system-react)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/react-native-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-pro-react-native)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/angular-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-angular)
+
+
+
+
+
+| HTML | React | Angular  |
+| --- | --- | ---  |
+| [![Argon Design System](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-design-system/argon-design-system.jpg)](https://www.creative-tim.com/product/argon-design-system?ref=argon-flutter-readme)  | [![Argon Design System React](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-design-system-react/argon-design-system-react.jpg)](https://www.creative-tim.com/product/argon-design-system-react?ref=argon-flutter-readme)  | [![Argon Design System Angular](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-design-system-angular/argon-design-system-angular.jpg)](https://www.creative-tim.com/product/argon-design-system-angular?ref=argon-flutter-readme)
+
+## Demo
+
+| Home Screen | Profile Screen | Onboarding Screen | Register Screen |
+| --- | --- | --- | --- |
+| [![Home Screen](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-react-native/home-screen.png)](https://demos.creative-tim.com/argon-pro-flutter/?ref=argon-flutter-readme) | [![Profile Screen](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-react-native/profile-screen.png)](https://demos.creative-tim.com/argon-pro-flutter/?ref=argon-flutter-readme) | [![Onboarding Screen](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-flutter/onboarding.png)](https://demos.creative-tim.com/argon-pro-flutter/?ref=argon-flutter-readme) | [![Register Screen](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-react-native/register-screen.png)](https://demos.creative-tim.com/argon-pro-flutter/?ref=argon-flutter-readme) |
+
+- [Start page](https://demos.creative-tim.com/argon-flutter?ref=argon-flutter-readme)
+- [How to install our product](https://demos.creative-tim.com/argon-flutter/docs/#/install?ref=argon-flutter-readme)
+
+[View more](https://demos.creative-tim.com/argon-flutter?ref=argon-flutter-readme)
+
+## Quick start
+- Download this from [Creative Tim](https://www.creative-tim.com/product/argon-flutter?ref=argon-flutter-readme)
+- Buy the PRO version from [Creative Tim](https://www.creative-tim.com/product/argon-pro-flutter?ref=argon-flutter-readme)
+
+
 ## Documentation
-### Run Project
-To run project use ```pub get``` to install dependencies and then ```run``` to execute main.dart file:
+The documentation for the Argon Flutter is hosted at our [website](https://demos.creative-tim.com/argon-flutter/docs/?ref=argon-flutter-readme).
+
+
+## File Structure
+Within the download you'll find the following directories and files:
+
 ```
-flutter pub get
-flutter run
+.
+├── README.md
+├── android
+├── assets
+├── ios
+├── lib
+│   ├── constants
+│   │   └── Theme.dart
+│   ├── main.dart
+│   ├── screens
+│   │   ├── articles.dart
+│   │   ├── elements.dart
+│   │   ├── home.dart
+│   │   ├── onboarding.dart
+│   │   ├── pro.dart
+│   │   ├── profile.dart
+│   │   ├── register.dart
+│   └── widgets
+│       ├── button.dart
+│       ├── card-category.dart
+│       ├── card-horizontal.dart
+│       ├── card-shopping-cart.dart
+│       ├── card-shopping.dart
+│       ├── card-small.dart
+│       ├── card-square.dart
+│       ├── drawer-tile.dart
+│       ├── drawer.dart
+│       ├── input.dart
+│       ├── navbar.dart
+│       ├── slider-product.dart
+│       ├── slider.dart
+│       └── table-cell.dart
+├── my_app.iml
+├── pubspec.lock
+├── pubspec.yaml
 ```
 
-# Project Statement
-## Proyecto Transversal Flutter Avanzado
-BAM (Bancolombia Guatemala)
 
-### Contexto del proyecto
-Este proyecto transversal acompaña todo el curso de **Flutter Avanzado** y simula el desarrollo de un **módulo real de una app bancaria de alto tráfico**, permitiendo a los estudiantes aplicar progresivamente los conocimientos de cada módulo en un entorno corporativo.
+## OS Support
 
-El proyecto se desarrolla de forma incremental, alineando **contenidos técnicos, arquitectura, buenas prácticas y calidad** con un caso realista del sector financiero.
+At present, we officially aim to support the last two versions of the following operating systems:
 
-### Nombre del proyecto
-**BAM Wallet & Transfers – Módulo Bancario Escalable**
+[<img src="https://raw.githubusercontent.com/creativetimofficial/ct-material-kit-pro-react-native/master/assets/android-logo.png" width="60" height="60" />](https://www.creative-tim.com/product/material-kit-pro-react-native)[<img src="https://raw.githubusercontent.com/creativetimofficial/ct-material-kit-pro-react-native/master/assets/apple-logo.png" width="60" height="60" />](https://www.creative-tim.com/product/material-kit-pro-react-native)
 
-### Objetivo general
-Diseñar e implementar un módulo funcional de una aplicación bancaria que incluya:
-* Autenticación segura
-* Visualización de productos y saldos
-* Transferencias y pagos
-* Historial y auditoría de transacciones
-* Notificaciones push
-* Internacionalización
-* Integración con servicios backend
-* Prácticas de calidad, testing, CI y uso de IA 
 
-### Lineamientos generales
-* Arquitectura limpia (Clean Architecture)
-* Modularización por feature
-* Manejo de estado profesional
-* Enfoque en escalabilidad y alto tráfico
-* Seguridad y manejo de errores
-* Documentación técnica clara
 
-### Resumen Backlog del Proyecto por Módulo
-| Módulo | Historia de Usuario | Descripción                                    | Entregables                                       | Evidencia de Cumplimiento          |
-| ------ |:-------------------:|:----------------------------------------------:|:-------------------------------------------------:|:----------------------------------:|
-| 1      | HU 1.1              | Configuración profesional del proyecto Flutter | Repo inicial, README, lint y estructura base      | Repositorio Git + README           |
-| 1      | HU 1.2              | Navegación base y pantallas iniciales          | Rutas y pantallas placeholder                     | App navegable                      |
-| 1      | HU 1.3              | Cliente HTTP y manejo de errores               | Cliente HTTP + modelo de errores                  | Código + pruebas manuales          |
-| 2      | HU 2.1              | Clean Architecture en Auth                     | Capas Domain / Data / UI                          | Estructura del feature ```auth```  |
-| 2      | HU 2.2              | Login con validaciones                         | Login funcional con manejo de estados             | Demo funcional                     |
-| 2      | HU 2.3              | Gestión de sesión                              | Guard de rutas + sesión persistente               | Navegación protegida               |
-| 3      | HU 3.1              | Modularización por features                    | Estructura ```features/``` + doc de decisiones    | Documento técnico                  |
-| 3      | HU 3.2              | Dashboard de productos                         | Dashboard con caché y manejo de estados           | UI funcional                       |
-| 3      | HU 3.3              | Internacionalización                           | i18n ES / EN                                      | Cambio dinámico de idioma          |
-| 4      | HU 4.1              | Firebase Authentication                        | Login real con Firebase                           | Usuario autenticado                |
-| 4      | HU 4.2              | Historial Firestore                            | Transacciones paginadas                           | Consulta funcional                 |
-| 4      | HU 4.3              | Push Notifications                             | Integración FCM                                   | Recepción de notificación          |
-| 5      | HU 5.1              | Servicio Python                                | API / script de validación                        | Endpoint funcional                 |
-| 6      | HU 6.1              | API Node.js / TypeScript                       | Endpoints de cuentas y transferencias             | Postman / OpenAPI                  |
+## Resources
+- Demo: <https://demos.creative-tim.com/argon-flutter>
+- Download Page: <https://www.creative-tim.com/product/argon-flutter?ref=argon-flutter-readme>
+- Documentation: <https://demos.creative-tim.com/argon-flutter/docs?ref=argon-flutter-readme>
+- License Agreement: <https://www.creative-tim.com/license>
+- Support: <https://www.creative-tim.com/contact-us>
+- Issues: [Github Issues Page](https://github.com/creativetimofficial/argon-flutter/issues)
+- [Argon Design System](https://www.creative-tim.com/product/argon-design-system?ref=argon-flutter-readme) - For Front End Development
+- **Dashboards:**
 
----
----
-## Detalle Backlog del Proyecto por Módulo
-### Módulo 1 – Fundamentos Avanzados de Flutter y Dart
+| HTML | React | Vue |
+| --- | --- | ---  |
+| [![Argon HTML](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/argon-dashboard-pro.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro?ref=argon-flutter-readme) | [![Argon Dashboard React](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro-react/argon-dashboard-pro-react.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro-react?ref=argon-flutter-readme) | [![Argon Dashboard Vue](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/vue-argon-dashboard-pro/vue-argon-dashboard-pro.jpg)](https://www.creative-tim.com/product/vue-argon-dashboard-pro?ref=argon-flutter-readme)
 
-#### Objetivo del módulo
-Construir la base técnica y estructural del proyecto con estándares corporativos.
+| Node.js | Nuxt  | Laravel |
+| --- | --- | --- |
+| [![Argon Dashboard PRO NodeJS](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro-nodejs/argon-dashboard-pro-nodejs.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro-nodejs?ref=argon-flutter-readme) | [![Argon Dashboard PRO Nuxt](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/nuxt-argon-dashboard-pro/nuxt-argon-dashboard-pro.jpg)](https://www.creative-tim.com/product/nuxt-argon-dashboard-pro?ref=argon-flutter-readme) | [![Argon Dashboard PRO Laravel](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro-laravel/argon-dashboard-pro-laravel.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro-laravel?ref=argon-flutter-readme)
 
-#### Historias de Usuario y Entregables
-#### HU 1.1 – Configuración profesional del proyecto
-**Como desarrollador**, quiero configurar un proyecto Flutter con estándares profesionales para asegurar calidad y mantenibilidad desde el inicio.
 
-#### Criterios de aceptación
-* Proyecto Flutter inicializado correctamente
-* Uso de Material 3
-* Linter y formatter configurados
-* Estructura base de carpetas definida
+## Reporting Issues
 
-#### Entregables
-* Repositorio inicial
-* README con instrucciones de ejecución
+We use GitHub Issues as the official bug tracker for the Argon Flutter. Here are some advices for our users that want to report an issue:
 
-#### HU 1.2 – Navegación base de la aplicación
-Como usuario, quiero navegar entre las principales secciones de la app bancaria.
+1. Make sure that you are using the latest version of the Argon Flutter.
+2. Providing us reproducible steps for the issue will shorten the time it takes for it to be fixed.
+3. Some issues may be platform specific, so specifying on what platform you encountered the issue might help.
 
-#### Entregables
-* Sistema de navegación configurado
-* Pantallas base:
-    * Login
-    * Dashboard
-    * Transferencias
-    * Historial
-    * Configuración
 
-#### HU 1.3 – Cliente HTTP y manejo de errores
-**Como desarrollador**, quiero un cliente HTTP reutilizable para consumir APIs externas.
+### Technical Support or Questions
 
-#### Entregables
-* Cliente HTTP con interceptores
-* Modelo de errores centralizado
+If you have questions or need help integrating the product please [contact us](https://www.creative-tim.com/contact-us) instead of opening an issue.
 
----
-### Módulo 2 – Clean Architecture y Manejo de Estado
-#### Objetivo del módulo
-Aplicar Clean Architecture y manejo de estado en el módulo de autenticación.
 
-#### Historias de Usuario y Entregables
-#### HU 2.1 – Arquitectura limpia para autenticación
-**Como desarrollador**, quiero separar dominio, datos y presentación para desacoplar la lógica de negocio.
+## Licensing
 
-#### Entregables
-* Capas Domain, Data y UI implementadas en el feature ```auth```
-* Casos de uso de login y logout
+- Copyright 2020 Creative Tim (https://www.creative-tim.com/?ref=argon-flutter-readme)
 
-#### HU 2.2 – Login con validaciones
-**Como usuario**, quiero iniciar sesión de forma segura.
+- Licensed under [MIT](https://github.com/creativetimofficial/argon-flutter/blob/master/LICENSE.md)
 
-#### Criterios de aceptación
-* Validaciones de email y contraseña
-* Manejo de estados: loading, error y éxito
 
-#### Entregables
-* Pantalla de login funcional
 
-#### HU 2.3 – Gestión de sesión y protección de rutas
-**Como sistema**, quiero proteger las rutas privadas de la aplicación.
+## Useful Links
 
-#### Entregables
-* Guard de rutas
-* Persistencia básica de sesión
+- [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w)
+- [Affiliate Program](https://www.creative-tim.com/affiliates/new) (earn money)
+- [Blog Creative Tim](http://blog.creative-tim.com/)
+- [Free Products](https://www.creative-tim.com/bootstrap-themes/free) from Creative Tim
+- [Premium Products](https://www.creative-tim.com/bootstrap-themes/premium) from Creative Tim
+- [React Products](https://www.creative-tim.com/bootstrap-themes/react-themes) from Creative Tim
+- [Angular Products](https://www.creative-tim.com/bootstrap-themes/angular-themes) from Creative Tim
+- [VueJS Products](https://www.creative-tim.com/bootstrap-themes/vuejs-themes) from Creative Tim
+- [More products](https://www.creative-tim.com/bootstrap-themes) from Creative Tim
+- Check our Bundles [here](https://www.creative-tim.com/bundles?ref="argon-github-readme")
 
----
-### Módulo 3 – Modularización, UI avanzada e Internacionalización
-#### Objetivo del módulo
-Escalar el proyecto mediante modularización por features y UI adaptable.
 
-#### Historias de Usuario y Entregables
-#### HU 3.1 – Modularización por features
-**Como desarrollador**, quiero separar la aplicación por funcionalidades para facilitar el trabajo
-en equipo.
+### Social Media
 
-#### Entregables
-* Estructura ```features/``` aplicada
-* Documento de decisiones técnicas
+Twitter: <https://twitter.com/CreativeTim>
 
-#### HU 3.2 – Dashboard de productos y saldos
-**Como usuario**, quiero visualizar mis productos financieros y saldos.
+Facebook: <https://www.facebook.com/CreativeTim>
 
-#### Entregables
-* Dashboard con datos mock
-* Estados de carga y error
-* Cache local
+Dribbble: <https://dribbble.com/creativetim>
 
-#### HU 3.3 – Internacionalización
-**Como usuario**, quiero usar la app en español o inglés.
+Google+: <https://plus.google.com/+CreativetimPage>
 
-#### Entregables
-* Configuración i18n
-* Selector de idioma
+Instagram: <https://www.instagram.com/CreativeTimOfficial>
 
----
-### Módulo 4 – Firebase y Notificaciones
-#### Objetivo del módulo
-Integrar servicios backend reales usando Firebase.
 
-#### Historias de Usuario y Entregables
-#### HU 4.1 – Autenticación con Firebase
-**Como usuario**, quiero autenticarme usando Firebase Authentication.
-
-#### Entregables
-* Login funcional con Firebase
-* Almacenamiento seguro de sesión
-
-#### HU 4.2 – Historial de transacciones en Firestore
-**Como usuario**, quiero consultar mi historial de transacciones.
-
-#### Entregables
-* Colección de transacciones
-* Consultas paginadas
-
-#### HU 4.3 – Notificaciones push
-**Como usuario**, quiero recibir notificaciones sobre eventos importantes.
-
-#### Entregables
-* Integración con Firebase Cloud Messaging
-
----
-### Módulo 5 – Integraciones con Python
-#### Objetivo del módulo
-Construir un servicio auxiliar para validaciones de negocio.
-Historias de Usuario y Entregables
-
-#### HU 5.1 – Servicio de validación en Python
-**Como sistema**, quiero validar reglas de negocio antes de registrar transferencias.
-
-#### Entregables
-* Servicio REST en Python
-* Documentación de uso
-
----
-### Módulo 6 – Backend con Node.js y TypeScript
-#### Objetivo del módulo
-Desarrollar una API backend que consuma la app Flutter.
-Historias de Usuario y Entregables
-
-#### HU 6.1 – API de cuentas y transferencias
-**Como aplicación móvil**, quiero consumir una API segura.
-
-#### Entregables
-* API en Node.js + TypeScript
-* Endpoints documentados
-
-#### HU 6.2 – Autenticación de la API
-**Como sistema**, quiero proteger los endpoints con JWT.
-
-#### Entregables
-* Middleware de autenticación
-
----
-### Módulo 7 – IA y Calidad de Software
-#### Objetivo del módulo
-Usar IA para mejorar productividad y calidad.
-
-#### Historias de Usuario y Entregables
-#### HU 7.1 – Refactor y pruebas con IA
-**Como desarrollador**, quiero usar IA para refactorizar y crear pruebas.
-
-#### Entregables
-* Tests unitarios y de widgets
-* Documento de prompts utilizados
-
----
-### Módulo 8 – Entrega Final
-#### Objetivo del módulo
-Preparar una entrega corporativa completa.
-
-#### Entregables finales
-* Proyecto funcional end-to-end
-* Documentación de arquitectura
-* Diagrama de flujos
-* Pipeline CI básico
-* Video o demo funcional
-
----
-### Resultado esperado
-Al finalizar el curso, el estudiante habrá construido un módulo bancario profesional, alineado
-con prácticas reales de desarrollo móvil en entornos financieros de alto tráfico.

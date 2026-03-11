@@ -34,7 +34,7 @@ class ArgonDrawer extends StatelessWidget {
                 alignment: Alignment.bottomLeft,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 32),
-                  child: Image.asset("assets/img/argon-logo.png"),
+                  child: Image.asset("lib/core/assets/img/argon-logo.png"),
                 ),
               ),
             )),

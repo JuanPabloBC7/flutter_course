@@ -21,7 +21,7 @@ class Pro extends StatelessWidget {
       Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/img/pro-background.png"),
+                  image: AssetImage("lib/core/assets/img/pro-background.png"),
                   fit: BoxFit.cover))),
       Padding(
         padding:
@@ -36,7 +36,7 @@ class Pro extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Image.asset("assets/img/logo-argon.png", scale: 1),
+                    Image.asset("lib/core/assets/img/logo-argon.png", scale: 1),
                     SizedBox(height: 16.0),
                     Padding(
                       padding: const EdgeInsets.only(right: 48.0),
@@ -75,9 +75,9 @@ class Pro extends StatelessWidget {
                         fontWeight: FontWeight.w200)),
                 // SizedBox(height: 26.0),
                 Row(children: <Widget>[
-                  Image.asset("assets/img/logo-ios.png", scale: 2.6),
+                  Image.asset("lib/core/assets/img/logo-ios.png", scale: 2.6),
                   SizedBox(width: 30.0),
-                  Image.asset("assets/img/logo-android.png", scale: 2.6)
+                  Image.asset("lib/core/assets/img/logo-android.png", scale: 2.6)
                 ]),
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),

@@ -30,10 +30,6 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      // home: const LoginView(),
-      // initialRoute: AppRoutes.login,
-      // onGenerateRoute: AppRoutes.generateRoute,
-
       title: 'Argon PRO Flutter',
       theme: ThemeData(fontFamily: 'OpenSans'),
       initialRoute: "/onboarding",

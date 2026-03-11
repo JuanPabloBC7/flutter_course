@@ -87,6 +87,7 @@ class _NavbarState extends State<Navbar> {
             ]),
         child: SafeArea(
           child: Padding(
+            // jpbalan - revisar aqui la navbar esta fallando por el padding, arreglarlo para el tamaño...
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
             child: Column(
               children: [
@@ -121,7 +122,7 @@ class _NavbarState extends State<Navbar> {
                                         : ArgonColors.white)
                                     : ArgonColors.white,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 18.0)),
+                                fontSize: 17.0)),
                       ],
                     ),
                     if (widget.rightOptions)

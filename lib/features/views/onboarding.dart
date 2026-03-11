@@ -11,7 +11,7 @@ class Onboarding extends StatelessWidget {
       Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/img/onboard-background.png"),
+                  image: AssetImage("lib/core/assets/img/onboard-background.png"),
                   fit: BoxFit.cover))),
       Padding(
         padding:
@@ -22,7 +22,7 @@ class Onboarding extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Image.asset("assets/img/argon-logo-onboarding.png", scale: 1),
+                Image.asset("lib/core/assets/img/argon-logo-onboarding.png", scale: 1),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
