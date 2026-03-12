@@ -1,5 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
+
+import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/widgets/input.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -36,28 +40,24 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
             AppLocalizations.of(context)!.loginWelcome,
             style: TextStyle(
               fontSize: 24,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
+              color: ArgonColors.text,
+              fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 24,),
-          TextField(
-            decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.loginUsername,
-              border: OutlineInputBorder(),
-            ),
+          Input(
+            placeholder: AppLocalizations.of(context)!.loginUsername,
+            prefixIcon: Icon(Icons.supervised_user_circle),
           ),
           const SizedBox(height: 16,),
-          TextField(
-            decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.loginPassword,
-              border: OutlineInputBorder(),
-              suffixIcon: IconButton(
-                icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
-                onPressed: () {
-                  setState(() => _obscurePassword = !_obscurePassword);
-                },
-              ),
+          Input(
+            placeholder: AppLocalizations.of(context)!.loginPassword,
+            prefixIcon: Icon(Icons.lock),
+            suffixIcon: IconButton(
+              icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+              onPressed: () {
+                setState(() => _obscurePassword = !_obscurePassword);
+              },
             ),
             obscureText: _obscurePassword,
           ),
@@ -69,21 +69,32 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
             child: Text(
               AppLocalizations.of(context)!.loginForgotPassword,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF006FFD)
+                color: ArgonColors.primary,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
           const SizedBox(height: 24,),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/temporal-route');
+              Navigator.pushReplacementNamed(context, '/temporal-route');
             },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Color(0xFF006FFD))
+            style: ElevatedButton.styleFrom(
+              foregroundColor: ArgonColors.white,
+              backgroundColor: ArgonColors.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
             ),
-            child: Text(AppLocalizations.of(context)!.loginLogin, style: TextStyle(color: Colors.white),),
+            child: Text(
+              AppLocalizations.of(context)!.loginLogin,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.0,
+              ),
+            ),
           ),
           const SizedBox(height: 2,),
           Text(

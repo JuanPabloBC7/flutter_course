@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   intl: ^0.20.2
+  font_awesome_flutter: 11.0.0
 
 dev_dependencies:
   flutter_test:
@@ -22,3 +23,25 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+
+  assets:
+   - lib/core/assets/img/pro-background.png
+   - lib/core/assets/img/onboard-background.png
+   - lib/core/assets/img/logo-android.png
+   - lib/core/assets/img/logo-ios.png
+   - lib/core/assets/img/logo-argon.png
+   - lib/core/assets/img/profile-screen-avatar.jpg
+   - lib/core/assets/img/profile-screen-bg.png
+   - lib/core/assets/img/register-bg.png
+   - lib/core/assets/img/chat-avatar.jpeg
+   - lib/core/assets/img/argon-logo.png
+   - lib/core/assets/img/argon-logo-onboarding.png
+
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: lib/core/assets/fonts/OpenSans-Regular.ttf
+        - asset: lib/core/assets/fonts/OpenSans-Light.ttf
+          weight: 200
+        - asset: lib/core/assets/fonts/OpenSans-Bold.ttf
+          weight: 600
