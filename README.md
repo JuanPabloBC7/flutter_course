@@ -17,31 +17,41 @@ Here you will find the list of deliveries, sprint by sprint.
 flutter_course/
 └─ lib/
   ├─ core/
+  │ ├─ assets/
+  │ │ ├─ fonts/
+  │ │ │ ├─ OpenSans-Bold.ttf
+  │ │ │ ├─ OpenSans-Light.ttf
+  │ │ │ └─ OpenSans-Regular.ttf
+  │ │ └─ img/
+  │ │   ├─ 2.0x/
+  │ │   │ └─ images...
+  │ │   └─ images...
+  │ ├─ constants/
+  │ │ └─ Theme.dart
   │ ├─ network/
   │ │ └─ services.dart
-  │ └─ routing/
-  │   └─ routes.dart
+  │ ├─ routing/
+  │ │ └─ routes.dart
+  │ └─ widgets/
+  │   └─ input.dart
   ├─ features/
   │ ├─ admin/
-  │ │ ├─ configuration/
-  │ │ │ └─ views/
-  │ │ │   └─  configuration_view.dart
-  │ │ ├─ dashboard/
-  │ │ │ └─ views/
-  │ │ │   └─  dashboard_view.dart
-  │ │ ├─ history/
-  │ │ │ └─ views/
-  │ │ │   └─  history_view.dart
-  │ │ └─ transfers/
-  │ │   └─ views/
-  │ │     └─  transfers_view.dart
+  │ │ ├─ layout/
+  │ │ │ └─ layout_view.dart
+  │ │ └─ pages/
+  │ │   ├─ configuration/
+  │ │   │ └─ configuration_view.dart
+  │ │   ├─ dashboard/
+  │ │   │ └─ dashboard_view.dart
+  │ │   ├─ history/
+  │ │   │ └─ history_view.dart
+  │ │   └─ transfers/
+  │ │     └─ transfers_view.dart
   │ └─ auth/
   │   ├─ forgot_password/
-  │   │ └─ views/
-  │   │   └─  forgot_password_view.dart
+  │   │ └─ forgot_password_view.dart
   │   └─ login/
-  │     └─ views/
-  │       └─ login_view.dart
+  │     └─ login_view.dart
   ├─ l10n/
   │ ├─ app_en.arb
   │ ├─ app_es.arb
