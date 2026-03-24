@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get commonGoBack => 'Go back';
+
+  @override
   String get loginWelcome => 'Welcome!';
 
   @override
@@ -28,5 +31,5 @@ class AppLocalizationsEn extends AppLocalizations {
       'Press the Forgot password? link or the Login button to navigate within the app.';
 
   @override
-  String get commonGoBack => 'Go back';
+  String get resetPassResetPassword => 'Reset Password';
 }

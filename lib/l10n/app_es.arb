@@ -1,9 +1,10 @@
 {
+  "commonGoBack": "Regresar",
   "loginWelcome": "Bienvenido!",
   "loginUsername": "Usuario",
   "loginPassword": "Contraseña",
   "loginForgotPassword": "Olvidó su contraseña?",
   "loginLogin": "Iniciar Sesión",
   "loginQuote": "Presione el link de Olvidó su contraseña? o el botón de Iniciar Sesión, para navegar detro de la app.",
-  "commonGoBack": "Regresar"
+  "resetPassResetPassword": "Reiniciar Contraseña"
 }

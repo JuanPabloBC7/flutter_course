@@ -98,6 +98,12 @@ abstract class AppLocalizations {
     Locale('es'),
   ];
 
+  /// No description provided for @commonGoBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get commonGoBack;
+
   /// No description provided for @loginWelcome.
   ///
   /// In en, this message translates to:
@@ -134,11 +140,11 @@ abstract class AppLocalizations {
   /// **'Press the Forgot password? link or the Login button to navigate within the app.'**
   String get loginQuote;
 
-  /// No description provided for @commonGoBack.
+  /// No description provided for @resetPassResetPassword.
   ///
   /// In en, this message translates to:
-  /// **'Go back'**
-  String get commonGoBack;
+  /// **'Reset Password'**
+  String get resetPassResetPassword;
 }
 
 class _AppLocalizationsDelegate

@@ -9,6 +9,9 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get commonGoBack => 'Regresar';
+
+  @override
   String get loginWelcome => 'Bienvenido!';
 
   @override
@@ -28,5 +31,5 @@ class AppLocalizationsEs extends AppLocalizations {
       'Presione el link de Olvidó su contraseña? o el botón de Iniciar Sesión, para navegar detro de la app.';
 
   @override
-  String get commonGoBack => 'Regresar';
+  String get resetPassResetPassword => 'Reiniciar Contraseña';
 }
