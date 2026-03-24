@@ -70,8 +70,8 @@ class _LoginViewState extends State<LoginView> {
                                         AppLocalizations.of(context)!.loginWelcome,
                                         style: TextStyle(
                                           color: ArgonColors.text,
-                                          fontWeight: FontWeight.w200,
-                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 38,
                                         ),
                                       ),
                                     ),
@@ -120,25 +120,24 @@ class _LoginViewState extends State<LoginView> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 16),
-                                    child: Center(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushReplacementNamed(context, '/temporal-route');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: ArgonColors.white,
-                                          backgroundColor: ArgonColors.primary,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(4.0),
-                                          ),
-                                          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pushReplacementNamed(context, '/temporal-route');
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: ArgonColors.white,
+                                        backgroundColor: ArgonColors.primary,
+                                        minimumSize: const Size(double.infinity, 50), 
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(4.0),
                                         ),
-                                        child: Text(
-                                          AppLocalizations.of(context)!.loginLogin,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16.0,
-                                          ),
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.loginLogin,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16.0,
                                         ),
                                       ),
                                     ),

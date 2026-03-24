@@ -68,8 +68,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                                         AppLocalizations.of(context)!.resetPassResetPassword,
                                         style: TextStyle(
                                           color: ArgonColors.text,
-                                          fontWeight: FontWeight.w200,
-                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 38,
                                         ),
                                       ),
                                     ),
@@ -88,53 +88,53 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 16),
-                                    child: Center(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushReplacementNamed(context, '/login');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: ArgonColors.white,
-                                          backgroundColor: ArgonColors.primary,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(4.0),
+                                    child: Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pushReplacementNamed(context, '/login');
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: ArgonColors.white,
+                                            backgroundColor: ArgonColors.primary,
+                                            minimumSize: const Size(double.infinity, 50), 
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(4.0),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(vertical: 12),
                                           ),
-                                          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
-                                        ),
-                                        child: Text(
-                                          AppLocalizations.of(context)!.resetPassResetPassword,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 1),
-                                    child: Center(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushReplacementNamed(context, '/login');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: ArgonColors.black,
-                                          backgroundColor: ArgonColors.secondary,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(4.0),
-                                          ),
-                                          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12, bottom: 12),
-                                        ),
-                                        child: Text(
-                                          AppLocalizations.of(context)!.commonGoBack,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16.0,
+                                          child: Text(
+                                            AppLocalizations.of(context)!.resetPassResetPassword,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.0,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
+                                        const SizedBox(height: 12,),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pushReplacementNamed(context, '/login');
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: ArgonColors.black,
+                                            backgroundColor: ArgonColors.secondary,
+                                            minimumSize: const Size(double.infinity, 50), 
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(4.0),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(vertical: 12),
+                                          ),
+                                          child: Text(
+                                            AppLocalizations.of(context)!.commonGoBack,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ]
+                                    )
                                   ),
                                 ],
                               ),
