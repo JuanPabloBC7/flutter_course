@@ -1,10 +1,11 @@
 {
   "commonGoBack": "Regresar",
-  "loginWelcome": "Bienvenido!",
-  "loginUsername": "Usuario",
-  "loginPassword": "Contraseña",
-  "loginForgotPassword": "Olvidó su contraseña?",
-  "loginLogin": "Iniciar Sesión",
-  "loginQuote": "Presione el link de Olvidó su contraseña? o el botón de Iniciar Sesión, para navegar detro de la app.",
-  "resetPassResetPassword": "Reiniciar Contraseña"
+  "commonWelcome": "Bienvenido!",
+  "commonUsername": "Usuario",
+  "commonEmail": "Correo Electrónico",
+  "commonPassword": "Contraseña",
+  "commonForgotPassword": "Olvidó su contraseña?",
+  "commonLogin": "Iniciar Sesión",
+  "commonQuote": "Presione el link de Olvidó su contraseña? o el botón de Iniciar Sesión, para navegar detro de la app.",
+  "commonResetPassword": "Reiniciar Contraseña"
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_course/features/admin/pages/configuration/configuration_view.dart';
-import 'package:flutter_course/features/admin/pages/dashboard/dashboard_view.dart';
-import 'package:flutter_course/features/admin/pages/history/history_view.dart';
-import 'package:flutter_course/features/admin/pages/trasnfers/trasnfers_view.dart';
+import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
+import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
+import 'package:flutter_course/features/pages/admin/history/history_view.dart';
+import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
 
 class TempViewWidget extends StatelessWidget {
   const TempViewWidget({super.key});

@@ -1,10 +1,11 @@
 {
   "commonGoBack": "Go back",
-  "loginWelcome": "Welcome!",
-  "loginUsername": "Username",
-  "loginPassword": "Password",
-  "loginForgotPassword": "Forgot password?",
-  "loginLogin": "Login",
-  "loginQuote": "Press the Forgot password? link or the Login button to navigate within the app.",
-  "resetPassResetPassword": "Reset Password"
+  "commonWelcome": "Welcome!",
+  "commonUsername": "Username",
+  "commonEmail": "Email",
+  "commonPassword": "Password",
+  "commonForgotPassword": "Forgot password?",
+  "commonLogin": "Login",
+  "commonQuote": "Press the Forgot password? link or the Login button to navigate within the app.",
+  "commonResetPassword": "Reset Password"
 }

@@ -104,47 +104,53 @@ abstract class AppLocalizations {
   /// **'Go back'**
   String get commonGoBack;
 
-  /// No description provided for @loginWelcome.
+  /// No description provided for @commonWelcome.
   ///
   /// In en, this message translates to:
   /// **'Welcome!'**
-  String get loginWelcome;
+  String get commonWelcome;
 
-  /// No description provided for @loginUsername.
+  /// No description provided for @commonUsername.
   ///
   /// In en, this message translates to:
   /// **'Username'**
-  String get loginUsername;
+  String get commonUsername;
 
-  /// No description provided for @loginPassword.
+  /// No description provided for @commonEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get commonEmail;
+
+  /// No description provided for @commonPassword.
   ///
   /// In en, this message translates to:
   /// **'Password'**
-  String get loginPassword;
+  String get commonPassword;
 
-  /// No description provided for @loginForgotPassword.
+  /// No description provided for @commonForgotPassword.
   ///
   /// In en, this message translates to:
   /// **'Forgot password?'**
-  String get loginForgotPassword;
+  String get commonForgotPassword;
 
-  /// No description provided for @loginLogin.
+  /// No description provided for @commonLogin.
   ///
   /// In en, this message translates to:
   /// **'Login'**
-  String get loginLogin;
+  String get commonLogin;
 
-  /// No description provided for @loginQuote.
+  /// No description provided for @commonQuote.
   ///
   /// In en, this message translates to:
   /// **'Press the Forgot password? link or the Login button to navigate within the app.'**
-  String get loginQuote;
+  String get commonQuote;
 
-  /// No description provided for @resetPassResetPassword.
+  /// No description provided for @commonResetPassword.
   ///
   /// In en, this message translates to:
   /// **'Reset Password'**
-  String get resetPassResetPassword;
+  String get commonResetPassword;
 }
 
 class _AppLocalizationsDelegate

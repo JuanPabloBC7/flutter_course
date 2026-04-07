@@ -6,16 +6,14 @@ import 'package:flutter_course/core/constants/Theme.dart';
 // widgets
 import 'package:flutter_course/core/widgets/input.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class ForgotPasswordView extends StatefulWidget {
+  const ForgotPasswordView({super.key});
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _ForgotPasswordViewState createState() => _ForgotPasswordViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
-  bool _obscurePassword = true;
-
+class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   final double height = window.physicalSize.height;
 
   @override
@@ -67,7 +65,7 @@ class _LoginViewState extends State<LoginView> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        AppLocalizations.of(context)!.loginWelcome,
+                                        AppLocalizations.of(context)!.commonResetPassword,
                                         style: TextStyle(
                                           color: ArgonColors.text,
                                           fontWeight: FontWeight.w600,
@@ -82,78 +80,68 @@ class _LoginViewState extends State<LoginView> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Input(
-                                          placeholder: AppLocalizations.of(context)!.loginUsername,
+                                          placeholder: AppLocalizations.of(context)!.commonUsername,
                                           prefixIcon: Icon(Icons.supervised_user_circle),
                                         ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Input(
-                                          placeholder: AppLocalizations.of(context)!.loginPassword,
-                                          prefixIcon: Icon(Icons.lock),
-                                          suffixIcon: IconButton(
-                                            icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
-                                            onPressed: () {
-                                              setState(() => _obscurePassword = !_obscurePassword);
-                                            },
-                                          ),
-                                          obscureText: _obscurePassword,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(context, '/forgot-password');
-                                          },
-                                          child: Text(
-                                            AppLocalizations.of(context)!.loginForgotPassword,
-                                            style: TextStyle(
-                                              color: ArgonColors.primary,
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
+                                          placeholder: AppLocalizations.of(context)!.commonEmail,
+                                          prefixIcon: Icon(Icons.email),
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 16),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pushReplacementNamed(context, '/temporal-route');
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        foregroundColor: ArgonColors.white,
-                                        backgroundColor: ArgonColors.primary,
-                                        minimumSize: const Size(double.infinity, 50), 
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(4.0),
+                                    child: Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pushReplacementNamed(context, '/login');
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: ArgonColors.white,
+                                            backgroundColor: ArgonColors.primary,
+                                            minimumSize: const Size(double.infinity, 50), 
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(4.0),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(vertical: 12),
+                                          ),
+                                          child: Text(
+                                            AppLocalizations.of(context)!.commonResetPassword,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.0,
+                                            ),
+                                          ),
                                         ),
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                      ),
-                                      child: Text(
-                                        AppLocalizations.of(context)!.loginLogin,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16.0,
+                                        const SizedBox(height: 12,),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pushReplacementNamed(context, '/login');
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: ArgonColors.black,
+                                            backgroundColor: ArgonColors.secondary,
+                                            minimumSize: const Size(double.infinity, 50), 
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(4.0),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(vertical: 12),
+                                          ),
+                                          child: Text(
+                                            AppLocalizations.of(context)!.commonGoBack,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.0,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 2),
-                                    child: Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!.loginQuote,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.blueGrey,
-                                        ),
-                                      ),
-                                    ),
+                                      ]
+                                    )
                                   ),
                                 ],
                               ),

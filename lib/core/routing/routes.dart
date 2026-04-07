@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_course/features/auth/login/login_view.dart';
-import 'package:flutter_course/features/auth/forgot_password/forgot_password_view.dart';
-import 'package:flutter_course/features/admin/pages/dashboard/dashboard_view.dart';
+import 'package:flutter_course/features/pages/auth/login/login_view.dart';
+import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
+import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
 import 'package:flutter_course/temp_view.dart';
 
 class AppRoutes {

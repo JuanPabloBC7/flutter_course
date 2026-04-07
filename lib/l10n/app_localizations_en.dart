@@ -12,24 +12,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonGoBack => 'Go back';
 
   @override
-  String get loginWelcome => 'Welcome!';
+  String get commonWelcome => 'Welcome!';
 
   @override
-  String get loginUsername => 'Username';
+  String get commonUsername => 'Username';
 
   @override
-  String get loginPassword => 'Password';
+  String get commonEmail => 'Email';
 
   @override
-  String get loginForgotPassword => 'Forgot password?';
+  String get commonPassword => 'Password';
 
   @override
-  String get loginLogin => 'Login';
+  String get commonForgotPassword => 'Forgot password?';
 
   @override
-  String get loginQuote =>
+  String get commonLogin => 'Login';
+
+  @override
+  String get commonQuote =>
       'Press the Forgot password? link or the Login button to navigate within the app.';
 
   @override
-  String get resetPassResetPassword => 'Reset Password';
+  String get commonResetPassword => 'Reset Password';
 }
