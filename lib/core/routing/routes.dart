@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_course/features/pages/auth/login/login_view.dart';
-import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
 import 'package:flutter_course/features/layouts/admin_layout_view.dart';
+import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
+import 'package:flutter_course/features/pages/auth/login/login_view.dart';
 
 class AppRoutes {
   // Route names as constants

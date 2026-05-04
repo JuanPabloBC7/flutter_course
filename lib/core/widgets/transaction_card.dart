@@ -27,8 +27,8 @@ class TransactionCard extends StatelessWidget {
     final amountColor = isIncome ? ArgonColors.success : ArgonColors.error;
     final amountPrefix = isIncome ? '+' : '-';
     final iconBgColor = isIncome
-        ? ArgonColors.success.withOpacity(0.12)
-        : ArgonColors.error.withOpacity(0.12);
+        ? ArgonColors.success.withValues(alpha: 0.12)
+        : ArgonColors.error.withValues(alpha: 0.12);
     final iconColor = isIncome ? ArgonColors.success : ArgonColors.error;
 
     return Material(
@@ -43,7 +43,7 @@ class TransactionCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: ArgonColors.initial.withOpacity(0.04),
+                color: ArgonColors.initial.withValues(alpha: 0.04),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),

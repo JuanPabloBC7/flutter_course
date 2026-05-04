@@ -38,7 +38,7 @@ class ContactAvatar extends StatelessWidget {
             width: size,
             height: size,
             decoration: BoxDecoration(
-              color: avatarColor.withOpacity(0.12),
+              color: avatarColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(size / 2),
             ),
             child: Center(

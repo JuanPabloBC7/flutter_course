@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
 import 'package:flutter_course/features/pages/admin/history/history_view.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
-import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 
 class AdminLayoutView extends StatefulWidget {
   const AdminLayoutView({super.key});
@@ -19,7 +20,6 @@ class _AdminLayoutViewState extends State<AdminLayoutView> {
     DashboardView(),
     TransfersView(),
     HistoryView(),
-    ConfigurationView(),
     _MenuView(),
   ];
 
@@ -62,11 +62,6 @@ class _AdminLayoutViewState extends State<AdminLayoutView> {
             label: 'History',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            activeIcon: Icon(Icons.settings),
-            label: 'Configuration',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.menu_outlined),
             activeIcon: Icon(Icons.menu),
             label: 'Menu',
@@ -77,8 +72,51 @@ class _AdminLayoutViewState extends State<AdminLayoutView> {
   }
 }
 
-class _MenuView extends StatelessWidget {
+class _MenuView extends StatefulWidget {
   const _MenuView();
+
+  @override
+  State<_MenuView> createState() => _MenuViewState();
+}
+
+class _MenuViewState extends State<_MenuView> {
+  final UserService _userService = UserService();
+  final AuthService _authService = AuthService();
+  Map<String, dynamic>? _userData;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    try {
+      final data = await _userService.fetchUser();
+      if (!mounted) return;
+      setState(() => _userData = data);
+    } catch (_) {
+      // Fallback to defaults
+    }
+  }
+
+  String get _fullName => _userData?['fullName'] as String? ?? 'User';
+  String get _email => _userData?['email'] as String? ?? 'email@example.com';
+  String get _initials {
+    final parts = _fullName.trim().split(' ');
+    if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    return _fullName.substring(0, _fullName.length >= 2 ? 2 : 1).toUpperCase();
+  }
+
+  Future<void> _handleLogout() async {
+    try {
+      await _authService.logout();
+    } catch (_) {
+      // Proceed with logout even if API fails
+    }
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, '/login');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +148,7 @@ class _MenuView extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   ArgonColors.primary,
-                  ArgonColors.primary.withOpacity(0.8),
+                  ArgonColors.primary.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -118,7 +156,7 @@ class _MenuView extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: ArgonColors.primary.withOpacity(0.3),
+                  color: ArgonColors.primary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -130,13 +168,13 @@ class _MenuView extends StatelessWidget {
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(
-                    color: ArgonColors.white.withOpacity(0.2),
+                    color: ArgonColors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(26),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      'JP',
-                      style: TextStyle(
+                      _initials,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
                         color: ArgonColors.white,
@@ -145,22 +183,22 @@ class _MenuView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Juan P. Balan',
-                        style: TextStyle(
+                        _fullName,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: ArgonColors.white,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
-                        'jpbalan@example.com',
-                        style: TextStyle(
+                        _email,
+                        style: const TextStyle(
                           fontSize: 13,
                           color: Colors.white70,
                         ),
@@ -202,7 +240,12 @@ class _MenuView extends StatelessWidget {
                 title: 'Configuration',
                 subtitle: 'App settings and preferences',
                 color: ArgonColors.warning,
-                onTap: () => _navigateToTab(context, 3),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ConfigurationView()),
+                  );
+                },
               ),
             ],
           ),
@@ -267,9 +310,7 @@ class _MenuView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/login');
-              },
+              onPressed: _handleLogout,
               style: ElevatedButton.styleFrom(
                 foregroundColor: ArgonColors.white,
                 backgroundColor: ArgonColors.error,
@@ -302,7 +343,7 @@ class _MenuView extends StatelessWidget {
     );
   }
 
-  static void _navigateToTab(BuildContext context, int index) {
+  void _navigateToTab(BuildContext context, int index) {
     final state = context.findAncestorStateOfType<_AdminLayoutViewState>();
     state?._onTabTapped(index);
   }
@@ -347,7 +388,7 @@ class _MenuGroup extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: ArgonColors.initial.withOpacity(0.05),
+            color: ArgonColors.initial.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -362,7 +403,7 @@ class _MenuGroup extends StatelessWidget {
                 Divider(
                   height: 1,
                   indent: 60,
-                  color: ArgonColors.border.withOpacity(0.5),
+                  color: ArgonColors.border.withValues(alpha: 0.5),
                 ),
             ],
           );
@@ -403,7 +444,7 @@ class _MenuTile extends StatelessWidget {
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, color: color, size: 20),

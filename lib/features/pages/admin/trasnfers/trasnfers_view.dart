@@ -1,81 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/network/services.dart';
 import 'package:flutter_course/core/widgets/contact_avatar.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 
-// ── Mock data ────────────────────────────────────────────────────────────────
+// ── Color palette for contact avatars ────────────────────────────────────────
 
-class _Contact {
-  final String name;
-  final Color color;
-
-  const _Contact({required this.name, required this.color});
-}
-
-class _RecentTransfer {
-  final String name;
-  final String date;
-  final double amount;
-  final String status; // completed, pending, failed
-  final Color avatarColor;
-
-  const _RecentTransfer({
-    required this.name,
-    required this.date,
-    required this.amount,
-    required this.status,
-    required this.avatarColor,
-  });
-}
-
-const List<_Contact> _frequentContacts = [
-  _Contact(name: 'Ana García', color: ArgonColors.primary),
-  _Contact(name: 'Carlos López', color: ArgonColors.success),
-  _Contact(name: 'María Torres', color: ArgonColors.info),
-  _Contact(name: 'Juan Pérez', color: ArgonColors.warning),
-  _Contact(name: 'Laura Díaz', color: ArgonColors.label),
-  _Contact(name: 'Pedro Ruiz', color: ArgonColors.error),
+const List<Color> _avatarColors = [
+  ArgonColors.primary,
+  ArgonColors.success,
+  ArgonColors.info,
+  ArgonColors.warning,
+  ArgonColors.label,
+  ArgonColors.error,
 ];
-
-const List<_RecentTransfer> _recentTransfers = [
-  _RecentTransfer(
-    name: 'Ana García',
-    date: 'Today, 10:30 AM',
-    amount: 250.00,
-    status: 'completed',
-    avatarColor: ArgonColors.primary,
-  ),
-  _RecentTransfer(
-    name: 'Carlos López',
-    date: 'Today, 8:15 AM',
-    amount: 1200.00,
-    status: 'pending',
-    avatarColor: ArgonColors.success,
-  ),
-  _RecentTransfer(
-    name: 'María Torres',
-    date: 'Yesterday, 4:45 PM',
-    amount: 85.50,
-    status: 'completed',
-    avatarColor: ArgonColors.info,
-  ),
-  _RecentTransfer(
-    name: 'Juan Pérez',
-    date: 'Yesterday, 1:20 PM',
-    amount: 500.00,
-    status: 'failed',
-    avatarColor: ArgonColors.warning,
-  ),
-  _RecentTransfer(
-    name: 'Laura Díaz',
-    date: 'Mon, 9:00 AM',
-    amount: 320.00,
-    status: 'completed',
-    avatarColor: ArgonColors.label,
-  ),
-];
-
-// ── Transfers View ───────────────────────────────────────────────────────────
 
 class TransfersView extends StatefulWidget {
   const TransfersView({super.key});
@@ -88,6 +26,13 @@ class _TransfersViewState extends State<TransfersView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
 
+  final TransferService _transferService = TransferService();
+
+  List<Map<String, dynamic>> _contacts = [];
+  List<Map<String, dynamic>> _recentTransfers = [];
+  bool _isLoading = true;
+  String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
@@ -95,7 +40,36 @@ class _TransfersViewState extends State<TransfersView>
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
-    _animController.forward();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final results = await Future.wait([
+        _transferService.fetchFrequentContacts(),
+        _transferService.fetchRecentTransfers(),
+      ]);
+
+      if (!mounted) return;
+
+      setState(() {
+        _contacts = results[0];
+        _recentTransfers = results[1];
+        _isLoading = false;
+      });
+      _animController.forward(from: 0);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = e.toString();
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -137,66 +111,65 @@ class _TransfersViewState extends State<TransfersView>
         automaticallyImplyLeading: false,
         title: const Text(
           'Transfers',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: ArgonColors.text,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: ArgonColors.text),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search_rounded,
-                color: ArgonColors.text, size: 24),
+            icon: const Icon(Icons.search_rounded, color: ArgonColors.text, size: 24),
             onPressed: () {},
           ),
         ],
       ),
-      body: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          // ── New transfer card ──
-          _buildAnimatedItem(
-            index: 0,
-            child: const _NewTransferCard(),
-          ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator(color: ArgonColors.primary))
+          : _errorMessage != null
+              ? _buildErrorState()
+              : RefreshIndicator(
+                  color: ArgonColors.primary,
+                  onRefresh: _loadData,
+                  child: _buildContent(),
+                ),
+    );
+  }
 
-          // ── Frequent contacts ──
-          _buildAnimatedItem(
-            index: 1,
-            child: const SectionHeader(title: 'FREQUENT CONTACTS'),
-          ),
-          _buildAnimatedItem(
-            index: 2,
-            child: const _FrequentContacts(),
-          ),
-
-          // ── Transfer options ──
-          _buildAnimatedItem(
-            index: 3,
-            child: const SectionHeader(title: 'TRANSFER OPTIONS'),
-          ),
-          _buildAnimatedItem(
-            index: 4,
-            child: const _TransferOptions(),
-          ),
-
-          // ── Recent transfers ──
-          _buildAnimatedItem(
-            index: 5,
-            child: const SectionHeader(title: 'RECENT TRANSFERS'),
-          ),
-          ..._recentTransfers.asMap().entries.map((entry) {
-            return _buildAnimatedItem(
-              index: 6 + entry.key,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: _RecentTransferCard(transfer: entry.value),
+  Widget _buildContent() {
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      children: [
+        _buildAnimatedItem(index: 0, child: const _NewTransferCard()),
+        _buildAnimatedItem(index: 1, child: const SectionHeader(title: 'FREQUENT CONTACTS')),
+        _buildAnimatedItem(index: 2, child: _FrequentContacts(contacts: _contacts)),
+        _buildAnimatedItem(index: 3, child: const SectionHeader(title: 'TRANSFER OPTIONS')),
+        _buildAnimatedItem(index: 4, child: const _TransferOptions()),
+        _buildAnimatedItem(index: 5, child: const SectionHeader(title: 'RECENT TRANSFERS')),
+        ..._recentTransfers.asMap().entries.map((entry) {
+          return _buildAnimatedItem(
+            index: 6 + entry.key,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _RecentTransferCard(
+                transfer: entry.value,
+                avatarColor: _avatarColors[entry.key % _avatarColors.length],
               ),
-            );
-          }),
+            ),
+          );
+        }),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
 
-          const SizedBox(height: 24),
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.error_outline, size: 48, color: ArgonColors.error.withValues(alpha: 0.7)),
+          const SizedBox(height: 12),
+          Text(_errorMessage ?? 'Something went wrong', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, color: ArgonColors.text)),
+          const SizedBox(height: 8),
+          TextButton(onPressed: _loadData, child: const Text('Retry')),
         ],
       ),
     );
@@ -215,78 +188,37 @@ class _NewTransferCard extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            ArgonColors.primary,
-            ArgonColors.primary.withOpacity(0.8),
-          ],
+          colors: [ArgonColors.primary, ArgonColors.primary.withValues(alpha: 0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: ArgonColors.primary.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: ArgonColors.primary.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 6))],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: ArgonColors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.send_rounded,
-                  color: ArgonColors.white,
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 14),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Send Money',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: ArgonColors.white,
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      'Transfer to anyone, anywhere',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: ArgonColors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Icon(
-                  Icons.arrow_forward_rounded,
-                  color: ArgonColors.white,
-                  size: 20,
-                ),
-              ),
-            ],
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(color: ArgonColors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+            child: const Icon(Icons.send_rounded, color: ArgonColors.white, size: 22),
+          ),
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Send Money', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ArgonColors.white)),
+                SizedBox(height: 2),
+                Text('Transfer to anyone, anywhere', style: TextStyle(fontSize: 13, color: Colors.white70)),
+              ],
+            ),
+          ),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(color: ArgonColors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(20)),
+            child: const Icon(Icons.arrow_forward_rounded, color: ArgonColors.white, size: 20),
           ),
         ],
       ),
@@ -294,10 +226,12 @@ class _NewTransferCard extends StatelessWidget {
   }
 }
 
-// ── Frequent Contacts ────────────────────────────────────────────────────────
+// ── Frequent Contacts (from service) ─────────────────────────────────────────
 
 class _FrequentContacts extends StatelessWidget {
-  const _FrequentContacts();
+  final List<Map<String, dynamic>> contacts;
+
+  const _FrequentContacts({required this.contacts});
 
   @override
   Widget build(BuildContext context) {
@@ -305,10 +239,9 @@ class _FrequentContacts extends StatelessWidget {
       height: 90,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: _frequentContacts.length + 1,
-        separatorBuilder: (_, __) => const SizedBox(width: 16),
+        itemCount: contacts.length + 1,
+        separatorBuilder: (_, _) => const SizedBox(width: 16),
         itemBuilder: (context, index) {
-          // First item is "Add new"
           if (index == 0) {
             return GestureDetector(
               onTap: () {},
@@ -319,42 +252,28 @@ class _FrequentContacts extends StatelessWidget {
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
-                      color: ArgonColors.border.withOpacity(0.4),
+                      color: ArgonColors.border.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(26),
-                      border: Border.all(
-                        color: ArgonColors.border,
-                        width: 1.5,
-                        strokeAlign: BorderSide.strokeAlignInside,
-                      ),
+                      border: Border.all(color: ArgonColors.border, width: 1.5, strokeAlign: BorderSide.strokeAlignInside),
                     ),
-                    child: const Icon(
-                      Icons.add_rounded,
-                      color: ArgonColors.muted,
-                      size: 24,
-                    ),
+                    child: const Icon(Icons.add_rounded, color: ArgonColors.muted, size: 24),
                   ),
                   const SizedBox(height: 8),
                   const SizedBox(
                     width: 68,
-                    child: Text(
-                      'Add',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: ArgonColors.muted,
-                      ),
-                    ),
+                    child: Text('Add', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: ArgonColors.muted)),
                   ),
                 ],
               ),
             );
           }
 
-          final contact = _frequentContacts[index - 1];
+          final contact = contacts[index - 1];
+          final colorIndex = (index - 1) % _avatarColors.length;
+
           return ContactAvatar(
-            name: contact.name,
-            color: contact.color,
+            name: contact['name'] as String,
+            color: _avatarColors[colorIndex],
             onTap: () {},
           );
         },
@@ -374,49 +293,17 @@ class _TransferOptions extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(
-              child: _TransferOptionTile(
-                icon: Icons.account_balance_rounded,
-                title: 'Bank Transfer',
-                subtitle: 'To bank account',
-                color: ArgonColors.primary,
-                onTap: () {},
-              ),
-            ),
+            Expanded(child: _TransferOptionTile(icon: Icons.account_balance_rounded, title: 'Bank Transfer', subtitle: 'To bank account', color: ArgonColors.primary, onTap: () {})),
             const SizedBox(width: 12),
-            Expanded(
-              child: _TransferOptionTile(
-                icon: Icons.phone_android_rounded,
-                title: 'Mobile',
-                subtitle: 'To phone number',
-                color: ArgonColors.success,
-                onTap: () {},
-              ),
-            ),
+            Expanded(child: _TransferOptionTile(icon: Icons.phone_android_rounded, title: 'Mobile', subtitle: 'To phone number', color: ArgonColors.success, onTap: () {})),
           ],
         ),
         const SizedBox(height: 12),
         Row(
           children: [
-            Expanded(
-              child: _TransferOptionTile(
-                icon: Icons.qr_code_rounded,
-                title: 'QR Code',
-                subtitle: 'Scan to pay',
-                color: ArgonColors.info,
-                onTap: () {},
-              ),
-            ),
+            Expanded(child: _TransferOptionTile(icon: Icons.qr_code_rounded, title: 'QR Code', subtitle: 'Scan to pay', color: ArgonColors.info, onTap: () {})),
             const SizedBox(width: 12),
-            Expanded(
-              child: _TransferOptionTile(
-                icon: Icons.language_rounded,
-                title: 'International',
-                subtitle: 'Send abroad',
-                color: ArgonColors.warning,
-                onTap: () {},
-              ),
-            ),
+            Expanded(child: _TransferOptionTile(icon: Icons.language_rounded, title: 'International', subtitle: 'Send abroad', color: ArgonColors.warning, onTap: () {})),
           ],
         ),
       ],
@@ -431,13 +318,7 @@ class _TransferOptionTile extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _TransferOptionTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.onTap,
-  });
+  const _TransferOptionTile({required this.icon, required this.title, required this.subtitle, required this.color, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -448,13 +329,7 @@ class _TransferOptionTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: ArgonColors.white,
           borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: ArgonColors.initial.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: ArgonColors.initial.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 3))],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -462,29 +337,13 @@ class _TransferOptionTile extends StatelessWidget {
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(10),
-              ),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
               child: Icon(icon, color: color, size: 20),
             ),
             const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: ArgonColors.text,
-              ),
-            ),
+            Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: ArgonColors.text)),
             const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: const TextStyle(
-                fontSize: 11,
-                color: ArgonColors.muted,
-              ),
-            ),
+            Text(subtitle, style: const TextStyle(fontSize: 11, color: ArgonColors.muted)),
           ],
         ),
       ),
@@ -492,15 +351,16 @@ class _TransferOptionTile extends StatelessWidget {
   }
 }
 
-// ── Recent Transfer Card ─────────────────────────────────────────────────────
+// ── Recent Transfer Card (from service) ──────────────────────────────────────
 
 class _RecentTransferCard extends StatelessWidget {
-  final _RecentTransfer transfer;
+  final Map<String, dynamic> transfer;
+  final Color avatarColor;
 
-  const _RecentTransferCard({required this.transfer});
+  const _RecentTransferCard({required this.transfer, required this.avatarColor});
 
   Color get _statusColor {
-    switch (transfer.status) {
+    switch (transfer['status']) {
       case 'completed':
         return ArgonColors.success;
       case 'pending':
@@ -513,7 +373,7 @@ class _RecentTransferCard extends StatelessWidget {
   }
 
   String get _statusLabel {
-    switch (transfer.status) {
+    switch (transfer['status']) {
       case 'completed':
         return 'Completed';
       case 'pending':
@@ -521,86 +381,45 @@ class _RecentTransferCard extends StatelessWidget {
       case 'failed':
         return 'Failed';
       default:
-        return transfer.status;
+        return transfer['status'] as String? ?? '';
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final name = transfer['name'] as String;
+    final amount = (transfer['amount'] as num).toDouble();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: ArgonColors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: ArgonColors.initial.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: ArgonColors.initial.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Row(
         children: [
-          ContactAvatar(
-            name: transfer.name,
-            color: transfer.avatarColor,
-            size: 44,
-            showLabel: false,
-          ),
+          ContactAvatar(name: name, color: avatarColor, size: 44, showLabel: false),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  transfer.name,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: ArgonColors.text,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                Text(name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: ArgonColors.text), maxLines: 1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 3),
-                Text(
-                  transfer.date,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: ArgonColors.muted,
-                  ),
-                ),
+                Text(transfer['date'] as String? ?? '', style: const TextStyle(fontSize: 12, color: ArgonColors.muted)),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                '-\$${transfer.amount.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: ArgonColors.text,
-                ),
-              ),
+              Text('-\$${amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: ArgonColors.text)),
               const SizedBox(height: 3),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: _statusColor.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  _statusLabel,
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    color: _statusColor,
-                  ),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(color: _statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+                child: Text(_statusLabel, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: _statusColor)),
               ),
             ],
           ),

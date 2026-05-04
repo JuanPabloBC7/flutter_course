@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/network/app_exceptions.dart';
+import 'package:flutter_course/core/network/services.dart';
 import 'package:flutter_course/core/widgets/input.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -13,7 +15,13 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView>
     with SingleTickerProviderStateMixin {
   bool _obscurePassword = true;
+  bool _isLoading = false;
+  String? _errorMessage;
   late AnimationController _animController;
+
+  final AuthService _authService = AuthService();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -28,7 +36,42 @@ class _LoginViewState extends State<LoginView>
   @override
   void dispose() {
     _animController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (username.isEmpty || password.isEmpty) {
+      setState(() => _errorMessage = 'Please enter username and password.');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      await _authService.login(username: username, password: password);
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    } on AppException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = e.message;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = 'An unexpected error occurred.';
+        _isLoading = false;
+      });
+    }
   }
 
   Widget _buildAnimatedItem({required int index, required Widget child}) {
@@ -65,7 +108,7 @@ class _LoginViewState extends State<LoginView>
           gradient: LinearGradient(
             colors: [
               ArgonColors.primary,
-              ArgonColors.primary.withOpacity(0.7),
+              ArgonColors.primary.withValues(alpha: 0.7),
               ArgonColors.bgColorScreen,
             ],
             begin: Alignment.topCenter,
@@ -88,7 +131,7 @@ class _LoginViewState extends State<LoginView>
                       width: 72,
                       height: 72,
                       decoration: BoxDecoration(
-                        color: ArgonColors.white.withOpacity(0.2),
+                        color: ArgonColors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Icon(
@@ -113,7 +156,7 @@ class _LoginViewState extends State<LoginView>
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
-                        color: ArgonColors.white.withOpacity(0.8),
+                        color: ArgonColors.white.withValues(alpha: 0.8),
                         height: 1.4,
                       ),
                     ),
@@ -133,7 +176,7 @@ class _LoginViewState extends State<LoginView>
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: ArgonColors.initial.withOpacity(0.08),
+                        color: ArgonColors.initial.withValues(alpha: 0.08),
                         blurRadius: 24,
                         offset: const Offset(0, 8),
                       ),
@@ -165,6 +208,7 @@ class _LoginViewState extends State<LoginView>
                       const SizedBox(height: 8),
                       Input(
                         placeholder: l10n.commonUsername,
+                        controller: _usernameController,
                         prefixIcon: const Icon(Icons.person_outline_rounded,
                             color: ArgonColors.muted, size: 20),
                       ),
@@ -175,6 +219,7 @@ class _LoginViewState extends State<LoginView>
                       const SizedBox(height: 8),
                       Input(
                         placeholder: l10n.commonPassword,
+                        controller: _passwordController,
                         prefixIcon: const Icon(Icons.lock_outline_rounded,
                             color: ArgonColors.muted, size: 20),
                         suffixIcon: IconButton(
@@ -213,12 +258,34 @@ class _LoginViewState extends State<LoginView>
                       ),
                       const SizedBox(height: 24),
 
+                      // Error message
+                      if (_errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: ArgonColors.error.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.error_outline, color: ArgonColors.error, size: 18),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    _errorMessage!,
+                                    style: const TextStyle(fontSize: 13, color: ArgonColors.error),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                       // Login button
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, '/dashboard');
-                        },
+                        onPressed: _isLoading ? null : _handleLogin,
                         style: ElevatedButton.styleFrom(
                           foregroundColor: ArgonColors.white,
                           backgroundColor: ArgonColors.primary,
@@ -228,13 +295,22 @@ class _LoginViewState extends State<LoginView>
                           ),
                           elevation: 0,
                         ),
-                        child: Text(
-                          l10n.commonLogin,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  color: ArgonColors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                            : Text(
+                                l10n.commonLogin,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
                       ),
                     ],
                   ),
@@ -250,7 +326,7 @@ class _LoginViewState extends State<LoginView>
                   children: [
                     Expanded(
                       child: Divider(
-                          color: ArgonColors.border.withOpacity(0.6)),
+                          color: ArgonColors.border.withValues(alpha: 0.6)),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -258,13 +334,13 @@ class _LoginViewState extends State<LoginView>
                         'or continue with',
                         style: TextStyle(
                           fontSize: 13,
-                          color: ArgonColors.muted.withOpacity(0.8),
+                          color: ArgonColors.muted.withValues(alpha: 0.8),
                         ),
                       ),
                     ),
                     Expanded(
                       child: Divider(
-                          color: ArgonColors.border.withOpacity(0.6)),
+                          color: ArgonColors.border.withValues(alpha: 0.6)),
                     ),
                   ],
                 ),
@@ -339,7 +415,7 @@ class _SocialButton extends StatelessWidget {
           border: Border.all(color: ArgonColors.border, width: 1),
           boxShadow: [
             BoxShadow(
-              color: ArgonColors.initial.withOpacity(0.04),
+              color: ArgonColors.initial.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

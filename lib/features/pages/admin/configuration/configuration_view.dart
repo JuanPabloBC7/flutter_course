@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/network/services.dart';
 
 class ConfigurationView extends StatefulWidget {
   const ConfigurationView({super.key});
@@ -11,6 +12,9 @@ class ConfigurationView extends StatefulWidget {
 class _ConfigurationViewState extends State<ConfigurationView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
+
+  final UserService _userService = UserService();
+  Map<String, dynamic>? _userData;
 
   // Toggle states
   bool _notificationsEnabled = true;
@@ -26,6 +30,17 @@ class _ConfigurationViewState extends State<ConfigurationView>
       duration: const Duration(milliseconds: 700),
     );
     _animController.forward();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    try {
+      final data = await _userService.fetchUser();
+      if (!mounted) return;
+      setState(() => _userData = data);
+    } catch (_) {
+      // Profile card will show fallback values
+    }
   }
 
   @override
@@ -81,7 +96,7 @@ class _ConfigurationViewState extends State<ConfigurationView>
           // ── Profile card ──
           _buildAnimatedItem(
             index: 0,
-            child: const _ProfileCard(),
+            child: _ProfileCard(userData: _userData),
           ),
 
           // ── General section ──
@@ -281,10 +296,23 @@ class _ConfigurationViewState extends State<ConfigurationView>
 // ── Profile Card ─────────────────────────────────────────────────────────────
 
 class _ProfileCard extends StatelessWidget {
-  const _ProfileCard();
+  final Map<String, dynamic>? userData;
+
+  const _ProfileCard({this.userData});
+
+  String get _initials {
+    final fullName = userData?['fullName'] as String? ?? 'U';
+    final parts = fullName.trim().split(' ');
+    if (parts.length >= 2) {
+      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    }
+    return fullName.substring(0, fullName.length >= 2 ? 2 : 1).toUpperCase();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final fullName = userData?['fullName'] as String? ?? 'User';
+    final email = userData?['email'] as String? ?? 'email@example.com';
     return Container(
       margin: const EdgeInsets.only(top: 16, bottom: 4),
       padding: const EdgeInsets.all(20),
@@ -292,7 +320,7 @@ class _ProfileCard extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             ArgonColors.primary,
-            ArgonColors.primary.withOpacity(0.8),
+            ArgonColors.primary.withValues(alpha: 0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -300,7 +328,7 @@ class _ProfileCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: ArgonColors.primary.withOpacity(0.3),
+            color: ArgonColors.primary.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -312,13 +340,13 @@ class _ProfileCard extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: ArgonColors.white.withOpacity(0.2),
+              color: ArgonColors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(28),
             ),
-            child: const Center(
+            child: Center(
               child: Text(
-                'JP',
-                style: TextStyle(
+                _initials,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: ArgonColors.white,
@@ -327,22 +355,22 @@ class _ProfileCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Juan P. Balan',
-                  style: TextStyle(
+                  fullName,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: ArgonColors.white,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
-                  'jpbalan@example.com',
-                  style: TextStyle(
+                  email,
+                  style: const TextStyle(
                     fontSize: 13,
                     color: Colors.white70,
                   ),
@@ -354,7 +382,7 @@ class _ProfileCard extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: ArgonColors.white.withOpacity(0.2),
+              color: ArgonColors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(18),
             ),
             child: const Icon(
@@ -408,7 +436,7 @@ class _SettingsGroup extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: ArgonColors.initial.withOpacity(0.05),
+            color: ArgonColors.initial.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -423,7 +451,7 @@ class _SettingsGroup extends StatelessWidget {
                 Divider(
                   height: 1,
                   indent: 60,
-                  color: ArgonColors.border.withOpacity(0.5),
+                  color: ArgonColors.border.withValues(alpha: 0.5),
                 ),
             ],
           );
@@ -462,7 +490,7 @@ class _SettingsToggleTile extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
+              color: color.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -494,7 +522,8 @@ class _SettingsToggleTile extends StatelessWidget {
           Switch.adaptive(
             value: value,
             onChanged: onChanged,
-            activeColor: ArgonColors.primary,
+            activeTrackColor: ArgonColors.primary.withValues(alpha: 0.3),
+            thumbColor: WidgetStateProperty.all(ArgonColors.primary),
           ),
         ],
       ),
@@ -533,7 +562,7 @@ class _SettingsNavTile extends StatelessWidget {
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, color: color, size: 20),

@@ -25,7 +25,7 @@ class BalanceSummary extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             ArgonColors.primary,
-            ArgonColors.primary.withOpacity(0.8),
+            ArgonColors.primary.withValues(alpha: 0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -33,7 +33,7 @@ class BalanceSummary extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: ArgonColors.primary.withOpacity(0.3),
+            color: ArgonColors.primary.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -64,7 +64,7 @@ class BalanceSummary extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: changeColor.withOpacity(0.2),
+              color: changeColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(

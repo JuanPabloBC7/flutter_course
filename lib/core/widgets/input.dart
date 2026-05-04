@@ -12,7 +12,8 @@ class Input extends StatelessWidget {
   final bool obscureText;
   final TextEditingController? controller;
 
-  Input({
+  const Input({
+    super.key,
     this.placeholder,
     this.suffixIcon,
     this.prefixIcon,
@@ -32,16 +33,16 @@ class Input extends StatelessWidget {
       onChanged: onChanged as ValueChanged<String>?,
       controller: controller,
       autofocus: autofocus,
-      style: TextStyle(
+      style: const TextStyle(
         height: 0.85,
         fontSize: 14.0,
         color: ArgonColors.initial,
       ),
-      textAlignVertical: TextAlignVertical(y: 0.6),
+      textAlignVertical: const TextAlignVertical(y: 0.6),
       decoration: InputDecoration(
         filled: true,
         fillColor: ArgonColors.white,
-        hintStyle: TextStyle(color: ArgonColors.muted),
+        hintStyle: const TextStyle(color: ArgonColors.muted),
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         enabledBorder: OutlineInputBorder(

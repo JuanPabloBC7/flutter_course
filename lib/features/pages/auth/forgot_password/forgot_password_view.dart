@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/network/app_exceptions.dart';
+import 'package:flutter_course/core/network/services.dart';
 import 'package:flutter_course/core/widgets/input.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -13,6 +15,12 @@ class ForgotPasswordView extends StatefulWidget {
 class _ForgotPasswordViewState extends State<ForgotPasswordView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  final AuthService _authService = AuthService();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   void initState() {
@@ -27,7 +35,43 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
   @override
   void dispose() {
     _animController.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleResetPassword(AppLocalizations l10n) async {
+    final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
+
+    if (username.isEmpty || email.isEmpty) {
+      setState(() => _errorMessage = 'Please fill in all fields.');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      await _authService.requestPasswordReset(username: username, email: email);
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      _showSuccessDialog(context, l10n);
+    } on AppException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = e.message;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = 'An unexpected error occurred.';
+        _isLoading = false;
+      });
+    }
   }
 
   Widget _buildAnimatedItem({required int index, required Widget child}) {
@@ -64,7 +108,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
           gradient: LinearGradient(
             colors: [
               ArgonColors.primary,
-              ArgonColors.primary.withOpacity(0.7),
+              ArgonColors.primary.withValues(alpha: 0.7),
               ArgonColors.bgColorScreen,
             ],
             begin: Alignment.topCenter,
@@ -89,7 +133,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: ArgonColors.white.withOpacity(0.2),
+                        color: ArgonColors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(
@@ -113,7 +157,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       width: 72,
                       height: 72,
                       decoration: BoxDecoration(
-                        color: ArgonColors.white.withOpacity(0.2),
+                        color: ArgonColors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Icon(
@@ -138,7 +182,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
-                        color: ArgonColors.white.withOpacity(0.8),
+                        color: ArgonColors.white.withValues(alpha: 0.8),
                         height: 1.4,
                       ),
                     ),
@@ -158,7 +202,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: ArgonColors.initial.withOpacity(0.08),
+                        color: ArgonColors.initial.withValues(alpha: 0.08),
                         blurRadius: 24,
                         offset: const Offset(0, 8),
                       ),
@@ -172,6 +216,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       const SizedBox(height: 8),
                       Input(
                         placeholder: l10n.commonUsername,
+                        controller: _usernameController,
                         prefixIcon: const Icon(
                           Icons.person_outline_rounded,
                           color: ArgonColors.muted,
@@ -185,6 +230,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       const SizedBox(height: 8),
                       Input(
                         placeholder: l10n.commonEmail,
+                        controller: _emailController,
                         prefixIcon: const Icon(
                           Icons.email_outlined,
                           color: ArgonColors.muted,
@@ -193,11 +239,34 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       ),
                       const SizedBox(height: 28),
 
+                      // Error message
+                      if (_errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: ArgonColors.error.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.error_outline, color: ArgonColors.error, size: 18),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    _errorMessage!,
+                                    style: const TextStyle(fontSize: 13, color: ArgonColors.error),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                       // Reset button
                       ElevatedButton(
-                        onPressed: () {
-                          _showSuccessDialog(context, l10n);
-                        },
+                        onPressed: _isLoading ? null : () => _handleResetPassword(l10n),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: ArgonColors.white,
                           backgroundColor: ArgonColors.primary,
@@ -207,13 +276,22 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                           ),
                           elevation: 0,
                         ),
-                        child: Text(
-                          l10n.commonResetPassword,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  color: ArgonColors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                            : Text(
+                                l10n.commonResetPassword,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
                       ),
                       const SizedBox(height: 14),
 
@@ -255,14 +333,14 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                     Icon(
                       Icons.info_outline_rounded,
                       size: 16,
-                      color: ArgonColors.muted.withOpacity(0.7),
+                      color: ArgonColors.muted.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 6),
                     Text(
                       'Check your spam folder if you don\'t see the email',
                       style: TextStyle(
                         fontSize: 12,
-                        color: ArgonColors.muted.withOpacity(0.7),
+                        color: ArgonColors.muted.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -304,7 +382,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: ArgonColors.success.withOpacity(0.12),
+                  color: ArgonColors.success.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: const Icon(
