@@ -2,6 +2,7 @@ import 'package:flutter_course/features/auth/data/datasources/auth_local_datasou
 import 'package:flutter_course/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:flutter_course/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:flutter_course/features/auth/domain/repositories/auth_repository.dart';
+import 'package:flutter_course/features/auth/domain/usecases/check_session_usecase.dart';
 import 'package:flutter_course/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_course/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:flutter_course/features/auth/domain/usecases/reset_password_usecase.dart';
@@ -27,7 +28,8 @@ class AuthInjection {
   static LoginUseCase get loginUseCase => LoginUseCase(_repository);
   static LogoutUseCase get logoutUseCase => LogoutUseCase(_repository);
   static ResetPasswordUseCase get resetPasswordUseCase => ResetPasswordUseCase(_repository);
+  static CheckSessionUseCase get checkSessionUseCase => CheckSessionUseCase(_repository);
 
-  // Expose repository for session checks
+  // Expose repository for advanced use cases
   static AuthRepository get repository => _repository;
 }

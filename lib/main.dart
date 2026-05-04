@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/routing/routes.dart';
-import 'package:flutter_course/features/pages/auth/login/login_view.dart';
+import 'package:flutter_course/features/pages/splash/splash_view.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -139,8 +139,8 @@ class MyApp extends StatelessWidget {
       ],
 
       // ── Routing ──
-      home: const LoginView(),
-      initialRoute: AppRoutes.login,
+      home: const SplashView(),
+      initialRoute: AppRoutes.splash,
       onGenerateRoute: AppRoutes.generateRoute,
     );
   }
