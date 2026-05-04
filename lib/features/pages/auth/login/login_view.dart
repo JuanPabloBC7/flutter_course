@@ -122,7 +122,7 @@ class _LoginViewState extends State<LoginView> {
                                     padding: const EdgeInsets.only(top: 16),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        Navigator.pushReplacementNamed(context, '/temporal-route');
+                                        Navigator.pushReplacementNamed(context, '/dashboard');
                                       },
                                       style: ElevatedButton.styleFrom(
                                         foregroundColor: ArgonColors.white,
