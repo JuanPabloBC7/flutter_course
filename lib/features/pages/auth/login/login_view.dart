@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/app_exceptions.dart';
-import 'package:flutter_course/core/widgets/input.dart';
+import 'package:flutter_course/core/utils/validators.dart';
+import 'package:flutter_course/core/widgets/form_input.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
 import 'package:flutter_course/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
+
+// ── Login State ──────────────────────────────────────────────────────────────
+
+enum LoginStatus { idle, loading, success, error }
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -15,14 +20,22 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView>
     with SingleTickerProviderStateMixin {
-  bool _obscurePassword = true;
-  bool _isLoading = false;
-  String? _errorMessage;
-  late AnimationController _animController;
+  // Form
+  final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
+  // State
+  LoginStatus _status = LoginStatus.idle;
+  String? _errorMessage;
+  bool _obscurePassword = true;
+  bool _hasAttemptedSubmit = false;
+
+  // Dependencies
   final LoginUseCase _loginUseCase = AuthInjection.loginUseCase;
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+
+  // Animation
+  late AnimationController _animController;
 
   @override
   void initState() {
@@ -42,41 +55,70 @@ class _LoginViewState extends State<LoginView>
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
+  // ── Login handler ──────────────────────────────────────────────────────────
 
-    if (username.isEmpty || password.isEmpty) {
-      setState(() => _errorMessage = 'Please enter username and password.');
+  Future<void> _handleLogin() async {
+    // Mark that user has attempted to submit (enables real-time validation)
+    setState(() => _hasAttemptedSubmit = true);
+
+    // Validate form fields
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
+    // Transition to loading state
     setState(() {
-      _isLoading = true;
+      _status = LoginStatus.loading;
       _errorMessage = null;
     });
 
     try {
-      await _loginUseCase.execute(username: username, password: password);
+      await _loginUseCase.execute(
+        username: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
       if (!mounted) return;
+
+      // Transition to success state
+      setState(() => _status = LoginStatus.success);
+
+      // Brief delay to show success state before navigating
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (!mounted) return;
+
       Navigator.pushReplacementNamed(context, '/dashboard');
     } on AppException catch (e) {
       if (!mounted) return;
       setState(() {
+        _status = LoginStatus.error;
         _errorMessage = e.message;
-        _isLoading = false;
       });
     } on ArgumentError catch (e) {
       if (!mounted) return;
       setState(() {
+        _status = LoginStatus.error;
         _errorMessage = e.message;
-        _isLoading = false;
       });
-    } catch (e) {
+    } catch (_) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'An unexpected error occurred.';
-        _isLoading = false;
+        _status = LoginStatus.error;
+        _errorMessage = 'An unexpected error occurred. Please try again.';
+      });
+    }
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  bool get _isLoading => _status == LoginStatus.loading;
+  bool get _isSuccess => _status == LoginStatus.success;
+
+  void _clearError() {
+    if (_errorMessage != null) {
+      setState(() {
+        _errorMessage = null;
+        _status = LoginStatus.idle;
       });
     }
   }
@@ -102,6 +144,8 @@ class _LoginViewState extends State<LoginView>
       ),
     );
   }
+
+  // ── Build ──────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -189,137 +233,138 @@ class _LoginViewState extends State<LoginView>
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: ArgonColors.text,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: ArgonColors.text,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Enter your credentials to continue',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: ArgonColors.muted,
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Enter your credentials to continue',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: ArgonColors.muted,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 24),
 
-                      // Username
-                      _buildLabel(l10n.commonUsername),
-                      const SizedBox(height: 8),
-                      Input(
-                        placeholder: l10n.commonUsername,
-                        controller: _usernameController,
-                        prefixIcon: const Icon(Icons.person_outline_rounded,
-                            color: ArgonColors.muted, size: 20),
-                      ),
-                      const SizedBox(height: 18),
-
-                      // Password
-                      _buildLabel(l10n.commonPassword),
-                      const SizedBox(height: 8),
-                      Input(
-                        placeholder: l10n.commonPassword,
-                        controller: _passwordController,
-                        prefixIcon: const Icon(Icons.lock_outline_rounded,
-                            color: ArgonColors.muted, size: 20),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
+                        // ── Username field ──
+                        _buildLabel(l10n.commonUsername),
+                        const SizedBox(height: 8),
+                        FormInput(
+                          placeholder: l10n.commonUsername,
+                          controller: _usernameController,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.text,
+                          prefixIcon: const Icon(
+                            Icons.person_outline_rounded,
                             color: ArgonColors.muted,
                             size: 20,
                           ),
-                          onPressed: () {
-                            setState(
-                                () => _obscurePassword = !_obscurePassword);
-                          },
+                          autovalidateMode: _hasAttemptedSubmit
+                              ? AutovalidateMode.onUserInteraction
+                              : AutovalidateMode.disabled,
+                          validator: Validators.username,
+                          onChanged: (_) => _clearError(),
                         ),
-                        obscureText: _obscurePassword,
-                      ),
-                      const SizedBox(height: 12),
+                        const SizedBox(height: 18),
 
-                      // Forgot password
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/forgot-password');
-                          },
-                          child: Text(
-                            l10n.commonForgotPassword,
-                            style: const TextStyle(
-                              color: ArgonColors.primary,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        // ── Password field ──
+                        _buildLabel(l10n.commonPassword),
+                        const SizedBox(height: 8),
+                        FormInput(
+                          placeholder: l10n.commonPassword,
+                          controller: _passwordController,
+                          textInputAction: TextInputAction.done,
+                          obscureText: _obscurePassword,
+                          prefixIcon: const Icon(
+                            Icons.lock_outline_rounded,
+                            color: ArgonColors.muted,
+                            size: 20,
                           ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: ArgonColors.muted,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              setState(() => _obscurePassword = !_obscurePassword);
+                            },
+                          ),
+                          autovalidateMode: _hasAttemptedSubmit
+                              ? AutovalidateMode.onUserInteraction
+                              : AutovalidateMode.disabled,
+                          validator: Validators.password,
+                          onChanged: (_) => _clearError(),
                         ),
-                      ),
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 12),
 
-                      // Error message
-                      if (_errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: ArgonColors.error.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.error_outline, color: ArgonColors.error, size: 18),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    _errorMessage!,
-                                    style: const TextStyle(fontSize: 13, color: ArgonColors.error),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                      // Login button
-                      ElevatedButton(
-                        onPressed: _isLoading ? null : _handleLogin,
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: ArgonColors.white,
-                          backgroundColor: ArgonColors.primary,
-                          minimumSize: const Size(double.infinity, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: _isLoading
-                            ? const SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  color: ArgonColors.white,
-                                  strokeWidth: 2.5,
-                                ),
-                              )
-                            : Text(
-                                l10n.commonLogin,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
+                        // ── Forgot password link ──
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/forgot-password');
+                            },
+                            child: Text(
+                              l10n.commonForgotPassword,
+                              style: const TextStyle(
+                                color: ArgonColors.primary,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
                               ),
-                      ),
-                    ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // ── Error banner (server-side errors) ──
+                        if (_errorMessage != null)
+                          _ErrorBanner(
+                            message: _errorMessage!,
+                            onDismiss: _clearError,
+                          ),
+
+                        // ── Success banner ──
+                        if (_isSuccess)
+                          const _SuccessBanner(),
+
+                        // ── Login button ──
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: ElevatedButton(
+                            onPressed: _isLoading || _isSuccess ? null : _handleLogin,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: ArgonColors.white,
+                              backgroundColor: _isSuccess
+                                  ? ArgonColors.success
+                                  : ArgonColors.primary,
+                              disabledBackgroundColor: _isSuccess
+                                  ? ArgonColors.success
+                                  : ArgonColors.primary.withValues(alpha: 0.6),
+                              disabledForegroundColor: ArgonColors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: _buildButtonContent(l10n),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -332,8 +377,7 @@ class _LoginViewState extends State<LoginView>
                 child: Row(
                   children: [
                     Expanded(
-                      child: Divider(
-                          color: ArgonColors.border.withValues(alpha: 0.6)),
+                      child: Divider(color: ArgonColors.border.withValues(alpha: 0.6)),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -346,8 +390,7 @@ class _LoginViewState extends State<LoginView>
                       ),
                     ),
                     Expanded(
-                      child: Divider(
-                          color: ArgonColors.border.withValues(alpha: 0.6)),
+                      child: Divider(color: ArgonColors.border.withValues(alpha: 0.6)),
                     ),
                   ],
                 ),
@@ -384,6 +427,33 @@ class _LoginViewState extends State<LoginView>
     );
   }
 
+  Widget _buildButtonContent(AppLocalizations l10n) {
+    if (_isLoading) {
+      return const SizedBox(
+        width: 22,
+        height: 22,
+        child: CircularProgressIndicator(
+          color: ArgonColors.white,
+          strokeWidth: 2.5,
+        ),
+      );
+    }
+    if (_isSuccess) {
+      return const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.check_rounded, size: 20),
+          SizedBox(width: 8),
+          Text('Success!', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+        ],
+      );
+    }
+    return Text(
+      l10n.commonLogin,
+      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+    );
+  }
+
   Widget _buildLabel(String text) {
     return Text(
       text,
@@ -391,6 +461,79 @@ class _LoginViewState extends State<LoginView>
         fontSize: 13,
         fontWeight: FontWeight.w600,
         color: ArgonColors.text,
+      ),
+    );
+  }
+}
+
+// ── Error Banner ─────────────────────────────────────────────────────────────
+
+class _ErrorBanner extends StatelessWidget {
+  final String message;
+  final VoidCallback onDismiss;
+
+  const _ErrorBanner({required this.message, required this.onDismiss});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: ArgonColors.error.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: ArgonColors.error.withValues(alpha: 0.2)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.error_outline_rounded, color: ArgonColors.error, size: 18),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(fontSize: 13, color: ArgonColors.error, height: 1.3),
+              ),
+            ),
+            GestureDetector(
+              onTap: onDismiss,
+              child: const Icon(Icons.close_rounded, color: ArgonColors.error, size: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Success Banner ───────────────────────────────────────────────────────────
+
+class _SuccessBanner extends StatelessWidget {
+  const _SuccessBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: ArgonColors.success.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: ArgonColors.success.withValues(alpha: 0.2)),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.check_circle_outline_rounded, color: ArgonColors.success, size: 18),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Login successful! Redirecting...',
+                style: TextStyle(fontSize: 13, color: ArgonColors.success, height: 1.3),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
