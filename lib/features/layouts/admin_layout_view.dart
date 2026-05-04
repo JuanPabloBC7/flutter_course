@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/features/auth/auth_injection.dart';
+import 'package:flutter_course/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
 import 'package:flutter_course/features/pages/admin/history/history_view.dart';
@@ -81,7 +83,7 @@ class _MenuView extends StatefulWidget {
 
 class _MenuViewState extends State<_MenuView> {
   final UserService _userService = UserService();
-  final AuthService _authService = AuthService();
+  final LogoutUseCase _logoutUseCase = AuthInjection.logoutUseCase;
   Map<String, dynamic>? _userData;
 
   @override
@@ -110,9 +112,9 @@ class _MenuViewState extends State<_MenuView> {
 
   Future<void> _handleLogout() async {
     try {
-      await _authService.logout();
+      await _logoutUseCase.execute();
     } catch (_) {
-      // Proceed with logout even if API fails
+      // Proceed with navigation even if logout API fails
     }
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/login');

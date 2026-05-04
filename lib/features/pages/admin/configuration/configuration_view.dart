@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/features/auth/auth_injection.dart';
 
 class ConfigurationView extends StatefulWidget {
   const ConfigurationView({super.key});
@@ -256,7 +257,11 @@ class _ConfigurationViewState extends State<ConfigurationView>
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  try {
+                    await AuthInjection.logoutUseCase.execute();
+                  } catch (_) {}
+                  if (!context.mounted) return;
                   Navigator.pushReplacementNamed(context, '/login');
                 },
                 style: ElevatedButton.styleFrom(

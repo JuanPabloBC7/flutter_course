@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/app_exceptions.dart';
-import 'package:flutter_course/core/network/services.dart';
 import 'package:flutter_course/core/widgets/input.dart';
+import 'package:flutter_course/features/auth/auth_injection.dart';
+import 'package:flutter_course/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 
 class ForgotPasswordView extends StatefulWidget {
@@ -18,7 +19,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
   bool _isLoading = false;
   String? _errorMessage;
 
-  final AuthService _authService = AuthService();
+  final ResetPasswordUseCase _resetPasswordUseCase = AuthInjection.resetPasswordUseCase;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
@@ -55,11 +56,17 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
     });
 
     try {
-      await _authService.requestPasswordReset(username: username, email: email);
+      await _resetPasswordUseCase.execute(username: username, email: email);
       if (!mounted) return;
       setState(() => _isLoading = false);
       _showSuccessDialog(context, l10n);
     } on AppException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = e.message;
+        _isLoading = false;
+      });
+    } on ArgumentError catch (e) {
       if (!mounted) return;
       setState(() {
         _errorMessage = e.message;

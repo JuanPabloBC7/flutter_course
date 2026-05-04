@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/app_exceptions.dart';
-import 'package:flutter_course/core/network/services.dart';
 import 'package:flutter_course/core/widgets/input.dart';
+import 'package:flutter_course/features/auth/auth_injection.dart';
+import 'package:flutter_course/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 
 class LoginView extends StatefulWidget {
@@ -19,7 +20,7 @@ class _LoginViewState extends State<LoginView>
   String? _errorMessage;
   late AnimationController _animController;
 
-  final AuthService _authService = AuthService();
+  final LoginUseCase _loginUseCase = AuthInjection.loginUseCase;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -56,10 +57,16 @@ class _LoginViewState extends State<LoginView>
     });
 
     try {
-      await _authService.login(username: username, password: password);
+      await _loginUseCase.execute(username: username, password: password);
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/dashboard');
     } on AppException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = e.message;
+        _isLoading = false;
+      });
+    } on ArgumentError catch (e) {
       if (!mounted) return;
       setState(() {
         _errorMessage = e.message;
