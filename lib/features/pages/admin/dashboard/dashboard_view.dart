@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/utils/category_icon.dart';
+import 'package:flutter_course/core/widgets/animated_list_item.dart';
 import 'package:flutter_course/core/widgets/balance_summary.dart';
+import 'package:flutter_course/core/widgets/error_state.dart';
+import 'package:flutter_course/core/widgets/quick_action_button.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/stat_card.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
@@ -67,33 +71,9 @@ class _DashboardViewState extends State<DashboardView>
           }
 
           if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline,
-                      size: 48,
-                      color: ArgonColors.error.withValues(alpha: 0.7)),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Error: ${snapshot.error}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: ArgonColors.text,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _dataFuture = _loadData();
-                      });
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
+            return ErrorState(
+              message: 'Error: ${snapshot.error}',
+              onRetry: () => setState(() => _dataFuture = _loadData()),
             );
           }
 
@@ -108,20 +88,20 @@ class _DashboardViewState extends State<DashboardView>
           return RefreshIndicator(
             color: ArgonColors.primary,
             onRefresh: () async {
-              setState(() {
-                _dataFuture = _loadData();
-              });
+              setState(() => _dataFuture = _loadData());
             },
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                _buildAnimatedItem(
+                AnimatedListItem(
                   index: 0,
+                  controller: _animController,
                   child: _GreetingHeader(username: username as String),
                 ),
-                _buildAnimatedItem(
+                AnimatedListItem(
                   index: 1,
+                  controller: _animController,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: BalanceSummary(
@@ -130,20 +110,24 @@ class _DashboardViewState extends State<DashboardView>
                     ),
                   ),
                 ),
-                _buildAnimatedItem(
+                AnimatedListItem(
                   index: 2,
+                  controller: _animController,
                   child: const _QuickActions(),
                 ),
-                _buildAnimatedItem(
+                AnimatedListItem(
                   index: 3,
+                  controller: _animController,
                   child: const SectionHeader(title: 'OVERVIEW'),
                 ),
-                _buildAnimatedItem(
+                AnimatedListItem(
                   index: 4,
+                  controller: _animController,
                   child: _StatsGrid(stats: stats),
                 ),
-                _buildAnimatedItem(
+                AnimatedListItem(
                   index: 5,
+                  controller: _animController,
                   child: const SectionHeader(title: 'RECENT TRANSACTIONS'),
                 ),
                 ..._buildRecentTransactions(data.transactions),
@@ -156,55 +140,6 @@ class _DashboardViewState extends State<DashboardView>
     );
   }
 
-  Widget _buildAnimatedItem({required int index, required Widget child}) {
-    final start = (index * 0.08).clamp(0.0, 0.6);
-    final end = (start + 0.4).clamp(0.0, 1.0);
-
-    return SlideTransition(
-      position: Tween<Offset>(
-        begin: const Offset(0, 0.12),
-        end: Offset.zero,
-      ).animate(CurvedAnimation(
-        parent: _animController,
-        curve: Interval(start, end, curve: Curves.easeOutCubic),
-      )),
-      child: FadeTransition(
-        opacity: CurvedAnimation(
-          parent: _animController,
-          curve: Interval(start, end, curve: Curves.easeOut),
-        ),
-        child: child,
-      ),
-    );
-  }
-
-  IconData _iconForCategory(String category) {
-    switch (category) {
-      case 'salary':
-        return Icons.account_balance;
-      case 'shopping':
-        return Icons.shopping_cart;
-      case 'freelance':
-        return Icons.work_outline;
-      case 'entertainment':
-        return Icons.movie_outlined;
-      case 'transfer':
-        return Icons.person_outline;
-      case 'utilities':
-        return Icons.bolt;
-      case 'food':
-        return Icons.restaurant;
-      case 'refund':
-        return Icons.replay;
-      case 'transport':
-        return Icons.local_gas_station;
-      case 'health':
-        return Icons.fitness_center;
-      default:
-        return Icons.attach_money;
-    }
-  }
-
   List<Widget> _buildRecentTransactions(List<Map<String, dynamic>> transactions) {
     final recent = transactions.take(4).toList();
 
@@ -213,8 +148,9 @@ class _DashboardViewState extends State<DashboardView>
       final tx = entry.value;
       final isIncome = tx['type'] == 'income';
 
-      return _buildAnimatedItem(
+      return AnimatedListItem(
         index: 6 + i,
+        controller: _animController,
         child: Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: TransactionCard(
@@ -222,7 +158,7 @@ class _DashboardViewState extends State<DashboardView>
             date: tx['section'] as String,
             amount: (tx['amount'] as num).toDouble(),
             type: isIncome ? TransactionType.income : TransactionType.expense,
-            icon: _iconForCategory(tx['category'] as String),
+            icon: CategoryIcon.fromCategory(tx['category'] as String),
           ),
         ),
       );
@@ -272,20 +208,12 @@ class _GreetingHeader extends StatelessWidget {
                 children: [
                   Text(
                     '$_greeting,',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: ArgonColors.muted,
-                    ),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: ArgonColors.muted),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     username,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: ArgonColors.text,
-                    ),
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: ArgonColors.text),
                   ),
                 ],
               ),
@@ -297,11 +225,7 @@ class _GreetingHeader extends StatelessWidget {
                 color: ArgonColors.primary.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Icon(
-                Icons.notifications_none_rounded,
-                color: ArgonColors.primary,
-                size: 22,
-              ),
+              child: const Icon(Icons.notifications_none_rounded, color: ArgonColors.primary, size: 22),
             ),
           ],
         ),
@@ -322,38 +246,10 @@ class _QuickActions extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _QuickActionButton(icon: Icons.arrow_upward_rounded, label: 'Send', color: ArgonColors.primary, onTap: () {}),
-          _QuickActionButton(icon: Icons.arrow_downward_rounded, label: 'Receive', color: ArgonColors.success, onTap: () {}),
-          _QuickActionButton(icon: Icons.swap_horiz_rounded, label: 'Transfer', color: ArgonColors.info, onTap: () {}),
-          _QuickActionButton(icon: Icons.qr_code_scanner_rounded, label: 'Scan', color: ArgonColors.warning, onTap: () {}),
-        ],
-      ),
-    );
-  }
-}
-
-class _QuickActionButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _QuickActionButton({required this.icon, required this.label, required this.color, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(16)),
-            child: Icon(icon, color: color, size: 26),
-          ),
-          const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: ArgonColors.text)),
+          QuickActionButton(icon: Icons.arrow_upward_rounded, label: 'Send', color: ArgonColors.primary, onTap: () {}),
+          QuickActionButton(icon: Icons.arrow_downward_rounded, label: 'Receive', color: ArgonColors.success, onTap: () {}),
+          QuickActionButton(icon: Icons.swap_horiz_rounded, label: 'Transfer', color: ArgonColors.info, onTap: () {}),
+          QuickActionButton(icon: Icons.qr_code_scanner_rounded, label: 'Scan', color: ArgonColors.warning, onTap: () {}),
         ],
       ),
     );

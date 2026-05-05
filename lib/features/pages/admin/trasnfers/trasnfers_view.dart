@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/widgets/animated_list_item.dart';
 import 'package:flutter_course/core/widgets/contact_avatar.dart';
+import 'package:flutter_course/core/widgets/error_state.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 
 // ── Color palette for contact avatars ────────────────────────────────────────
@@ -78,28 +80,6 @@ class _TransfersViewState extends State<TransfersView>
     super.dispose();
   }
 
-  Widget _buildAnimatedItem({required int index, required Widget child}) {
-    final start = (index * 0.08).clamp(0.0, 0.6);
-    final end = (start + 0.4).clamp(0.0, 1.0);
-
-    return SlideTransition(
-      position: Tween<Offset>(
-        begin: const Offset(0, 0.12),
-        end: Offset.zero,
-      ).animate(CurvedAnimation(
-        parent: _animController,
-        curve: Interval(start, end, curve: Curves.easeOutCubic),
-      )),
-      child: FadeTransition(
-        opacity: CurvedAnimation(
-          parent: _animController,
-          curve: Interval(start, end, curve: Curves.easeOut),
-        ),
-        child: child,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,7 +103,7 @@ class _TransfersViewState extends State<TransfersView>
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: ArgonColors.primary))
           : _errorMessage != null
-              ? _buildErrorState()
+              ? ErrorState(message: _errorMessage!, onRetry: _loadData)
               : RefreshIndicator(
                   color: ArgonColors.primary,
                   onRefresh: _loadData,
@@ -137,15 +117,16 @@ class _TransfersViewState extends State<TransfersView>
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
-        _buildAnimatedItem(index: 0, child: const _NewTransferCard()),
-        _buildAnimatedItem(index: 1, child: const SectionHeader(title: 'FREQUENT CONTACTS')),
-        _buildAnimatedItem(index: 2, child: _FrequentContacts(contacts: _contacts)),
-        _buildAnimatedItem(index: 3, child: const SectionHeader(title: 'TRANSFER OPTIONS')),
-        _buildAnimatedItem(index: 4, child: const _TransferOptions()),
-        _buildAnimatedItem(index: 5, child: const SectionHeader(title: 'RECENT TRANSFERS')),
+        AnimatedListItem(index: 0, controller: _animController, child: const _NewTransferCard()),
+        AnimatedListItem(index: 1, controller: _animController, child: const SectionHeader(title: 'FREQUENT CONTACTS')),
+        AnimatedListItem(index: 2, controller: _animController, child: _FrequentContacts(contacts: _contacts)),
+        AnimatedListItem(index: 3, controller: _animController, child: const SectionHeader(title: 'TRANSFER OPTIONS')),
+        AnimatedListItem(index: 4, controller: _animController, child: const _TransferOptions()),
+        AnimatedListItem(index: 5, controller: _animController, child: const SectionHeader(title: 'RECENT TRANSFERS')),
         ..._recentTransfers.asMap().entries.map((entry) {
-          return _buildAnimatedItem(
+          return AnimatedListItem(
             index: 6 + entry.key,
+            controller: _animController,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: _RecentTransferCard(
@@ -157,21 +138,6 @@ class _TransfersViewState extends State<TransfersView>
         }),
         const SizedBox(height: 24),
       ],
-    );
-  }
-
-  Widget _buildErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 48, color: ArgonColors.error.withValues(alpha: 0.7)),
-          const SizedBox(height: 12),
-          Text(_errorMessage ?? 'Something went wrong', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, color: ArgonColors.text)),
-          const SizedBox(height: 8),
-          TextButton(onPressed: _loadData, child: const Text('Retry')),
-        ],
-      ),
     );
   }
 }
@@ -226,7 +192,7 @@ class _NewTransferCard extends StatelessWidget {
   }
 }
 
-// ── Frequent Contacts (from service) ─────────────────────────────────────────
+// ── Frequent Contacts ────────────────────────────────────────────────────────
 
 class _FrequentContacts extends StatelessWidget {
   final List<Map<String, dynamic>> contacts;
@@ -351,7 +317,7 @@ class _TransferOptionTile extends StatelessWidget {
   }
 }
 
-// ── Recent Transfer Card (from service) ──────────────────────────────────────
+// ── Recent Transfer Card ─────────────────────────────────────────────────────
 
 class _RecentTransferCard extends StatelessWidget {
   final Map<String, dynamic> transfer;

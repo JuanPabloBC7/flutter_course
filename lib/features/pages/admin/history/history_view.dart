@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/utils/category_icon.dart';
 import 'package:flutter_course/core/widgets/balance_summary.dart';
+import 'package:flutter_course/core/widgets/empty_state.dart';
+import 'package:flutter_course/core/widgets/error_state.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
 
@@ -73,34 +76,6 @@ class _HistoryViewState extends State<HistoryView>
     super.dispose();
   }
 
-  IconData _iconForCategory(String category) {
-    switch (category) {
-      case 'salary':
-        return Icons.account_balance;
-      case 'shopping':
-        return Icons.shopping_cart;
-      case 'freelance':
-        return Icons.work_outline;
-      case 'entertainment':
-        return Icons.movie_outlined;
-      case 'transfer':
-        return Icons.person_outline;
-      case 'utilities':
-        return Icons.bolt;
-      case 'food':
-        return Icons.restaurant;
-      case 'refund':
-        return Icons.replay;
-      case 'transport':
-        return Icons.local_gas_station;
-      case 'health':
-        return Icons.fitness_center;
-      default:
-        return Icons.attach_money;
-    }
-  }
-
-  // Group transactions by section
   List<dynamic> _buildGroupedList() {
     final List<dynamic> items = [];
     String? lastSection;
@@ -127,11 +102,7 @@ class _HistoryViewState extends State<HistoryView>
         automaticallyImplyLeading: false,
         title: const Text(
           'History',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: ArgonColors.text,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: ArgonColors.text),
         ),
         actions: [
           IconButton(
@@ -143,9 +114,20 @@ class _HistoryViewState extends State<HistoryView>
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: ArgonColors.primary))
           : _errorMessage != null
-              ? _buildErrorState()
+              ? ErrorState(
+                  message: _errorMessage!,
+                  onRetry: () => _loadData(filter: _activeFilter),
+                )
               : _transactions.isEmpty
-                  ? _buildEmptyState()
+                  ? EmptyState(
+                      icon: Icons.receipt_long_outlined,
+                      title: 'No transactions yet',
+                      subtitle: _activeFilter != null
+                          ? 'No $_activeFilter transactions found'
+                          : 'Your transaction history will appear here',
+                      actionLabel: _activeFilter != null ? 'Show all transactions' : null,
+                      onAction: _activeFilter != null ? () => _loadData() : null,
+                    )
                   : RefreshIndicator(
                       color: ArgonColors.primary,
                       onRefresh: () => _loadData(filter: _activeFilter),
@@ -218,59 +200,12 @@ class _HistoryViewState extends State<HistoryView>
                 date: tx['section'] as String? ?? '',
                 amount: (tx['amount'] as num).toDouble(),
                 type: isIncome ? TransactionType.income : TransactionType.expense,
-                icon: _iconForCategory(tx['category'] as String? ?? ''),
+                icon: CategoryIcon.fromCategory(tx['category'] as String? ?? ''),
               ),
             ),
           ),
         );
       },
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.receipt_long_outlined, size: 64, color: ArgonColors.muted.withValues(alpha: 0.5)),
-          const SizedBox(height: 16),
-          const Text('No transactions yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: ArgonColors.text)),
-          const SizedBox(height: 8),
-          Text(
-            _activeFilter != null ? 'No $_activeFilter transactions found' : 'Your transaction history will appear here',
-            style: const TextStyle(fontSize: 14, color: ArgonColors.muted),
-          ),
-          if (_activeFilter != null) ...[
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () => _loadData(),
-              child: const Text('Show all transactions'),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 48, color: ArgonColors.error.withValues(alpha: 0.7)),
-          const SizedBox(height: 12),
-          Text(
-            _errorMessage ?? 'Something went wrong',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14, color: ArgonColors.text),
-          ),
-          const SizedBox(height: 8),
-          TextButton(
-            onPressed: () => _loadData(filter: _activeFilter),
-            child: const Text('Retry'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -299,35 +234,9 @@ class _HistoryViewState extends State<HistoryView>
                 const SizedBox(height: 20),
                 const Text('Filter Transactions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ArgonColors.text)),
                 const SizedBox(height: 16),
-                _FilterOption(
-                  label: 'All',
-                  icon: Icons.list,
-                  isActive: _activeFilter == null,
-                  onTap: () {
-                    Navigator.pop(context);
-                    _loadData();
-                  },
-                ),
-                _FilterOption(
-                  label: 'Income',
-                  icon: Icons.arrow_downward,
-                  iconColor: ArgonColors.success,
-                  isActive: _activeFilter == 'income',
-                  onTap: () {
-                    Navigator.pop(context);
-                    _loadData(filter: 'income');
-                  },
-                ),
-                _FilterOption(
-                  label: 'Expenses',
-                  icon: Icons.arrow_upward,
-                  iconColor: ArgonColors.error,
-                  isActive: _activeFilter == 'expense',
-                  onTap: () {
-                    Navigator.pop(context);
-                    _loadData(filter: 'expense');
-                  },
-                ),
+                _FilterOption(label: 'All', icon: Icons.list, isActive: _activeFilter == null, onTap: () { Navigator.pop(context); _loadData(); }),
+                _FilterOption(label: 'Income', icon: Icons.arrow_downward, iconColor: ArgonColors.success, isActive: _activeFilter == 'income', onTap: () { Navigator.pop(context); _loadData(filter: 'income'); }),
+                _FilterOption(label: 'Expenses', icon: Icons.arrow_upward, iconColor: ArgonColors.error, isActive: _activeFilter == 'expense', onTap: () { Navigator.pop(context); _loadData(filter: 'expense'); }),
                 const SizedBox(height: 8),
               ],
             ),
@@ -345,27 +254,14 @@ class _FilterOption extends StatelessWidget {
   final bool isActive;
   final VoidCallback onTap;
 
-  const _FilterOption({
-    required this.label,
-    required this.icon,
-    this.iconColor,
-    this.isActive = false,
-    required this.onTap,
-  });
+  const _FilterOption({required this.label, required this.icon, this.iconColor, this.isActive = false, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon, color: iconColor ?? ArgonColors.primary),
-      title: Text(
-        label,
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-          color: isActive ? ArgonColors.primary : ArgonColors.text,
-        ),
-      ),
+      title: Text(label, style: TextStyle(fontSize: 15, fontWeight: isActive ? FontWeight.w700 : FontWeight.w500, color: isActive ? ArgonColors.primary : ArgonColors.text)),
       trailing: isActive ? const Icon(Icons.check_rounded, color: ArgonColors.primary, size: 20) : null,
       onTap: onTap,
     );
