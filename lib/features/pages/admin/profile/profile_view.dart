@@ -3,25 +3,19 @@ import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
 
-class ConfigurationView extends StatefulWidget {
-  const ConfigurationView({super.key});
+class ProfileView extends StatefulWidget {
+  const ProfileView({super.key});
 
   @override
-  State<ConfigurationView> createState() => _ConfigurationViewState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _ConfigurationViewState extends State<ConfigurationView>
+class _ProfileViewState extends State<ProfileView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
 
   final UserService _userService = UserService();
   Map<String, dynamic>? _userData;
-
-  // Toggle states
-  bool _notificationsEnabled = true;
-  bool _biometricEnabled = false;
-  bool _darkModeEnabled = false;
-  bool _autoSaveEnabled = true;
 
   @override
   void initState() {
@@ -40,7 +34,7 @@ class _ConfigurationViewState extends State<ConfigurationView>
       if (!mounted) return;
       setState(() => _userData = data);
     } catch (_) {
-      // Profile card will show fallback values
+      // Fallback to defaults
     }
   }
 
@@ -48,6 +42,15 @@ class _ConfigurationViewState extends State<ConfigurationView>
   void dispose() {
     _animController.dispose();
     super.dispose();
+  }
+
+  String get _fullName => _userData?['fullName'] as String? ?? 'User';
+  String get _email => _userData?['email'] as String? ?? 'email@example.com';
+  String get _username => _userData?['username'] as String? ?? 'user';
+  String get _initials {
+    final parts = _fullName.trim().split(' ');
+    if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    return _fullName.substring(0, _fullName.length >= 2 ? 2 : 1).toUpperCase();
   }
 
   Widget _buildAnimatedItem({required int index, required Widget child}) {
@@ -80,9 +83,8 @@ class _ConfigurationViewState extends State<ConfigurationView>
         backgroundColor: ArgonColors.white,
         elevation: 0,
         centerTitle: false,
-        automaticallyImplyLeading: false,
         title: const Text(
-          'Configuration',
+          'Profile',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -97,83 +99,86 @@ class _ConfigurationViewState extends State<ConfigurationView>
           // ── Profile card ──
           _buildAnimatedItem(
             index: 0,
-            child: _ProfileCard(userData: _userData),
+            child: _ProfileCard(
+              fullName: _fullName,
+              email: _email,
+              initials: _initials,
+              onEdit: () {},
+            ),
           ),
 
-          // ── General section ──
+          // ── Personal Information ──
           _buildAnimatedItem(
             index: 1,
-            child: const _SectionLabel(title: 'GENERAL'),
+            child: const _SectionLabel(title: 'PERSONAL INFORMATION'),
           ),
           _buildAnimatedItem(
             index: 2,
             child: _SettingsGroup(
               children: [
-                _SettingsToggleTile(
-                  icon: Icons.notifications_none_rounded,
-                  title: 'Notifications',
-                  subtitle: 'Push and in-app alerts',
+                _ProfileInfoTile(
+                  icon: Icons.person_outline_rounded,
+                  title: 'Full Name',
+                  value: _fullName,
                   color: ArgonColors.primary,
-                  value: _notificationsEnabled,
-                  onChanged: (v) =>
-                      setState(() => _notificationsEnabled = v),
                 ),
-                _SettingsToggleTile(
-                  icon: Icons.dark_mode_outlined,
-                  title: 'Dark Mode',
-                  subtitle: 'Switch appearance theme',
-                  color: ArgonColors.initial,
-                  value: _darkModeEnabled,
-                  onChanged: (v) =>
-                      setState(() => _darkModeEnabled = v),
-                ),
-                _SettingsNavTile(
-                  icon: Icons.language_rounded,
-                  title: 'Language',
-                  subtitle: 'English (US)',
+                _ProfileInfoTile(
+                  icon: Icons.alternate_email_rounded,
+                  title: 'Username',
+                  value: '@$_username',
                   color: ArgonColors.info,
+                ),
+                _ProfileInfoTile(
+                  icon: Icons.email_outlined,
+                  title: 'Email',
+                  value: _email,
+                  color: ArgonColors.success,
+                ),
+                _ProfileNavTile(
+                  icon: Icons.phone_outlined,
+                  title: 'Phone Number',
+                  subtitle: '+502 **** 1234',
+                  color: ArgonColors.warning,
                   onTap: () {},
                 ),
-                _SettingsNavTile(
-                  icon: Icons.palette_outlined,
-                  title: 'Appearance',
-                  subtitle: 'Colors and layout',
-                  color: ArgonColors.warning,
+                _ProfileNavTile(
+                  icon: Icons.calendar_today_outlined,
+                  title: 'Date of Birth',
+                  subtitle: 'January 15, 1995',
+                  color: ArgonColors.label,
                   onTap: () {},
                 ),
               ],
             ),
           ),
 
-          // ── Security section ──
+          // ── Account Settings ──
           _buildAnimatedItem(
             index: 3,
-            child: const _SectionLabel(title: 'SECURITY'),
+            child: const _SectionLabel(title: 'ACCOUNT SETTINGS'),
           ),
           _buildAnimatedItem(
             index: 4,
             child: _SettingsGroup(
               children: [
-                _SettingsToggleTile(
-                  icon: Icons.fingerprint_rounded,
-                  title: 'Biometric Login',
-                  subtitle: 'Use fingerprint or face ID',
-                  color: ArgonColors.success,
-                  value: _biometricEnabled,
-                  onChanged: (v) =>
-                      setState(() => _biometricEnabled = v),
-                ),
-                _SettingsNavTile(
+                _ProfileNavTile(
                   icon: Icons.lock_outline_rounded,
                   title: 'Change Password',
                   subtitle: 'Update your credentials',
                   color: ArgonColors.error,
                   onTap: () {},
                 ),
-                _SettingsNavTile(
-                  icon: Icons.shield_outlined,
-                  title: 'Two-Factor Auth',
-                  subtitle: 'Extra layer of security',
+                _ProfileNavTile(
+                  icon: Icons.language_rounded,
+                  title: 'Language',
+                  subtitle: 'English (US)',
+                  color: ArgonColors.info,
+                  onTap: () {},
+                ),
+                _ProfileNavTile(
+                  icon: Icons.notifications_none_rounded,
+                  title: 'Notifications',
+                  subtitle: 'Manage push notifications',
                   color: ArgonColors.primary,
                   onTap: () {},
                 ),
@@ -181,118 +186,140 @@ class _ConfigurationViewState extends State<ConfigurationView>
             ),
           ),
 
-          // ── Data & Storage section ──
+          // ── Security ──
           _buildAnimatedItem(
             index: 5,
-            child: const _SectionLabel(title: 'DATA & STORAGE'),
+            child: const _SectionLabel(title: 'SECURITY'),
           ),
           _buildAnimatedItem(
             index: 6,
             child: _SettingsGroup(
               children: [
-                _SettingsToggleTile(
-                  icon: Icons.save_outlined,
-                  title: 'Auto-Save',
-                  subtitle: 'Save transactions automatically',
-                  color: ArgonColors.info,
-                  value: _autoSaveEnabled,
-                  onChanged: (v) =>
-                      setState(() => _autoSaveEnabled = v),
-                ),
-                _SettingsNavTile(
-                  icon: Icons.storage_rounded,
-                  title: 'Storage Usage',
-                  subtitle: '24.5 MB used',
-                  color: ArgonColors.warning,
+                _ProfileNavTile(
+                  icon: Icons.fingerprint_rounded,
+                  title: 'Biometric Authentication',
+                  subtitle: 'Fingerprint and Face ID',
+                  color: ArgonColors.success,
                   onTap: () {},
                 ),
-                _SettingsNavTile(
-                  icon: Icons.download_outlined,
-                  title: 'Export Data',
-                  subtitle: 'Download your information',
-                  color: ArgonColors.success,
+                _ProfileNavTile(
+                  icon: Icons.shield_outlined,
+                  title: 'Two-Factor Authentication',
+                  subtitle: 'Extra layer of security',
+                  color: ArgonColors.primary,
+                  onTap: () {},
+                ),
+                _ProfileNavTile(
+                  icon: Icons.devices_rounded,
+                  title: 'Active Sessions',
+                  subtitle: '2 devices connected',
+                  color: ArgonColors.warning,
                   onTap: () {},
                 ),
               ],
             ),
           ),
 
-          // ── Support section ──
+          // ── Danger Zone ──
           _buildAnimatedItem(
             index: 7,
-            child: const _SectionLabel(title: 'SUPPORT'),
+            child: const _SectionLabel(title: 'DANGER ZONE'),
           ),
           _buildAnimatedItem(
             index: 8,
             child: _SettingsGroup(
               children: [
-                _SettingsNavTile(
-                  icon: Icons.help_outline_rounded,
-                  title: 'Help Center',
-                  subtitle: 'FAQ and guides',
-                  color: ArgonColors.primary,
-                  onTap: () {},
+                _ProfileNavTile(
+                  icon: Icons.logout_rounded,
+                  title: 'Log Out',
+                  subtitle: 'Sign out of your account',
+                  color: ArgonColors.error,
+                  onTap: () async {
+                    try {
+                      await AuthInjection.logoutUseCase.execute();
+                    } catch (_) {}
+                    if (!context.mounted) return;
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
                 ),
-                _SettingsNavTile(
-                  icon: Icons.chat_bubble_outline_rounded,
-                  title: 'Contact Support',
-                  subtitle: 'Get in touch with us',
-                  color: ArgonColors.info,
-                  onTap: () {},
-                ),
-                _SettingsNavTile(
-                  icon: Icons.info_outline_rounded,
-                  title: 'About',
-                  subtitle: 'Version 1.0.0',
-                  color: ArgonColors.muted,
-                  onTap: () {},
+                _ProfileNavTile(
+                  icon: Icons.delete_outline_rounded,
+                  title: 'Delete Account',
+                  subtitle: 'Permanently remove your data',
+                  color: ArgonColors.error,
+                  onTap: () => _showDeleteConfirmation(context),
                 ),
               ],
             ),
           ),
 
-          // ── Logout button ──
-          _buildAnimatedItem(
-            index: 9,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await AuthInjection.logoutUseCase.execute();
-                  } catch (_) {}
-                  if (!context.mounted) return;
-                  Navigator.pushReplacementNamed(context, '/login');
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: ArgonColors.white,
-                  backgroundColor: ArgonColors.error,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.logout_rounded, size: 20),
-                    SizedBox(width: 8),
-                    Text(
-                      'Log Out',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 16),
+          const SizedBox(height: 32),
         ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: ArgonColors.error.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(28),
+                ),
+                child: const Icon(Icons.warning_amber_rounded, color: ArgonColors.error, size: 28),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Delete Account?',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ArgonColors.text),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'This action cannot be undone. All your data will be permanently removed.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: ArgonColors.muted, height: 1.4),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(0, 44),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        side: const BorderSide(color: ArgonColors.border),
+                      ),
+                      child: const Text('Cancel', style: TextStyle(fontSize: 14)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ArgonColors.error,
+                        minimumSize: const Size(0, 44),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      child: const Text('Delete', style: TextStyle(fontSize: 14)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -301,23 +328,20 @@ class _ConfigurationViewState extends State<ConfigurationView>
 // ── Profile Card ─────────────────────────────────────────────────────────────
 
 class _ProfileCard extends StatelessWidget {
-  final Map<String, dynamic>? userData;
+  final String fullName;
+  final String email;
+  final String initials;
+  final VoidCallback onEdit;
 
-  const _ProfileCard({this.userData});
-
-  String get _initials {
-    final fullName = userData?['fullName'] as String? ?? 'U';
-    final parts = fullName.trim().split(' ');
-    if (parts.length >= 2) {
-      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
-    }
-    return fullName.substring(0, fullName.length >= 2 ? 2 : 1).toUpperCase();
-  }
+  const _ProfileCard({
+    required this.fullName,
+    required this.email,
+    required this.initials,
+    required this.onEdit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final fullName = userData?['fullName'] as String? ?? 'User';
-    final email = userData?['email'] as String? ?? 'email@example.com';
     return Container(
       margin: const EdgeInsets.only(top: 16, bottom: 4),
       padding: const EdgeInsets.all(20),
@@ -350,7 +374,7 @@ class _ProfileCard extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                _initials,
+                initials,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -383,6 +407,22 @@ class _ProfileCard extends StatelessWidget {
               ],
             ),
           ),
+          GestureDetector(
+            onTap: onEdit,
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: ArgonColors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: const Icon(
+                Icons.edit_outlined,
+                color: ArgonColors.white,
+                size: 18,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -413,7 +453,7 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-// ── Settings Group (card container) ──────────────────────────────────────────
+// ── Settings Group ───────────────────────────────────────────────────────────
 
 class _SettingsGroup extends StatelessWidget {
   final List<Widget> children;
@@ -453,23 +493,19 @@ class _SettingsGroup extends StatelessWidget {
   }
 }
 
-// ── Settings Toggle Tile ─────────────────────────────────────────────────────
+// ── Profile Info Tile (read-only display) ────────────────────────────────────
 
-class _SettingsToggleTile extends StatelessWidget {
+class _ProfileInfoTile extends StatelessWidget {
   final IconData icon;
   final String title;
-  final String subtitle;
+  final String value;
   final Color color;
-  final bool value;
-  final ValueChanged<bool> onChanged;
 
-  const _SettingsToggleTile({
+  const _ProfileInfoTile({
     required this.icon,
     required this.title,
-    required this.subtitle,
-    required this.color,
     required this.value,
-    required this.onChanged,
+    required this.color,
   });
 
   @override
@@ -495,27 +531,21 @@ class _SettingsToggleTile extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
+                    fontSize: 12,
+                    color: ArgonColors.muted,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: ArgonColors.text,
                   ),
                 ),
-                const SizedBox(height: 1),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: ArgonColors.muted,
-                  ),
-                ),
               ],
             ),
-          ),
-          Switch.adaptive(
-            value: value,
-            onChanged: onChanged,
-            activeTrackColor: ArgonColors.primary.withValues(alpha: 0.3),
-            thumbColor: WidgetStateProperty.all(ArgonColors.primary),
           ),
         ],
       ),
@@ -523,16 +553,16 @@ class _SettingsToggleTile extends StatelessWidget {
   }
 }
 
-// ── Settings Navigation Tile ─────────────────────────────────────────────────
+// ── Profile Navigation Tile ──────────────────────────────────────────────────
 
-class _SettingsNavTile extends StatelessWidget {
+class _ProfileNavTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
   final Color color;
   final VoidCallback onTap;
 
-  const _SettingsNavTile({
+  const _ProfileNavTile({
     required this.icon,
     required this.title,
     required this.subtitle,

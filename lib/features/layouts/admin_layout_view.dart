@@ -6,6 +6,7 @@ import 'package:flutter_course/features/auth/domain/usecases/logout_usecase.dart
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
 import 'package:flutter_course/features/pages/admin/history/history_view.dart';
+import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
 
 class AdminLayoutView extends StatefulWidget {
@@ -261,7 +262,12 @@ class _MenuViewState extends State<_MenuView> {
                 title: 'Profile',
                 subtitle: 'View and edit your profile',
                 color: ArgonColors.primary,
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ProfileView()),
+                  );
+                },
               ),
               _MenuTile(
                 icon: Icons.notifications_none_rounded,

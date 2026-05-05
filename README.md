@@ -5,6 +5,7 @@ To run project use ```pub get``` to install dependencies and then ```run``` to e
 ```
 flutter pub get
 flutter run
+flutter clean
 ```
 
 ## Sprints Delivery Videos
