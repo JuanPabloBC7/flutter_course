@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/widgets/profile_card.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
 
 class ConfigurationView extends StatefulWidget {
@@ -97,7 +98,10 @@ class _ConfigurationViewState extends State<ConfigurationView>
           // ── Profile card ──
           _buildAnimatedItem(
             index: 0,
-            child: _ProfileCard(userData: _userData),
+            child: ProfileCard(
+              fullName: _userData?['fullName'] as String? ?? 'User',
+              email: _userData?['email'] as String? ?? 'email@example.com',
+            ),
           ),
 
           // ── General section ──
@@ -292,97 +296,6 @@ class _ConfigurationViewState extends State<ConfigurationView>
           ),
 
           const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Profile Card ─────────────────────────────────────────────────────────────
-
-class _ProfileCard extends StatelessWidget {
-  final Map<String, dynamic>? userData;
-
-  const _ProfileCard({this.userData});
-
-  String get _initials {
-    final fullName = userData?['fullName'] as String? ?? 'U';
-    final parts = fullName.trim().split(' ');
-    if (parts.length >= 2) {
-      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
-    }
-    return fullName.substring(0, fullName.length >= 2 ? 2 : 1).toUpperCase();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final fullName = userData?['fullName'] as String? ?? 'User';
-    final email = userData?['email'] as String? ?? 'email@example.com';
-    return Container(
-      margin: const EdgeInsets.only(top: 16, bottom: 4),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            ArgonColors.primary,
-            ArgonColors.primary.withValues(alpha: 0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: ArgonColors.primary.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: ArgonColors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(28),
-            ),
-            child: Center(
-              child: Text(
-                _initials,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: ArgonColors.white,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  fullName,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: ArgonColors.white,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  email,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.white70,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

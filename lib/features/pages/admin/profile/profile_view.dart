@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/widgets/profile_card.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
 
 class ProfileView extends StatefulWidget {
@@ -99,10 +100,11 @@ class _ProfileViewState extends State<ProfileView>
           // ── Profile card ──
           _buildAnimatedItem(
             index: 0,
-            child: _ProfileCard(
+            child: ProfileCard(
               fullName: _fullName,
               email: _email,
               initials: _initials,
+              showEditButton: true,
               onEdit: () {},
             ),
           ),
@@ -320,110 +322,6 @@ class _ProfileViewState extends State<ProfileView>
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-// ── Profile Card ─────────────────────────────────────────────────────────────
-
-class _ProfileCard extends StatelessWidget {
-  final String fullName;
-  final String email;
-  final String initials;
-  final VoidCallback onEdit;
-
-  const _ProfileCard({
-    required this.fullName,
-    required this.email,
-    required this.initials,
-    required this.onEdit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 16, bottom: 4),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            ArgonColors.primary,
-            ArgonColors.primary.withValues(alpha: 0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: ArgonColors.primary.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: ArgonColors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(28),
-            ),
-            child: Center(
-              child: Text(
-                initials,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: ArgonColors.white,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  fullName,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: ArgonColors.white,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  email,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.white70,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: onEdit,
-            child: Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: ArgonColors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: const Icon(
-                Icons.edit_outlined,
-                color: ArgonColors.white,
-                size: 18,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

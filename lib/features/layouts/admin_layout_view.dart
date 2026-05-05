@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/widgets/profile_card.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
 import 'package:flutter_course/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
@@ -144,73 +145,10 @@ class _MenuViewState extends State<_MenuView> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           // ── Profile header ──
-          Container(
-            margin: const EdgeInsets.only(top: 16, bottom: 4),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  ArgonColors.primary,
-                  ArgonColors.primary.withValues(alpha: 0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: ArgonColors.primary.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    color: ArgonColors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(26),
-                  ),
-                  child: Center(
-                    child: Text(
-                      _initials,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: ArgonColors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _fullName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: ArgonColors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        _email,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          ProfileCard(
+            fullName: _fullName,
+            email: _email,
+            initials: _initials,
           ),
 
           // ── Navigation section ──
