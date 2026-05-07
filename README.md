@@ -1,22 +1,17 @@
 # flutter_course
 ## Documentation
 ### Run Project
-To run project use ```pub get``` to install dependencies and then ```run``` to execute main.dart file:
+To run the project, use `pub get` to install dependencies and then `run` to execute the main.dart file:
 ```
 flutter pub get
 flutter run
 flutter clean
 ```
 
-### Login authentication
+### Login Authentication
 DummyJSON: [DummyJSON - Auth](https://dummyjson.com/docs/auth)
-Username: emilys
-Password: emilyspass
-
-## Sprints Delivery Videos
-Here you will find the list of deliveries, sprint by sprint.
-- [Content](https://github.com/JuanPabloBC7/flutter_course/tree/feature/transversal_project)
-- [Sprint 1 - Proyecto integrador](https://drive.google.com/file/d/1YatGbW-SEUROhhDvGQt40QAryPF_YNx2/view?usp=drive_link)
+- Username: `emilys`
+- Password: `emilyspass`
 
 ## Project Structure
 ```
@@ -30,41 +25,107 @@ flutter_course/
   │ │ │ └─ OpenSans-Regular.ttf
   │ │ └─ img/
   │ │   ├─ 2.0x/
-  │ │   │ └─ images...
   │ │   └─ images...
   │ ├─ constants/
   │ │ └─ Theme.dart
   │ ├─ network/
+  │ │ ├─ api_client.dart
+  │ │ ├─ app_exceptions.dart
   │ │ └─ services.dart
+  │ ├─ providers/
+  │ │ ├─ service_providers.dart
+  │ │ └─ user_provider.dart
   │ ├─ routing/
-  │ │ └─ routes.dart
+  │ │ └─ app_router.dart
+  │ ├─ utils/
+  │ │ ├─ category_icon.dart
+  │ │ └─ validators.dart
   │ └─ widgets/
-  │   └─ input.dart
+  │   ├─ animated_list_item.dart
+  │   ├─ app_toast.dart
+  │   ├─ balance_summary.dart
+  │   ├─ contact_avatar.dart
+  │   ├─ empty_state.dart
+  │   ├─ error_state.dart
+  │   ├─ form_input.dart
+  │   ├─ frequent_contacts.dart
+  │   ├─ gradient_action_card.dart
+  │   ├─ greeting_header.dart
+  │   ├─ input.dart
+  │   ├─ options_grid.dart
+  │   ├─ profile_card.dart
+  │   ├─ quick_action_button.dart
+  │   ├─ quick_actions.dart
+  │   ├─ section_header.dart
+  │   ├─ stat_card.dart
+  │   ├─ stats_grid.dart
+  │   ├─ transaction_card.dart
+  │   └─ transfer_card.dart
   ├─ features/
-  │ ├─ admin/
-  │ │ ├─ layout/
-  │ │ │ └─ layout_view.dart
-  │ │ └─ pages/
-  │ │   ├─ configuration/
-  │ │   │ └─ configuration_view.dart
-  │ │   ├─ dashboard/
-  │ │   │ └─ dashboard_view.dart
-  │ │   ├─ history/
-  │ │   │ └─ history_view.dart
-  │ │   └─ transfers/
-  │ │     └─ transfers_view.dart
-  │ └─ auth/
-  │   ├─ forgot_password/
-  │   │ └─ forgot_password_view.dart
-  │   └─ login/
-  │     └─ login_view.dart
-  ├─ l10n/
-  │ ├─ app_en.arb
-  │ ├─ app_es.arb
-  │ ├─ app_localizations_en.dart
-  │ ├─ app_localizations_es.dart
-  │ └─ app_localizations.dart
-  └─ main.dart
+  │ ├─ auth/
+  │ │ ├─ auth_injection.dart
+  │ │ ├─ data/
+  │ │ │ ├─ datasources/
+  │ │ │ │ ├─ auth_local_datasource.dart
+  │ │ │ │ └─ auth_remote_datasource.dart
+  │ │ │ └─ repositories/
+  │ │ │   └─ auth_repository_impl.dart
+  │ │ ├─ domain/
+  │ │ │ ├─ entities/
+  │ │ │ │ ├─ auth_token.dart
+  │ │ │ │ ├─ login_result.dart
+  │ │ │ │ └─ user_entity.dart
+  │ │ │ ├─ repositories/
+  │ │ │ │ └─ auth_repository.dart
+  │ │ │ └─ usecases/
+  │ │ │   ├─ check_session_usecase.dart
+  │ │ │   ├─ login_usecase.dart
+  │ │ │   ├─ logout_usecase.dart
+  │ │ │   └─ reset_password_usecase.dart
+  │ │ └─ presentation/
+  │ │   ├─ providers/
+  │ │   │ └─ auth_providers.dart
+  │ │   └─ state/
+  │ │     └─ auth_state.dart
+  │ ├─ layouts/
+  │ │ └─ admin_layout_view.dart
+  │ └─ pages/
+  │   ├─ admin/
+  │   │ ├─ configuration/
+  │   │ │ └─ configuration_view.dart
+  │   │ ├─ dashboard/
+  │   │ │ ├─ models/
+  │   │ │ │ └─ dashboard_data.dart
+  │   │ │ ├─ providers/
+  │   │ │ │ └─ dashboard_providers.dart
+  │   │ │ └─ dashboard_view.dart
+  │   │ ├─ history/
+  │   │ │ ├─ models/
+  │   │ │ │ └─ history_models.dart
+  │   │ │ ├─ providers/
+  │   │ │ │ └─ history_providers.dart
+  │   │ │ └─ history_view.dart
+  │   │ ├─ profile/
+  │   │ │ └─ profile_view.dart
+  │   │ └─ transfers/
+  │   │   ├─ models/
+  │   │   │ └─ transfer_models.dart
+  │   │   ├─ providers/
+  │   │   │ └─ transfers_providers.dart
+  │   │   └─ transfers_view.dart
+  │   ├─ auth/
+  │   │ ├─ forgot_password/
+  │   │ │ └─ forgot_password_view.dart
+  │   │ └─ login/
+  │   │   └─ login_view.dart
+  │   └─ splash/
+  │     └─ splash_view.dart
+  └─ l10n/
+    ├─ app_en.arb
+    ├─ app_es.arb
+    ├─ app_localizations_en.dart
+    ├─ app_localizations_es.dart
+    └─ app_localizations.dart
 ```
 
 # Project Statement
@@ -300,6 +361,5 @@ Preparar una entrega corporativa completa.
 * Video o demo funcional
 
 ---
-### Resultado esperado
-Al finalizar el curso, el estudiante habrá construido un módulo bancario profesional, alineado
-con prácticas reales de desarrollo móvil en entornos financieros de alto tráfico.
+### Expected Outcome
+Upon completing the course, the student will have built a professional banking module, aligned with real-world mobile development practices in high-traffic financial environments.
