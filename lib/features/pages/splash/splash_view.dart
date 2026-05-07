@@ -40,7 +40,7 @@ class _SplashViewState extends ConsumerState<SplashView>
 
     if (!mounted) return;
 
-    final isAuthenticated = ref.read(authProvider).isAuthenticated;
+    final isAuthenticated = ref.read(authProvider) is AuthAuthenticated;
 
     if (isAuthenticated) {
       Navigator.pushReplacementNamed(context, AppRoutes.dashboard);

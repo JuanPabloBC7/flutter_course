@@ -1,86 +1,51 @@
 import 'package:flutter_course/core/network/app_exceptions.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
-import 'package:flutter_course/features/auth/domain/entities/login_result.dart';
+import 'package:flutter_course/features/auth/presentation/state/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// ── Auth State ───────────────────────────────────────────────────────────────
-
-enum AuthStatus { idle, loading, authenticated, unauthenticated, error }
-
-class AuthState {
-  final AuthStatus status;
-  final LoginResult? loginResult;
-  final String? errorMessage;
-
-  const AuthState({
-    this.status = AuthStatus.idle,
-    this.loginResult,
-    this.errorMessage,
-  });
-
-  AuthState copyWith({
-    AuthStatus? status,
-    LoginResult? loginResult,
-    String? errorMessage,
-  }) {
-    return AuthState(
-      status: status ?? this.status,
-      loginResult: loginResult ?? this.loginResult,
-      errorMessage: errorMessage,
-    );
-  }
-
-  bool get isLoading => status == AuthStatus.loading;
-  bool get isAuthenticated => status == AuthStatus.authenticated;
-  bool get hasError => status == AuthStatus.error;
-}
+export 'package:flutter_course/features/auth/presentation/state/auth_state.dart';
 
 // ── Auth Notifier ────────────────────────────────────────────────────────────
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(const AuthState());
+  AuthNotifier() : super(const AuthState.idle());
 
   Future<void> login({required String username, required String password}) async {
-    state = state.copyWith(status: AuthStatus.loading, errorMessage: null);
+    state = const AuthState.loading();
 
     try {
       final result = await AuthInjection.loginUseCase.execute(
         username: username,
         password: password,
       );
-      state = AuthState(status: AuthStatus.authenticated, loginResult: result);
+      state = AuthState.authenticated(loginResult: result);
     } on AppException catch (e) {
-      state = AuthState(status: AuthStatus.error, errorMessage: e.message);
+      state = AuthState.error(message: e.message);
     } on ArgumentError catch (e) {
-      state = AuthState(status: AuthStatus.error, errorMessage: e.message);
+      state = AuthState.error(message: e.message ?? 'Validation error');
     } catch (_) {
-      state = const AuthState(
-        status: AuthStatus.error,
-        errorMessage: 'An unexpected error occurred.',
-      );
+      state = const AuthState.error(message: 'An unexpected error occurred.');
     }
   }
 
   Future<void> logout() async {
-    state = state.copyWith(status: AuthStatus.loading);
+    state = const AuthState.loading();
     try {
       await AuthInjection.logoutUseCase.execute();
     } catch (_) {
       // Continue with logout even if API fails
     }
-    state = const AuthState(status: AuthStatus.unauthenticated);
+    state = const AuthState.unauthenticated();
   }
 
   Future<void> checkSession() async {
     final isAuth = await AuthInjection.checkSessionUseCase.execute();
-    state = AuthState(
-      status: isAuth ? AuthStatus.authenticated : AuthStatus.unauthenticated,
-    );
+    state = isAuth ? const AuthState.authenticated(loginResult: null) : const AuthState.unauthenticated();
   }
 
   void clearError() {
-    if (state.hasError) {
-      state = state.copyWith(status: AuthStatus.idle, errorMessage: null);
+    if (state is AuthError) {
+      state = const AuthState.idle();
     }
   }
 }

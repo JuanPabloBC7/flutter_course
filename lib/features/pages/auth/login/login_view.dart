@@ -83,10 +83,13 @@ class _LoginViewState extends ConsumerState<LoginView>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
+    final isLoading = authState is AuthLoading;
+    final isAuthenticated = authState is AuthAuthenticated;
+    final errorMessage = authState is AuthError ? authState.message : null;
 
     // Navigate on success
     ref.listen<AuthState>(authProvider, (previous, next) {
-      if (next.isAuthenticated) {
+      if (next is AuthAuthenticated) {
         Future.delayed(const Duration(milliseconds: 300), () {
           if (context.mounted) {
             Navigator.pushReplacementNamed(context, '/dashboard');
@@ -269,14 +272,14 @@ class _LoginViewState extends ConsumerState<LoginView>
                         const SizedBox(height: 24),
 
                         // Error banner
-                        if (authState.hasError && authState.errorMessage != null)
+                        if (errorMessage != null)
                           _ErrorBanner(
-                            message: authState.errorMessage!,
+                            message: errorMessage,
                             onDismiss: _clearError,
                           ),
 
                         // Success banner
-                        if (authState.isAuthenticated)
+                        if (isAuthenticated)
                           const _SuccessBanner(),
 
                         // Login button
@@ -284,12 +287,12 @@ class _LoginViewState extends ConsumerState<LoginView>
                           width: double.infinity,
                           height: 52,
                           child: ElevatedButton(
-                            onPressed: authState.isLoading || authState.isAuthenticated ? null : _handleLogin,
+                            onPressed: isLoading || isAuthenticated ? null : _handleLogin,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: authState.isAuthenticated
+                              backgroundColor: isAuthenticated
                                   ? ArgonColors.success
                                   : ArgonColors.primary,
-                              disabledBackgroundColor: authState.isAuthenticated
+                              disabledBackgroundColor: isAuthenticated
                                   ? ArgonColors.success
                                   : ArgonColors.primary.withValues(alpha: 0.6),
                               disabledForegroundColor: ArgonColors.white,
@@ -298,7 +301,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                               ),
                               elevation: 0,
                             ),
-                            child: _buildButtonContent(l10n, authState),
+                            child: _buildButtonContent(l10n, isLoading, isAuthenticated),
                           ),
                         ),
                       ],
@@ -365,8 +368,8 @@ class _LoginViewState extends ConsumerState<LoginView>
     );
   }
 
-  Widget _buildButtonContent(AppLocalizations l10n, AuthState state) {
-    if (state.isLoading) {
+  Widget _buildButtonContent(AppLocalizations l10n, bool isLoading, bool isAuthenticated) {
+    if (isLoading) {
       return const SizedBox(
         width: 22,
         height: 22,
@@ -376,7 +379,7 @@ class _LoginViewState extends ConsumerState<LoginView>
         ),
       );
     }
-    if (state.isAuthenticated) {
+    if (isAuthenticated) {
       return const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

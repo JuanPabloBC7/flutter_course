@@ -1,29 +1,18 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'user_entity.freezed.dart';
+part 'user_entity.g.dart';
+
 /// Core user entity representing an authenticated user.
-/// This is a pure domain object with no dependencies on external layers.
-class UserEntity {
-  final int id;
-  final String username;
-  final String email;
-  final String fullName;
+@freezed
+class UserEntity with _$UserEntity {
+  const factory UserEntity({
+    required int id,
+    required String username,
+    required String email,
+    required String fullName,
+    String? avatar,
+  }) = _UserEntity;
 
-  const UserEntity({
-    required this.id,
-    required this.username,
-    required this.email,
-    required this.fullName,
-  });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserEntity &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          username == other.username;
-
-  @override
-  int get hashCode => id.hashCode ^ username.hashCode;
-
-  @override
-  String toString() => 'UserEntity(id: $id, username: $username, email: $email)';
+  factory UserEntity.fromJson(Map<String, dynamic> json) => _$UserEntityFromJson(json);
 }

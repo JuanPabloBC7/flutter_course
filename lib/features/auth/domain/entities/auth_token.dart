@@ -1,13 +1,15 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'auth_token.freezed.dart';
+part 'auth_token.g.dart';
+
 /// Represents the authentication tokens returned after a successful login.
-class AuthToken {
-  final String accessToken;
-  final String refreshToken;
+@freezed
+class AuthToken with _$AuthToken {
+  const factory AuthToken({
+    required String accessToken,
+    required String refreshToken,
+  }) = _AuthToken;
 
-  const AuthToken({
-    required this.accessToken,
-    required this.refreshToken,
-  });
-
-  @override
-  String toString() => 'AuthToken(accessToken: ${accessToken.substring(0, 8)}...)';
+  factory AuthToken.fromJson(Map<String, dynamic> json) => _$AuthTokenFromJson(json);
 }
