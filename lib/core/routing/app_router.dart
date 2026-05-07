@@ -86,17 +86,18 @@ class AppRouter {
     GoRouterState state,
   ) async {
     final currentPath = state.uri.path;
-
-    // Skip redirect for public routes
-    if (_publicRoutes.contains(currentPath)) {
-      return null;
-    }
+    final isPublicRoute = _publicRoutes.contains(currentPath);
 
     // Check if user has valid tokens
     final isAuthenticated = await AuthInjection.repository.isAuthenticated();
 
-    if (!isAuthenticated) {
-      // Redirect to login if trying to access a protected route
+    // If authenticated and trying to access login/splash → redirect to dashboard
+    if (isAuthenticated && (currentPath == login || currentPath == splash)) {
+      return dashboard;
+    }
+
+    // If not authenticated and trying to access a protected route → redirect to login
+    if (!isAuthenticated && !isPublicRoute) {
       return login;
     }
 
