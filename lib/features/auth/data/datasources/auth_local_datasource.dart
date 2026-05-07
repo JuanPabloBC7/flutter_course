@@ -1,48 +1,41 @@
-/// Local data source for storing/retrieving auth tokens.
-///
-/// In a production app, this would use flutter_secure_storage or similar.
-/// For now, it uses in-memory storage as a placeholder.
-class AuthLocalDataSource {
-  // In-memory token storage (replace with secure storage in production)
-  String? _accessToken;
-  String? _refreshToken;
+import 'package:shared_preferences/shared_preferences.dart';
 
-  /// Stores the authentication tokens locally.
+/// Local data source for persisting/retrieving auth tokens.
+///
+/// Uses [SharedPreferences] for persistent storage that survives app restarts.
+/// In a production app with higher security requirements, consider
+/// using flutter_secure_storage instead.
+class AuthLocalDataSource {
+  static const _keyAccessToken = 'auth_access_token';
+  static const _keyRefreshToken = 'auth_refresh_token';
+
+  /// Stores the authentication tokens persistently.
   Future<void> saveTokens({
     required String accessToken,
     required String refreshToken,
   }) async {
-    // TODO: Replace with secure storage:
-    // await _secureStorage.write(key: 'access_token', value: accessToken);
-    // await _secureStorage.write(key: 'refresh_token', value: refreshToken);
-
-    _accessToken = accessToken;
-    _refreshToken = refreshToken;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyAccessToken, accessToken);
+    await prefs.setString(_keyRefreshToken, refreshToken);
   }
 
   /// Retrieves the stored access token.
   Future<String?> getAccessToken() async {
-    // TODO: Replace with secure storage:
-    // return await _secureStorage.read(key: 'access_token');
-
-    return _accessToken;
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyAccessToken);
   }
 
   /// Retrieves the stored refresh token.
   Future<String?> getRefreshToken() async {
-    // TODO: Replace with secure storage:
-    // return await _secureStorage.read(key: 'refresh_token');
-
-    return _refreshToken;
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyRefreshToken);
   }
 
   /// Clears all stored tokens.
   Future<void> clearTokens() async {
-    // TODO: Replace with secure storage:
-    // await _secureStorage.deleteAll();
-
-    _accessToken = null;
-    _refreshToken = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyAccessToken);
+    await prefs.remove(_keyRefreshToken);
   }
 
   /// Checks if tokens exist in storage.
