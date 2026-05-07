@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/providers/user_provider.dart';
+import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/widgets/profile_card.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
-import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
 import 'package:flutter_course/features/pages/admin/history/history_view.dart';
-import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminLayoutView extends StatefulWidget {
   const AdminLayoutView({super.key});
@@ -153,11 +153,7 @@ class _MenuView extends ConsumerWidget {
                 title: 'Configuration',
                 subtitle: 'App settings and preferences',
                 color: ArgonColors.warning,
-                onTap: () => 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ConfigurationView()),
-                  ),
+                onTap: () => context.push(AppRouter.configuration),
               ),
             ],
           ),
@@ -170,10 +166,7 @@ class _MenuView extends ConsumerWidget {
                 title: 'Profile',
                 subtitle: 'View and edit your profile',
                 color: ArgonColors.primary,
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ProfileView()),
-                ),
+                onTap: () => context.push(AppRouter.profile),
               ),
               _MenuTile(
                 icon: Icons.notifications_none_rounded,
@@ -225,7 +218,7 @@ class _MenuView extends ConsumerWidget {
               onPressed: () async {
                 await ref.read(authProvider.notifier).logout();
                 if (!context.mounted) return;
-                Navigator.pushReplacementNamed(context, '/login');
+                context.go(AppRouter.login);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: ArgonColors.white,

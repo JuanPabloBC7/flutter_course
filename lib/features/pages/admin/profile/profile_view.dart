@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/providers/user_provider.dart';
+import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/widgets/profile_card.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
@@ -226,7 +228,7 @@ class _ProfileViewState extends ConsumerState<ProfileView>
                   onTap: () async {
                     await ref.read(authProvider.notifier).logout();
                     if (!context.mounted) return;
-                    Navigator.pushReplacementNamed(context, '/login');
+                    context.go(AppRouter.login);
                   },
                 ),
                 _ProfileNavTile(

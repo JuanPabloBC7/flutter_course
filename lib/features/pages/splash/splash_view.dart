@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
-import 'package:flutter_course/core/routing/routes.dart';
+import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Splash screen shown on app startup.
 ///
@@ -43,9 +44,9 @@ class _SplashViewState extends ConsumerState<SplashView>
     final isAuthenticated = ref.read(authProvider) is AuthAuthenticated;
 
     if (isAuthenticated) {
-      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      context.go(AppRouter.dashboard);
     } else {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      context.go(AppRouter.login);
     }
   }
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/app_exceptions.dart';
-import 'package:flutter_course/core/widgets/input.dart';
+import 'package:flutter_course/core/routing/app_router.dart';
+import 'package:flutter_course/core/widgets/form_input.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
 import 'package:flutter_course/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -135,7 +137,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => context.pop(),
                     child: Container(
                       width: 44,
                       height: 44,
@@ -221,7 +223,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       // Username
                       _buildLabel(l10n.commonUsername),
                       const SizedBox(height: 8),
-                      Input(
+                      FormInput(
                         placeholder: l10n.commonUsername,
                         controller: _usernameController,
                         prefixIcon: const Icon(
@@ -235,7 +237,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       // Email
                       _buildLabel(l10n.commonEmail),
                       const SizedBox(height: 8),
-                      Input(
+                      FormInput(
                         placeholder: l10n.commonEmail,
                         controller: _emailController,
                         prefixIcon: const Icon(
@@ -304,7 +306,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
 
                       // Go back button
                       OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => context.pop(),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: ArgonColors.text,
                           minimumSize: const Size(double.infinity, 52),
@@ -421,7 +423,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context); // close dialog
-                  Navigator.pushReplacementNamed(context, '/login');
+                  context.go(AppRouter.login);
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: ArgonColors.white,

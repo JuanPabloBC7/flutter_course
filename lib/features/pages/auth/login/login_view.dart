@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/utils/validators.dart';
 import 'package:flutter_course/core/widgets/form_input.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
@@ -92,7 +94,7 @@ class _LoginViewState extends ConsumerState<LoginView>
       if (next is AuthAuthenticated) {
         Future.delayed(const Duration(milliseconds: 300), () {
           if (context.mounted) {
-            Navigator.pushReplacementNamed(context, '/dashboard');
+            context.go(AppRouter.dashboard);
           }
         });
       }
@@ -258,7 +260,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                         Align(
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, '/forgot-password'),
+                            onTap: () => context.push(AppRouter.forgotPassword),
                             child: Text(
                               l10n.commonForgotPassword,
                               style: const TextStyle(

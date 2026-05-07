@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
-import 'package:flutter_course/core/routing/routes.dart';
-import 'package:flutter_course/features/pages/splash/splash_view.dart';
+import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,9 +14,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'BAM Wallet & Transfers',
+      routerConfig: AppRouter.router,
 
       // ── Material 3 Theme ──
       theme: ThemeData(
@@ -138,11 +138,6 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-
-      // ── Routing ──
-      home: const SplashView(),
-      initialRoute: AppRoutes.splash,
-      onGenerateRoute: AppRoutes.generateRoute,
     );
   }
 }
