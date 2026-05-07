@@ -81,7 +81,7 @@ class _ConfigurationViewState extends State<ConfigurationView>
         backgroundColor: ArgonColors.white,
         elevation: 0,
         centerTitle: false,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: const Text(
           'Configuration',
           style: TextStyle(
