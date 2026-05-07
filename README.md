@@ -8,6 +8,11 @@ flutter run
 flutter clean
 ```
 
+### Login authentication
+DummyJSON: [DummyJSON - Auth](https://dummyjson.com/docs/auth)
+Username: emilys
+Password: emilyspass
+
 ## Sprints Delivery Videos
 Here you will find the list of deliveries, sprint by sprint.
 - [Content](https://github.com/JuanPabloBC7/flutter_course/tree/feature/transversal_project)

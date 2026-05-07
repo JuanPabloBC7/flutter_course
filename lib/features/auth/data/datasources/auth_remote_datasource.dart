@@ -1,69 +1,144 @@
-import 'package:flutter_course/core/network/api_client.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_course/core/network/app_exceptions.dart';
-
-// ignore_for_file: unused_field
-// The _client field is declared for future use with real API endpoints.
 
 /// Remote data source for authentication API calls.
 ///
-/// This class handles the raw HTTP communication with the backend.
-/// It returns raw Maps that the repository will convert to domain entities.
+/// Uses the dummyJSON API for login: https://dummyjson.com/docs/auth
+/// Other endpoints (logout, reset) remain as mock for now.
 class AuthRemoteDataSource {
-  final ApiClient _client = ApiClient();
+  final Dio _dio;
 
-  /// Calls the login endpoint.
-  /// Returns raw response data on success.
+  AuthRemoteDataSource()
+      : _dio = Dio(BaseOptions(
+          baseUrl: 'https://dummyjson.com',
+          connectTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 15),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ));
+
+  /// Calls the dummyJSON login endpoint.
+  ///
+  /// API: POST https://dummyjson.com/auth/login
+  /// Body: { "username": "emilys", "password": "emilyspass", "expiresInMins": 30 }
+  ///
+  /// Test credentials: username: "emilys", password: "emilyspass"
+  ///
+  /// Returns the full response map on success.
   Future<Map<String, dynamic>> login({
     required String username,
     required String password,
   }) async {
-    // TODO: Replace with real API call when endpoint is available:
-    // final response = await _client.post('/auth/login', data: {
-    //   'username': username,
-    //   'password': password,
-    // });
-    // return response.data as Map<String, dynamic>;
+    try {
+      final response = await _dio.post(
+        '/auth/login',
+        data: {
+          'username': username,
+          'password': password,
+          'expiresInMins': 30,
+        },
+      );
 
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    // Mock: only accept specific credentials
-    if (username != 'jpbalan' || password != '123456') {
-      throw const UnauthorizedException(
-        message: 'Invalid username or password.',
+      return response.data as Map<String, dynamic>;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400 || e.response?.statusCode == 401) {
+        final message = e.response?.data?['message'] as String? ?? 'Invalid credentials';
+        throw UnauthorizedException(message: message);
+      }
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw const TimeoutException();
+      }
+      if (e.type == DioExceptionType.connectionError) {
+        throw const NetworkException();
+      }
+      throw AppException(
+        message: e.message ?? 'Login failed',
+        originalError: e,
       );
     }
-
-    return {
-      'token': 'mock-jwt-token-abc123',
-      'refreshToken': 'mock-refresh-token-xyz789',
-      'user': {
-        'id': 1,
-        'username': 'jpbalan',
-        'email': 'jpbalan@example.com',
-        'fullName': 'Juan P. Balan',
-      },
-    };
   }
 
-  /// Calls the logout endpoint.
+  /// Calls the logout endpoint (mock for now).
   Future<void> logout() async {
-    // TODO: Replace with real API call:
-    // await _client.post('/auth/logout');
-
     await Future.delayed(const Duration(milliseconds: 300));
   }
 
-  /// Calls the password reset endpoint.
+  /// Gets the current authenticated user's profile.
+  ///
+  /// API: GET https://dummyjson.com/auth/me
+  /// Requires Authorization header with Bearer token.
+  ///
+  /// Used to validate the session on app startup.
+  Future<Map<String, dynamic>> getCurrentUser({required String token}) async {
+    try {
+      final response = await _dio.get(
+        '/auth/me',
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+        ),
+      );
+
+      return response.data as Map<String, dynamic>;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw const UnauthorizedException(message: 'Session expired. Please log in again.');
+      }
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw const TimeoutException();
+      }
+      if (e.type == DioExceptionType.connectionError) {
+        throw const NetworkException();
+      }
+      throw AppException(
+        message: e.message ?? 'Failed to get user profile',
+        originalError: e,
+      );
+    }
+  }
+
+  /// Refreshes the authentication token.
+  ///
+  /// API: POST https://dummyjson.com/auth/refresh
+  /// Body: `{ "refreshToken": "...", "expiresInMins": 30 }`
+  ///
+  /// Returns new tokens on success.
+  Future<Map<String, dynamic>> refreshToken({required String refreshToken}) async {
+    try {
+      final response = await _dio.post(
+        '/auth/refresh',
+        data: {
+          'refreshToken': refreshToken,
+          'expiresInMins': 30,
+        },
+      );
+
+      return response.data as Map<String, dynamic>;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        throw const UnauthorizedException(message: 'Refresh token expired. Please log in again.');
+      }
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw const TimeoutException();
+      }
+      if (e.type == DioExceptionType.connectionError) {
+        throw const NetworkException();
+      }
+      throw AppException(
+        message: e.message ?? 'Failed to refresh token',
+        originalError: e,
+      );
+    }
+  }
+
+  /// Calls the password reset endpoint (mock for now).
   Future<void> requestPasswordReset({
     required String username,
     required String email,
   }) async {
-    // TODO: Replace with real API call:
-    // await _client.post('/auth/reset-password', data: {
-    //   'username': username,
-    //   'email': email,
-    // });
-
     await Future.delayed(const Duration(milliseconds: 600));
 
     if (username.isEmpty || email.isEmpty) {

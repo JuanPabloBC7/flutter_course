@@ -1,3 +1,4 @@
+import 'package:flutter_course/core/network/app_exceptions.dart';
 import 'package:flutter_course/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:flutter_course/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:flutter_course/features/auth/domain/entities/auth_token.dart';
@@ -31,18 +32,18 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
-    // 2. Map raw data to domain entities
+    // 2. Map dummyJSON response to domain entities
+    // dummyJSON returns user data at the top level alongside tokens
     final token = AuthToken(
-      accessToken: response['token'] as String,
-      refreshToken: response['refreshToken'] as String,
+      accessToken: response['accessToken'] as String? ?? response['token'] as String? ?? '',
+      refreshToken: response['refreshToken'] as String? ?? '',
     );
 
-    final userData = response['user'] as Map<String, dynamic>;
     final user = UserEntity(
-      id: userData['id'] as int,
-      username: userData['username'] as String,
-      email: userData['email'] as String,
-      fullName: userData['fullName'] as String,
+      id: response['id'] as int? ?? 0,
+      username: response['username'] as String? ?? '',
+      email: response['email'] as String? ?? '',
+      fullName: '${response['firstName'] ?? ''} ${response['lastName'] ?? ''}'.trim(),
     );
 
     // 3. Persist tokens locally
@@ -80,6 +81,59 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> isAuthenticated() async {
-    return _localDataSource.hasTokens();
+    final hasTokens = await _localDataSource.hasTokens();
+    if (!hasTokens) return false;
+
+    // Validate the token by calling auth/me
+    try {
+      final token = await _localDataSource.getAccessToken();
+      if (token == null) return false;
+
+      await _remoteDataSource.getCurrentUser(token: token);
+      return true;
+    } catch (_) {
+      // Token is invalid or expired, try to refresh
+      try {
+        await refreshSession();
+        return true;
+      } catch (_) {
+        // Refresh also failed, session is invalid
+        await _localDataSource.clearTokens();
+        return false;
+      }
+    }
+  }
+
+  @override
+  Future<UserEntity> getCurrentUser() async {
+    final token = await _localDataSource.getAccessToken();
+    if (token == null || token.isEmpty) {
+      throw const UnauthorizedException(message: 'No access token found.');
+    }
+
+    final response = await _remoteDataSource.getCurrentUser(token: token);
+
+    return UserEntity(
+      id: response['id'] as int? ?? 0,
+      username: response['username'] as String? ?? '',
+      email: response['email'] as String? ?? '',
+      fullName: '${response['firstName'] ?? ''} ${response['lastName'] ?? ''}'.trim(),
+    );
+  }
+
+  @override
+  Future<void> refreshSession() async {
+    final refreshToken = await _localDataSource.getRefreshToken();
+    if (refreshToken == null || refreshToken.isEmpty) {
+      throw const UnauthorizedException(message: 'No refresh token found.');
+    }
+
+    final response = await _remoteDataSource.refreshToken(refreshToken: refreshToken);
+
+    // Persist new tokens
+    await _localDataSource.saveTokens(
+      accessToken: response['accessToken'] as String? ?? response['token'] as String? ?? '',
+      refreshToken: response['refreshToken'] as String? ?? refreshToken,
+    );
   }
 }
