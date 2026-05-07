@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/routing/routes.dart';
-import 'package:flutter_course/features/auth/auth_injection.dart';
-import 'package:flutter_course/features/auth/domain/usecases/check_session_usecase.dart';
+import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Splash screen shown on app startup.
 ///
 /// Checks if the user has an active session:
 /// - If authenticated → navigates to dashboard
 /// - If not authenticated → navigates to login
-class SplashView extends StatefulWidget {
+class SplashView extends ConsumerStatefulWidget {
   const SplashView({super.key});
 
   @override
-  State<SplashView> createState() => _SplashViewState();
+  ConsumerState<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView>
+class _SplashViewState extends ConsumerState<SplashView>
     with SingleTickerProviderStateMixin {
-  final CheckSessionUseCase _checkSession = AuthInjection.checkSessionUseCase;
   late AnimationController _animController;
 
   @override
@@ -33,14 +32,15 @@ class _SplashViewState extends State<SplashView>
   }
 
   Future<void> _checkAuthAndNavigate() async {
-    // Small delay for splash branding visibility
     await Future.delayed(const Duration(milliseconds: 1200));
 
     if (!mounted) return;
 
-    final isAuthenticated = await _checkSession.execute();
+    await ref.read(authProvider.notifier).checkSession();
 
     if (!mounted) return;
+
+    final isAuthenticated = ref.read(authProvider).isAuthenticated;
 
     if (isAuthenticated) {
       Navigator.pushReplacementNamed(context, AppRoutes.dashboard);

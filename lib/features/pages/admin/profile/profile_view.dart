@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
-import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/providers/user_provider.dart';
 import 'package:flutter_course/core/widgets/profile_card.dart';
-import 'package:flutter_course/features/auth/auth_injection.dart';
+import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfileView extends StatefulWidget {
+class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
 
   @override
-  State<ProfileView> createState() => _ProfileViewState();
+  ConsumerState<ProfileView> createState() => _ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView>
+class _ProfileViewState extends ConsumerState<ProfileView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
-
-  final UserService _userService = UserService();
-  Map<String, dynamic>? _userData;
 
   @override
   void initState() {
@@ -26,17 +24,6 @@ class _ProfileViewState extends State<ProfileView>
       duration: const Duration(milliseconds: 700),
     );
     _animController.forward();
-    _loadUser();
-  }
-
-  Future<void> _loadUser() async {
-    try {
-      final data = await _userService.fetchUser();
-      if (!mounted) return;
-      setState(() => _userData = data);
-    } catch (_) {
-      // Fallback to defaults
-    }
   }
 
   @override
@@ -45,9 +32,9 @@ class _ProfileViewState extends State<ProfileView>
     super.dispose();
   }
 
-  String get _fullName => _userData?['fullName'] as String? ?? 'User';
-  String get _email => _userData?['email'] as String? ?? 'email@example.com';
-  String get _username => _userData?['username'] as String? ?? 'user';
+  String get _fullName => ref.watch(userProfileProvider).valueOrNull?['fullName'] as String? ?? 'User';
+  String get _email => ref.watch(userProfileProvider).valueOrNull?['email'] as String? ?? 'email@example.com';
+  String get _username => ref.watch(userProfileProvider).valueOrNull?['username'] as String? ?? 'user';
   String get _initials {
     final parts = _fullName.trim().split(' ');
     if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
@@ -237,9 +224,7 @@ class _ProfileViewState extends State<ProfileView>
                   subtitle: 'Sign out of your account',
                   color: ArgonColors.error,
                   onTap: () async {
-                    try {
-                      await AuthInjection.logoutUseCase.execute();
-                    } catch (_) {}
+                    await ref.read(authProvider.notifier).logout();
                     if (!context.mounted) return;
                     Navigator.pushReplacementNamed(context, '/login');
                   },

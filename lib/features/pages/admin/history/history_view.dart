@@ -1,32 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
-import 'package:flutter_course/core/network/services.dart';
 import 'package:flutter_course/core/utils/category_icon.dart';
 import 'package:flutter_course/core/widgets/balance_summary.dart';
 import 'package:flutter_course/core/widgets/empty_state.dart';
 import 'package:flutter_course/core/widgets/error_state.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
+import 'package:flutter_course/features/pages/admin/history/providers/history_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HistoryView extends StatefulWidget {
+class HistoryView extends ConsumerStatefulWidget {
   const HistoryView({super.key});
 
   @override
-  State<HistoryView> createState() => _HistoryViewState();
+  ConsumerState<HistoryView> createState() => _HistoryViewState();
 }
 
-class _HistoryViewState extends State<HistoryView>
+class _HistoryViewState extends ConsumerState<HistoryView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
-
-  final TransactionService _transactionService = TransactionService();
-  final AccountService _accountService = AccountService();
-
-  List<Map<String, dynamic>> _transactions = [];
-  Map<String, dynamic>? _accountData;
-  bool _isLoading = true;
-  String? _activeFilter;
-  String? _errorMessage;
 
   @override
   void initState() {
@@ -35,39 +27,6 @@ class _HistoryViewState extends State<HistoryView>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    _loadData();
-  }
-
-  Future<void> _loadData({String? filter}) async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final results = await Future.wait([
-        _transactionService.fetchTransactions(filter: filter),
-        if (_accountData == null) _accountService.fetchAccountSummary(),
-      ]);
-
-      if (!mounted) return;
-
-      setState(() {
-        _transactions = results[0] as List<Map<String, dynamic>>;
-        if (results.length > 1) {
-          _accountData = results[1] as Map<String, dynamic>;
-        }
-        _activeFilter = filter;
-        _isLoading = false;
-      });
-      _animController.forward(from: 0);
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _errorMessage = e.toString();
-        _isLoading = false;
-      });
-    }
   }
 
   @override
@@ -76,11 +35,11 @@ class _HistoryViewState extends State<HistoryView>
     super.dispose();
   }
 
-  List<dynamic> _buildGroupedList() {
+  List<dynamic> _buildGroupedList(List<Map<String, dynamic>> transactions) {
     final List<dynamic> items = [];
     String? lastSection;
 
-    for (final tx in _transactions) {
+    for (final tx in transactions) {
       final section = tx['section'] as String? ?? 'Other';
       if (section != lastSection) {
         items.add(section);
@@ -93,6 +52,10 @@ class _HistoryViewState extends State<HistoryView>
 
   @override
   Widget build(BuildContext context) {
+    final transactionsAsync = ref.watch(historyTransactionsProvider);
+    final accountAsync = ref.watch(historyAccountProvider);
+    final activeFilter = ref.watch(historyFilterProvider);
+
     return Scaffold(
       backgroundColor: ArgonColors.bgColorScreen,
       appBar: AppBar(
@@ -107,39 +70,47 @@ class _HistoryViewState extends State<HistoryView>
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list_rounded, color: ArgonColors.text, size: 24),
-            onPressed: () => _showFilterSheet(context),
+            onPressed: () => _showFilterSheet(context, activeFilter),
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: ArgonColors.primary))
-          : _errorMessage != null
-              ? ErrorState(
-                  message: _errorMessage!,
-                  onRetry: () => _loadData(filter: _activeFilter),
-                )
-              : _transactions.isEmpty
-                  ? EmptyState(
-                      icon: Icons.receipt_long_outlined,
-                      title: 'No transactions yet',
-                      subtitle: _activeFilter != null
-                          ? 'No $_activeFilter transactions found'
-                          : 'Your transaction history will appear here',
-                      actionLabel: _activeFilter != null ? 'Show all transactions' : null,
-                      onAction: _activeFilter != null ? () => _loadData() : null,
-                    )
-                  : RefreshIndicator(
-                      color: ArgonColors.primary,
-                      onRefresh: () => _loadData(filter: _activeFilter),
-                      child: _buildTransactionList(),
-                    ),
+      body: transactionsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator(color: ArgonColors.primary)),
+        error: (error, _) => ErrorState(
+          message: error.toString(),
+          onRetry: () => ref.invalidate(historyTransactionsProvider),
+        ),
+        data: (transactions) {
+          if (transactions.isEmpty) {
+            return EmptyState(
+              icon: Icons.receipt_long_outlined,
+              title: 'No transactions yet',
+              subtitle: activeFilter != null ? 'No $activeFilter transactions found' : 'Your transaction history will appear here',
+              actionLabel: activeFilter != null ? 'Show all transactions' : null,
+              onAction: activeFilter != null ? () => ref.read(historyFilterProvider.notifier).state = null : null,
+            );
+          }
+
+          _animController.forward(from: 0);
+
+          final totalBalance = accountAsync.valueOrNull?['totalBalance'] as num? ?? 0;
+          final percentChange = accountAsync.valueOrNull?['percentChange'] as num? ?? 0;
+
+          return RefreshIndicator(
+            color: ArgonColors.primary,
+            onRefresh: () async {
+              ref.invalidate(historyTransactionsProvider);
+              ref.invalidate(historyAccountProvider);
+            },
+            child: _buildTransactionList(transactions, totalBalance.toDouble(), percentChange.toDouble()),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildTransactionList() {
-    final groupedItems = _buildGroupedList();
-    final totalBalance = (_accountData?['totalBalance'] as num?)?.toDouble() ?? 0;
-    final percentChange = (_accountData?['percentChange'] as num?)?.toDouble() ?? 0;
+  Widget _buildTransactionList(List<Map<String, dynamic>> transactions, double totalBalance, double percentChange) {
+    final groupedItems = _buildGroupedList(transactions);
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -209,7 +180,7 @@ class _HistoryViewState extends State<HistoryView>
     );
   }
 
-  void _showFilterSheet(BuildContext context) {
+  void _showFilterSheet(BuildContext context, String? activeFilter) {
     showModalBottomSheet(
       context: context,
       backgroundColor: ArgonColors.white,
@@ -234,9 +205,9 @@ class _HistoryViewState extends State<HistoryView>
                 const SizedBox(height: 20),
                 const Text('Filter Transactions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ArgonColors.text)),
                 const SizedBox(height: 16),
-                _FilterOption(label: 'All', icon: Icons.list, isActive: _activeFilter == null, onTap: () { Navigator.pop(context); _loadData(); }),
-                _FilterOption(label: 'Income', icon: Icons.arrow_downward, iconColor: ArgonColors.success, isActive: _activeFilter == 'income', onTap: () { Navigator.pop(context); _loadData(filter: 'income'); }),
-                _FilterOption(label: 'Expenses', icon: Icons.arrow_upward, iconColor: ArgonColors.error, isActive: _activeFilter == 'expense', onTap: () { Navigator.pop(context); _loadData(filter: 'expense'); }),
+                _FilterOption(label: 'All', icon: Icons.list, isActive: activeFilter == null, onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = null; }),
+                _FilterOption(label: 'Income', icon: Icons.arrow_downward, iconColor: ArgonColors.success, isActive: activeFilter == 'income', onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = 'income'; }),
+                _FilterOption(label: 'Expenses', icon: Icons.arrow_upward, iconColor: ArgonColors.error, isActive: activeFilter == 'expense', onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = 'expense'; }),
                 const SizedBox(height: 8),
               ],
             ),

@@ -1,40 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
-import 'package:flutter_course/core/network/app_exceptions.dart';
 import 'package:flutter_course/core/utils/validators.dart';
 import 'package:flutter_course/core/widgets/form_input.dart';
-import 'package:flutter_course/features/auth/auth_injection.dart';
-import 'package:flutter_course/features/auth/domain/usecases/login_usecase.dart';
+import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// ── Login State ──────────────────────────────────────────────────────────────
-
-enum LoginStatus { idle, loading, success, error }
-
-class LoginView extends StatefulWidget {
+class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView>
+class _LoginViewState extends ConsumerState<LoginView>
     with SingleTickerProviderStateMixin {
-  // Form
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // State
-  LoginStatus _status = LoginStatus.idle;
-  String? _errorMessage;
   bool _obscurePassword = true;
   bool _hasAttemptedSubmit = false;
 
-  // Dependencies
-  final LoginUseCase _loginUseCase = AuthInjection.loginUseCase;
-
-  // Animation
   late AnimationController _animController;
 
   @override
@@ -55,72 +42,19 @@ class _LoginViewState extends State<LoginView>
     super.dispose();
   }
 
-  // ── Login handler ──────────────────────────────────────────────────────────
-
   Future<void> _handleLogin() async {
-    // Mark that user has attempted to submit (enables real-time validation)
     setState(() => _hasAttemptedSubmit = true);
 
-    // Validate form fields
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
-    // Transition to loading state
-    setState(() {
-      _status = LoginStatus.loading;
-      _errorMessage = null;
-    });
-
-    try {
-      await _loginUseCase.execute(
-        username: _usernameController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      if (!mounted) return;
-
-      // Transition to success state
-      setState(() => _status = LoginStatus.success);
-
-      // Brief delay to show success state before navigating
-      await Future.delayed(const Duration(milliseconds: 300));
-      if (!mounted) return;
-
-      Navigator.pushReplacementNamed(context, '/dashboard');
-    } on AppException catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _status = LoginStatus.error;
-        _errorMessage = e.message;
-      });
-    } on ArgumentError catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _status = LoginStatus.error;
-        _errorMessage = e.message;
-      });
-    } catch (_) {
-      if (!mounted) return;
-      setState(() {
-        _status = LoginStatus.error;
-        _errorMessage = 'An unexpected error occurred. Please try again.';
-      });
-    }
+    await ref.read(authProvider.notifier).login(
+          username: _usernameController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
   }
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
-
-  bool get _isLoading => _status == LoginStatus.loading;
-  bool get _isSuccess => _status == LoginStatus.success;
-
   void _clearError() {
-    if (_errorMessage != null) {
-      setState(() {
-        _errorMessage = null;
-        _status = LoginStatus.idle;
-      });
-    }
+    ref.read(authProvider.notifier).clearError();
   }
 
   Widget _buildAnimatedItem({required int index, required Widget child}) {
@@ -145,11 +79,21 @@ class _LoginViewState extends State<LoginView>
     );
   }
 
-  // ── Build ──────────────────────────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final authState = ref.watch(authProvider);
+
+    // Navigate on success
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next.isAuthenticated) {
+        Future.delayed(const Duration(milliseconds: 300), () {
+          if (context.mounted) {
+            Navigator.pushReplacementNamed(context, '/dashboard');
+          }
+        });
+      }
+    });
 
     return Scaffold(
       body: Container(
@@ -256,14 +200,13 @@ class _LoginViewState extends State<LoginView>
                         ),
                         const SizedBox(height: 24),
 
-                        // ── Username field ──
+                        // Username
                         _buildLabel(l10n.commonUsername),
                         const SizedBox(height: 8),
                         FormInput(
                           placeholder: l10n.commonUsername,
                           controller: _usernameController,
                           textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.text,
                           prefixIcon: const Icon(
                             Icons.person_outline_rounded,
                             color: ArgonColors.muted,
@@ -277,7 +220,7 @@ class _LoginViewState extends State<LoginView>
                         ),
                         const SizedBox(height: 18),
 
-                        // ── Password field ──
+                        // Password
                         _buildLabel(l10n.commonPassword),
                         const SizedBox(height: 8),
                         FormInput(
@@ -298,9 +241,7 @@ class _LoginViewState extends State<LoginView>
                               color: ArgonColors.muted,
                               size: 20,
                             ),
-                            onPressed: () {
-                              setState(() => _obscurePassword = !_obscurePassword);
-                            },
+                            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                           ),
                           autovalidateMode: _hasAttemptedSubmit
                               ? AutovalidateMode.onUserInteraction
@@ -310,13 +251,11 @@ class _LoginViewState extends State<LoginView>
                         ),
                         const SizedBox(height: 12),
 
-                        // ── Forgot password link ──
+                        // Forgot password
                         Align(
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/forgot-password');
-                            },
+                            onTap: () => Navigator.pushNamed(context, '/forgot-password'),
                             child: Text(
                               l10n.commonForgotPassword,
                               style: const TextStyle(
@@ -329,29 +268,28 @@ class _LoginViewState extends State<LoginView>
                         ),
                         const SizedBox(height: 24),
 
-                        // ── Error banner (server-side errors) ──
-                        if (_errorMessage != null)
+                        // Error banner
+                        if (authState.hasError && authState.errorMessage != null)
                           _ErrorBanner(
-                            message: _errorMessage!,
+                            message: authState.errorMessage!,
                             onDismiss: _clearError,
                           ),
 
-                        // ── Success banner ──
-                        if (_isSuccess)
+                        // Success banner
+                        if (authState.isAuthenticated)
                           const _SuccessBanner(),
 
-                        // ── Login button ──
+                        // Login button
                         SizedBox(
                           width: double.infinity,
                           height: 52,
                           child: ElevatedButton(
-                            onPressed: _isLoading || _isSuccess ? null : _handleLogin,
+                            onPressed: authState.isLoading || authState.isAuthenticated ? null : _handleLogin,
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: ArgonColors.white,
-                              backgroundColor: _isSuccess
+                              backgroundColor: authState.isAuthenticated
                                   ? ArgonColors.success
                                   : ArgonColors.primary,
-                              disabledBackgroundColor: _isSuccess
+                              disabledBackgroundColor: authState.isAuthenticated
                                   ? ArgonColors.success
                                   : ArgonColors.primary.withValues(alpha: 0.6),
                               disabledForegroundColor: ArgonColors.white,
@@ -360,7 +298,7 @@ class _LoginViewState extends State<LoginView>
                               ),
                               elevation: 0,
                             ),
-                            child: _buildButtonContent(l10n),
+                            child: _buildButtonContent(l10n, authState),
                           ),
                         ),
                       ],
@@ -371,7 +309,7 @@ class _LoginViewState extends State<LoginView>
 
               const SizedBox(height: 24),
 
-              // ── Divider with "or" ──
+              // ── Divider ──
               _buildAnimatedItem(
                 index: 2,
                 child: Row(
@@ -398,7 +336,7 @@ class _LoginViewState extends State<LoginView>
 
               const SizedBox(height: 20),
 
-              // ── Social login buttons ──
+              // ── Social buttons ──
               _buildAnimatedItem(
                 index: 3,
                 child: Row(
@@ -427,8 +365,8 @@ class _LoginViewState extends State<LoginView>
     );
   }
 
-  Widget _buildButtonContent(AppLocalizations l10n) {
-    if (_isLoading) {
+  Widget _buildButtonContent(AppLocalizations l10n, AuthState state) {
+    if (state.isLoading) {
       return const SizedBox(
         width: 22,
         height: 22,
@@ -438,7 +376,7 @@ class _LoginViewState extends State<LoginView>
         ),
       );
     }
-    if (_isSuccess) {
+    if (state.isAuthenticated) {
       return const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -539,7 +477,7 @@ class _SuccessBanner extends StatelessWidget {
   }
 }
 
-// ── Social Login Button ──────────────────────────────────────────────────────
+// ── Social Button ────────────────────────────────────────────────────────────
 
 class _SocialButton extends StatelessWidget {
   final IconData icon;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
-import 'package:flutter_course/core/network/services.dart';
 import 'package:flutter_course/core/utils/category_icon.dart';
 import 'package:flutter_course/core/widgets/animated_list_item.dart';
 import 'package:flutter_course/core/widgets/app_toast.dart';
@@ -11,23 +10,19 @@ import 'package:flutter_course/core/widgets/quick_actions.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/stats_grid.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
+import 'package:flutter_course/features/pages/admin/dashboard/providers/dashboard_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DashboardView extends StatefulWidget {
+class DashboardView extends ConsumerStatefulWidget {
   const DashboardView({super.key});
 
   @override
-  State<DashboardView> createState() => _DashboardViewState();
+  ConsumerState<DashboardView> createState() => _DashboardViewState();
 }
 
-class _DashboardViewState extends State<DashboardView>
+class _DashboardViewState extends ConsumerState<DashboardView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
-
-  final UserService _userService = UserService();
-  final AccountService _accountService = AccountService();
-  final TransactionService _transactionService = TransactionService();
-
-  late Future<_DashboardData> _dataFuture;
 
   @override
   void initState() {
@@ -35,21 +30,6 @@ class _DashboardViewState extends State<DashboardView>
     _animController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
-    );
-    _dataFuture = _loadData();
-  }
-
-  Future<_DashboardData> _loadData() async {
-    final results = await Future.wait([
-      _userService.fetchUser(),
-      _accountService.fetchAccountSummary(),
-      _transactionService.fetchTransactions(limit: 4),
-    ]);
-
-    return _DashboardData(
-      user: results[0] as Map<String, dynamic>,
-      account: results[1] as Map<String, dynamic>,
-      transactions: results[2] as List<Map<String, dynamic>>,
     );
   }
 
@@ -65,37 +45,29 @@ class _DashboardViewState extends State<DashboardView>
 
   @override
   Widget build(BuildContext context) {
+    final dashboardAsync = ref.watch(dashboardProvider);
+
     return Scaffold(
       backgroundColor: ArgonColors.bgColorScreen,
-      body: FutureBuilder<_DashboardData>(
-        future: _dataFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: ArgonColors.primary),
-            );
-          }
+      body: dashboardAsync.when(
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: ArgonColors.primary),
+        ),
+        error: (error, _) => ErrorState(
+          message: 'Error: $error',
+          onRetry: () => ref.invalidate(dashboardProvider),
+        ),
+        data: (data) {
+          _animController.forward(from: 0);
 
-          if (snapshot.hasError) {
-            return ErrorState(
-              message: 'Error: ${snapshot.error}',
-              onRetry: () => setState(() => _dataFuture = _loadData()),
-            );
-          }
-
-          final data = snapshot.data!;
           final username = (data.user['fullName'] ?? data.user['username'] ?? 'User') as String;
           final totalBalance = (data.account['totalBalance'] as num).toDouble();
           final percentChange = (data.account['percentChange'] as num).toDouble();
           final stats = data.account['stats'] as Map<String, dynamic>;
 
-          _animController.forward(from: 0);
-
           return RefreshIndicator(
             color: ArgonColors.primary,
-            onRefresh: () async {
-              setState(() => _dataFuture = _loadData());
-            },
+            onRefresh: () async => ref.invalidate(dashboardProvider),
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -230,7 +202,24 @@ class _DashboardViewState extends State<DashboardView>
                   controller: _animController,
                   child: const SectionHeader(title: 'RECENT TRANSACTIONS'),
                 ),
-                ..._buildRecentTransactions(data.transactions),
+                ...data.transactions.take(4).toList().asMap().entries.map((entry) {
+                  final tx = entry.value;
+                  final isIncome = tx['type'] == 'income';
+                  return AnimatedListItem(
+                    index: 6 + entry.key,
+                    controller: _animController,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: TransactionCard(
+                        title: tx['title'] as String,
+                        date: tx['section'] as String,
+                        amount: (tx['amount'] as num).toDouble(),
+                        type: isIncome ? TransactionType.income : TransactionType.expense,
+                        icon: CategoryIcon.fromCategory(tx['category'] as String),
+                      ),
+                    ),
+                  );
+                }),
                 const SizedBox(height: 24),
               ],
             ),
@@ -239,43 +228,4 @@ class _DashboardViewState extends State<DashboardView>
       ),
     );
   }
-
-  List<Widget> _buildRecentTransactions(List<Map<String, dynamic>> transactions) {
-    final recent = transactions.take(4).toList();
-
-    return recent.asMap().entries.map((entry) {
-      final i = entry.key;
-      final tx = entry.value;
-      final isIncome = tx['type'] == 'income';
-
-      return AnimatedListItem(
-        index: 6 + i,
-        controller: _animController,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: TransactionCard(
-            title: tx['title'] as String,
-            date: tx['section'] as String,
-            amount: (tx['amount'] as num).toDouble(),
-            type: isIncome ? TransactionType.income : TransactionType.expense,
-            icon: CategoryIcon.fromCategory(tx['category'] as String),
-          ),
-        ),
-      );
-    }).toList();
-  }
-}
-
-// ── Data container ───────────────────────────────────────────────────────────
-
-class _DashboardData {
-  final Map<String, dynamic> user;
-  final Map<String, dynamic> account;
-  final List<Map<String, dynamic>> transactions;
-
-  const _DashboardData({
-    required this.user,
-    required this.account,
-    required this.transactions,
-  });
 }

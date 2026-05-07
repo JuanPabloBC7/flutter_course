@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
-import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/providers/user_provider.dart';
 import 'package:flutter_course/core/widgets/profile_card.dart';
-import 'package:flutter_course/features/auth/auth_injection.dart';
+import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ConfigurationView extends StatefulWidget {
+class ConfigurationView extends ConsumerStatefulWidget {
   const ConfigurationView({super.key});
 
   @override
-  State<ConfigurationView> createState() => _ConfigurationViewState();
+  ConsumerState<ConfigurationView> createState() => _ConfigurationViewState();
 }
 
-class _ConfigurationViewState extends State<ConfigurationView>
+class _ConfigurationViewState extends ConsumerState<ConfigurationView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
-
-  final UserService _userService = UserService();
-  Map<String, dynamic>? _userData;
 
   // Toggle states
   bool _notificationsEnabled = true;
@@ -32,17 +30,6 @@ class _ConfigurationViewState extends State<ConfigurationView>
       duration: const Duration(milliseconds: 700),
     );
     _animController.forward();
-    _loadUser();
-  }
-
-  Future<void> _loadUser() async {
-    try {
-      final data = await _userService.fetchUser();
-      if (!mounted) return;
-      setState(() => _userData = data);
-    } catch (_) {
-      // Profile card will show fallback values
-    }
   }
 
   @override
@@ -99,8 +86,8 @@ class _ConfigurationViewState extends State<ConfigurationView>
           _buildAnimatedItem(
             index: 0,
             child: ProfileCard(
-              fullName: _userData?['fullName'] as String? ?? 'User',
-              email: _userData?['email'] as String? ?? 'email@example.com',
+              fullName: ref.watch(userProfileProvider).valueOrNull?['fullName'] as String? ?? 'User',
+              email: ref.watch(userProfileProvider).valueOrNull?['email'] as String? ?? 'email@example.com',
             ),
           ),
 
@@ -262,9 +249,7 @@ class _ConfigurationViewState extends State<ConfigurationView>
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: ElevatedButton(
                 onPressed: () async {
-                  try {
-                    await AuthInjection.logoutUseCase.execute();
-                  } catch (_) {}
+                  await ref.read(authProvider.notifier).logout();
                   if (!context.mounted) return;
                   Navigator.pushReplacementNamed(context, '/login');
                 },

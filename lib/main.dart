@@ -4,9 +4,10 @@ import 'package:flutter_course/core/routing/routes.dart';
 import 'package:flutter_course/features/pages/splash/splash_view.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

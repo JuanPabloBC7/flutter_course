@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
-import 'package:flutter_course/core/network/services.dart';
+import 'package:flutter_course/core/providers/user_provider.dart';
 import 'package:flutter_course/core/widgets/profile_card.dart';
-import 'package:flutter_course/features/auth/auth_injection.dart';
-import 'package:flutter_course/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
 import 'package:flutter_course/features/pages/admin/history/history_view.dart';
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AdminLayoutView extends StatefulWidget {
   const AdminLayoutView({super.key});
@@ -76,54 +76,28 @@ class _AdminLayoutViewState extends State<AdminLayoutView> {
   }
 }
 
-class _MenuView extends StatefulWidget {
+// ── Menu View ────────────────────────────────────────────────────────────────
+
+class _MenuView extends ConsumerWidget {
   const _MenuView();
 
   @override
-  State<_MenuView> createState() => _MenuViewState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.watch(userProfileProvider).valueOrNull;
+    final fullName = userData?['fullName'] as String? ?? 'User';
+    final email = userData?['email'] as String? ?? 'email@example.com';
 
-class _MenuViewState extends State<_MenuView> {
-  final UserService _userService = UserService();
-  final LogoutUseCase _logoutUseCase = AuthInjection.logoutUseCase;
-  Map<String, dynamic>? _userData;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUser();
-  }
-
-  Future<void> _loadUser() async {
-    try {
-      final data = await _userService.fetchUser();
-      if (!mounted) return;
-      setState(() => _userData = data);
-    } catch (_) {
-      // Fallback to defaults
+    String initials() {
+      final parts = fullName.trim().split(' ');
+      if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+      return fullName.substring(0, fullName.length >= 2 ? 2 : 1).toUpperCase();
     }
-  }
 
-  String get _fullName => _userData?['fullName'] as String? ?? 'User';
-  String get _email => _userData?['email'] as String? ?? 'email@example.com';
-  String get _initials {
-    final parts = _fullName.trim().split(' ');
-    if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
-    return _fullName.substring(0, _fullName.length >= 2 ? 2 : 1).toUpperCase();
-  }
-
-  Future<void> _handleLogout() async {
-    try {
-      await _logoutUseCase.execute();
-    } catch (_) {
-      // Proceed with navigation even if logout API fails
+    void navigateToTab(int index) {
+      final state = context.findAncestorStateOfType<_AdminLayoutViewState>();
+      state?._onTabTapped(index);
     }
-    if (!mounted) return;
-    Navigator.pushReplacementNamed(context, '/login');
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ArgonColors.bgColorScreen,
       appBar: AppBar(
@@ -144,14 +118,12 @@ class _MenuViewState extends State<_MenuView> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          // ── Profile header ──
           ProfileCard(
-            fullName: _fullName,
-            email: _email,
-            initials: _initials,
+            fullName: fullName,
+            email: email,
+            initials: initials()
           ),
 
-          // ── Navigation section ──
           const _MenuSectionLabel(title: 'NAVIGATION'),
           _MenuGroup(
             children: [
@@ -160,38 +132,36 @@ class _MenuViewState extends State<_MenuView> {
                 title: 'Dashboard',
                 subtitle: 'Overview and statistics',
                 color: ArgonColors.primary,
-                onTap: () => _navigateToTab(context, 0),
+                onTap: () => navigateToTab(0),
               ),
               _MenuTile(
                 icon: Icons.swap_horiz_rounded,
                 title: 'Transfers',
                 subtitle: 'Send and receive transfers',
                 color: ArgonColors.info,
-                onTap: () => _navigateToTab(context, 1),
+                onTap: () => navigateToTab(1),
               ),
               _MenuTile(
                 icon: Icons.history_rounded,
                 title: 'History',
                 subtitle: 'View past transactions',
                 color: ArgonColors.success,
-                onTap: () => _navigateToTab(context, 2),
+                onTap: () => navigateToTab(2),
               ),
               _MenuTile(
                 icon: Icons.settings_rounded,
                 title: 'Configuration',
                 subtitle: 'App settings and preferences',
                 color: ArgonColors.warning,
-                onTap: () {
+                onTap: () => 
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const ConfigurationView()),
-                  );
-                },
+                  ),
               ),
             ],
           ),
 
-          // ── Account section ──
           const _MenuSectionLabel(title: 'ACCOUNT'),
           _MenuGroup(
             children: [
@@ -200,12 +170,10 @@ class _MenuViewState extends State<_MenuView> {
                 title: 'Profile',
                 subtitle: 'View and edit your profile',
                 color: ArgonColors.primary,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ProfileView()),
-                  );
-                },
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileView()),
+                ),
               ),
               _MenuTile(
                 icon: Icons.notifications_none_rounded,
@@ -224,7 +192,6 @@ class _MenuViewState extends State<_MenuView> {
             ],
           ),
 
-          // ── Support section ──
           const _MenuSectionLabel(title: 'SUPPORT'),
           _MenuGroup(
             children: [
@@ -252,11 +219,14 @@ class _MenuViewState extends State<_MenuView> {
             ],
           ),
 
-          // ── Logout ──
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: ElevatedButton(
-              onPressed: _handleLogout,
+              onPressed: () async {
+                await ref.read(authProvider.notifier).logout();
+                if (!context.mounted) return;
+                Navigator.pushReplacementNamed(context, '/login');
+              },
               style: ElevatedButton.styleFrom(
                 foregroundColor: ArgonColors.white,
                 backgroundColor: ArgonColors.error,
@@ -288,11 +258,6 @@ class _MenuViewState extends State<_MenuView> {
       ),
     );
   }
-
-  void _navigateToTab(BuildContext context, int index) {
-    final state = context.findAncestorStateOfType<_AdminLayoutViewState>();
-    state?._onTabTapped(index);
-  }
 }
 
 // ── Menu Section Label ───────────────────────────────────────────────────────
@@ -319,7 +284,7 @@ class _MenuSectionLabel extends StatelessWidget {
   }
 }
 
-// ── Menu Group (card container) ──────────────────────────────────────────────
+// ── Menu Group ───────────────────────────────────────────────────────────────
 
 class _MenuGroup extends StatelessWidget {
   final List<Widget> children;
