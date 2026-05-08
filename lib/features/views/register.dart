@@ -11,6 +11,8 @@ import 'package:flutter_course/core/widgets/input.dart';
 import 'package:flutter_course/core/widgets/drawer.dart';
 
 class Register extends StatefulWidget {
+  const Register({super.key});
+
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -388,3 +390,4 @@ class _RegisterState extends State<Register> {
         ));
   }
 }
+ 
