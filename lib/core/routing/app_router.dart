@@ -5,6 +5,7 @@ import 'package:flutter_course/features/pages/admin/configuration/configuration_
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
 import 'package:flutter_course/features/pages/auth/login/login_view.dart';
+import 'package:flutter_course/features/pages/onboarding/onboarding_view.dart';
 import 'package:flutter_course/features/pages/splash/splash_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,6 +14,7 @@ import 'package:go_router/go_router.dart';
 /// Features:
 /// - Declarative route definitions
 /// - Auth redirect guard (protects private routes)
+/// - Onboarding flow on first launch
 /// - Named routes for type-safe navigation
 class AppRouter {
   AppRouter._();
@@ -20,6 +22,7 @@ class AppRouter {
   // ── Route paths ────────────────────────────────────────────────────────────
 
   static const String splash = '/';
+  static const String onboarding = '/onboarding';
   static const String login = '/login';
   static const String forgotPassword = '/forgot-password';
   static const String dashboard = '/dashboard';
@@ -30,6 +33,7 @@ class AppRouter {
 
   static const List<String> _publicRoutes = [
     splash,
+    onboarding,
     login,
     forgotPassword,
   ];
@@ -45,6 +49,11 @@ class AppRouter {
         path: splash,
         name: 'splash',
         builder: (context, state) => const SplashView(),
+      ),
+      GoRoute(
+        path: onboarding,
+        name: 'onboarding',
+        builder: (context, state) => const OnboardingView(),
       ),
       GoRoute(
         path: login,
@@ -91,8 +100,8 @@ class AppRouter {
     // Check if user has valid tokens
     final isAuthenticated = await AuthInjection.repository.isAuthenticated();
 
-    // If authenticated and trying to access login/splash → redirect to dashboard
-    if (isAuthenticated && (currentPath == login || currentPath == splash)) {
+    // If authenticated and trying to access login/splash/onboarding → redirect to dashboard
+    if (isAuthenticated && (currentPath == login || currentPath == splash || currentPath == onboarding)) {
       return dashboard;
     }
 

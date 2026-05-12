@@ -4,12 +4,14 @@ import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Splash screen shown on app startup.
 ///
-/// Checks if the user has an active session:
-/// - If authenticated → navigates to dashboard
-/// - If not authenticated → navigates to login
+/// Flow:
+/// 1. If onboarding not completed → onboarding
+/// 2. If authenticated → dashboard
+/// 3. Otherwise → login
 class SplashView extends ConsumerStatefulWidget {
   const SplashView({super.key});
 
@@ -37,6 +39,20 @@ class _SplashViewState extends ConsumerState<SplashView>
 
     if (!mounted) return;
 
+    // Check if onboarding was completed
+    final prefs = await SharedPreferences.getInstance();
+    final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
+
+    if (!onboardingCompleted) {
+      if (mounted) context.go(AppRouter.onboarding);
+      return;
+    }
+    if (onboardingCompleted) {
+      if (mounted) context.go(AppRouter.onboarding);
+      return;
+    }
+
+    // Check session
     await ref.read(authProvider.notifier).checkSession();
 
     if (!mounted) return;
