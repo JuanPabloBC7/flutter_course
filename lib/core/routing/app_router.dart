@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
 import 'package:flutter_course/features/layouts/admin_layout_view.dart';
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dart';
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
 import 'package:flutter_course/features/pages/auth/login/login_view.dart';
@@ -28,6 +29,7 @@ class AppRouter {
   static const String dashboard = '/dashboard';
   static const String configuration = '/configuration';
   static const String profile = '/profile';
+  static const String ecommerce = '/ecommerce';
 
   // ── Public routes (no auth required) ───────────────────────────────────────
 
@@ -79,6 +81,11 @@ class AppRouter {
         path: profile,
         name: 'profile',
         builder: (context, state) => const ProfileView(),
+      ),
+      GoRoute(
+        path: ecommerce,
+        name: 'ecommerce',
+        builder: (context, state) => const EcommerceView(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

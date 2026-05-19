@@ -47,6 +47,10 @@ class _SplashViewState extends ConsumerState<SplashView>
       if (mounted) context.go(AppRouter.onboarding);
       return;
     }
+    if (onboardingCompleted) {
+      if (mounted) context.go(AppRouter.onboarding);
+      return;
+    }
 
     // Check session
     await ref.read(authProvider.notifier).checkSession();
