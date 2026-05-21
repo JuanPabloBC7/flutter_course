@@ -149,13 +149,6 @@ class _MenuView extends ConsumerWidget {
                 onTap: () => navigateToTab(2),
               ),
               _MenuTile(
-                icon: Icons.storefront_rounded,
-                title: 'E-Commerce',
-                subtitle: 'Browse products and shop',
-                color: ArgonColors.label,
-                onTap: () => context.push(AppRouter.ecommerce),
-              ),
-              _MenuTile(
                 icon: Icons.settings_rounded,
                 title: 'Configuration',
                 subtitle: 'App settings and preferences',

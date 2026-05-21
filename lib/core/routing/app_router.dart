@@ -6,6 +6,7 @@ import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dar
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
 import 'package:flutter_course/features/pages/auth/login/login_view.dart';
+import 'package:flutter_course/features/pages/module_selector/module_selector_view.dart';
 import 'package:flutter_course/features/pages/onboarding/onboarding_view.dart';
 import 'package:flutter_course/features/pages/splash/splash_view.dart';
 import 'package:go_router/go_router.dart';
@@ -30,14 +31,17 @@ class AppRouter {
   static const String configuration = '/configuration';
   static const String profile = '/profile';
   static const String ecommerce = '/ecommerce';
+  static const String moduleSelector = '/module-selector';
 
   // ── Public routes (no auth required) ───────────────────────────────────────
 
   static const List<String> _publicRoutes = [
     splash,
+    moduleSelector,
     onboarding,
     login,
     forgotPassword,
+    ecommerce,
   ];
 
   // ── Router instance ────────────────────────────────────────────────────────
@@ -51,6 +55,11 @@ class AppRouter {
         path: splash,
         name: 'splash',
         builder: (context, state) => const SplashView(),
+      ),
+      GoRoute(
+        path: moduleSelector,
+        name: 'module-selector',
+        builder: (context, state) => const ModuleSelectorView(),
       ),
       GoRoute(
         path: onboarding,
@@ -107,8 +116,8 @@ class AppRouter {
     // Check if user has valid tokens
     final isAuthenticated = await AuthInjection.repository.isAuthenticated();
 
-    // If authenticated and trying to access login/splash/onboarding → redirect to dashboard
-    if (isAuthenticated && (currentPath == login || currentPath == splash || currentPath == onboarding)) {
+    // If authenticated and trying to access login → redirect to dashboard
+    if (isAuthenticated && (currentPath == login)) {
       return dashboard;
     }
 

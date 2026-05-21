@@ -39,7 +39,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_completed', true);
     if (!mounted) return;
-    context.go(AppRouter.login);
+    context.go(AppRouter.ecommerce);
   }
 
   void _nextPage() {

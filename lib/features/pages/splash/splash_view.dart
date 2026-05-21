@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
-import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Splash screen shown on app startup.
 ///
@@ -36,34 +34,8 @@ class _SplashViewState extends ConsumerState<SplashView>
 
   Future<void> _checkAuthAndNavigate() async {
     await Future.delayed(const Duration(milliseconds: 1200));
-
     if (!mounted) return;
-
-    // Check if onboarding was completed
-    final prefs = await SharedPreferences.getInstance();
-    final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
-
-    if (!onboardingCompleted) {
-      if (mounted) context.go(AppRouter.onboarding);
-      return;
-    }
-    if (onboardingCompleted) {
-      if (mounted) context.go(AppRouter.onboarding);
-      return;
-    }
-
-    // Check session
-    await ref.read(authProvider.notifier).checkSession();
-
-    if (!mounted) return;
-
-    final isAuthenticated = ref.read(authProvider) is AuthAuthenticated;
-
-    if (isAuthenticated) {
-      context.go(AppRouter.dashboard);
-    } else {
-      context.go(AppRouter.login);
-    }
+    context.go(AppRouter.moduleSelector);
   }
 
   @override
