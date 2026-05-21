@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
 import 'package:flutter_course/features/layouts/admin_layout_view.dart';
-import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
-import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dart';
-import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
-import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
-import 'package:flutter_course/features/pages/auth/login/login_view.dart';
-import 'package:flutter_course/features/pages/module_selector/module_selector_view.dart';
-import 'package:flutter_course/features/pages/onboarding/onboarding_view.dart';
-import 'package:flutter_course/features/pages/splash/splash_view.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/configuration/configuration_view.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/profile/profile_view.dart';
+import 'package:flutter_course/features/pages/admin_app/auth/forgot_password/forgot_password_view.dart';
+import 'package:flutter_course/features/pages/admin_app/auth/login/login_view.dart';
+import 'package:flutter_course/features/pages/core/module_selector/module_selector_view.dart';
+import 'package:flutter_course/features/pages/core/splash/splash_view.dart';
+import 'package:flutter_course/features/pages/ecommerce_app/ecommerce/ecommerce_view.dart';
+import 'package:flutter_course/features/pages/ecommerce_app/onboarding/onboarding_view.dart';
 import 'package:go_router/go_router.dart';
 
 /// Application router configuration using GoRouter.

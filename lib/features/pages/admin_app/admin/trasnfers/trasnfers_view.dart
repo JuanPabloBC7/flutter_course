@@ -8,7 +8,7 @@ import 'package:flutter_course/core/widgets/gradient_action_card.dart';
 import 'package:flutter_course/core/widgets/options_grid.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transfer_card.dart';
-import 'package:flutter_course/features/pages/admin/trasnfers/providers/transfers_providers.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/trasnfers/providers/transfers_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const List<Color> _avatarColors = [

@@ -4,9 +4,9 @@ import 'package:flutter_course/core/providers/user_provider.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/widgets/profile_card.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
-import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
-import 'package:flutter_course/features/pages/admin/history/history_view.dart';
-import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/dashboard/dashboard_view.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/history/history_view.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/trasnfers/trasnfers_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 

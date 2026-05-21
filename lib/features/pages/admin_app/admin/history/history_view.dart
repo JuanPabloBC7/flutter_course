@@ -6,7 +6,7 @@ import 'package:flutter_course/core/widgets/empty_state.dart';
 import 'package:flutter_course/core/widgets/error_state.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
-import 'package:flutter_course/features/pages/admin/history/providers/history_providers.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/history/providers/history_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HistoryView extends ConsumerStatefulWidget {
