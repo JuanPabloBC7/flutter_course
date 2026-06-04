@@ -4,7 +4,7 @@ import 'package:flutter_course/core/widgets/ecommerce_top_bar.dart';
 import 'package:flutter_course/core/widgets/image_carousel.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_section.dart';
-import 'package:flutter_course/features/pages/ecommerce_app/product_detail/product_detail_view.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/product_detail/product_detail_view.dart';
 import 'package:go_router/go_router.dart';
 
 class EcommerceView extends StatefulWidget {

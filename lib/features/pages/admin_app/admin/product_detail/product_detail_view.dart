@@ -4,7 +4,7 @@ import 'package:flutter_course/core/widgets/color_selector.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_detail_image_carousel.dart';
 import 'package:flutter_course/core/widgets/size_selector.dart';
-import 'package:flutter_course/features/pages/ecommerce_app/product_detail/providers/product_detail_provider.dart';
+import 'package:flutter_course/features/pages/admin_app/admin/product_detail/providers/product_detail_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 

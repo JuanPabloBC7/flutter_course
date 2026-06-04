@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/widgets/interest_tile.dart';
 import 'package:flutter_course/core/widgets/progress_bar.dart';
-import 'package:flutter_course/features/pages/ecommerce_app/onboarding/providers/onboarding_providers.dart';
+import 'package:flutter_course/features/pages/core/onboarding/providers/onboarding_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The interests selection page of the onboarding flow.
