@@ -4,6 +4,8 @@ import 'package:flutter_course/core/widgets/ecommerce_top_bar.dart';
 import 'package:flutter_course/core/widgets/image_carousel.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_section.dart';
+import 'package:flutter_course/features/pages/ecommerce_app/product_detail/product_detail_view.dart';
+import 'package:go_router/go_router.dart';
 
 class EcommerceView extends StatefulWidget {
   const EcommerceView({super.key});
@@ -113,8 +115,9 @@ class _EcommerceViewState extends State<EcommerceView> {
   }
 
   void _handleProductTap(Product product) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Tapped on ${product.name}')),
+    context.push(
+      '/product-detail',
+      extra: ProductDetailView(product: product),
     );
   }
 

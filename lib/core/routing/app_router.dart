@@ -8,11 +8,9 @@ import 'package:flutter_course/features/pages/admin_app/auth/login/login_view.da
 import 'package:flutter_course/features/pages/core/module_selector/module_selector_view.dart';
 import 'package:flutter_course/features/pages/core/splash/splash_view.dart';
 import 'package:flutter_course/features/pages/ecommerce_app/ecommerce/ecommerce_view.dart';
+import 'package:flutter_course/features/pages/ecommerce_app/product_detail/product_detail_view.dart';
 import 'package:flutter_course/features/pages/ecommerce_app/onboarding/onboarding_view.dart';
 import 'package:go_router/go_router.dart';
-
-/// Application router configuration using GoRouter.
-///
 /// Features:
 /// - Declarative route definitions
 /// - Auth redirect guard (protects private routes)
@@ -31,6 +29,7 @@ class AppRouter {
   static const String configuration = '/configuration';
   static const String profile = '/profile';
   static const String ecommerce = '/ecommerce';
+  static const String productDetail = '/product-detail';
   static const String moduleSelector = '/module-selector';
 
   // ── Public routes (no auth required) ───────────────────────────────────────
@@ -42,6 +41,7 @@ class AppRouter {
     login,
     forgotPassword,
     ecommerce,
+    productDetail,
   ];
 
   // ── Router instance ────────────────────────────────────────────────────────
@@ -95,6 +95,17 @@ class AppRouter {
         path: ecommerce,
         name: 'ecommerce',
         builder: (context, state) => const EcommerceView(),
+      ),
+      GoRoute(
+        path: productDetail,
+        name: 'product-detail',
+        builder: (context, state) => state.extra is ProductDetailView
+            ? state.extra as ProductDetailView
+            : const Scaffold(
+                body: Center(
+                  child: Text('Product not found'),
+                ),
+              ),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
