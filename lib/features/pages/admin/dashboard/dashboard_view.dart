@@ -10,7 +10,7 @@ import 'package:flutter_course/core/widgets/quick_actions.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/stats_grid.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
-import 'package:flutter_course/features/pages/admin_app/admin/dashboard/providers/dashboard_providers.dart';
+import 'package:flutter_course/features/pages/admin/dashboard/providers/dashboard_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
