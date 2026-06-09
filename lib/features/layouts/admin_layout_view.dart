@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/core/config/feature_flags.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/providers/user_provider.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_course/features/pages/admin/history/history_view.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminLayoutView extends StatefulWidget {
   const AdminLayoutView({super.key});
@@ -147,6 +149,26 @@ class _MenuView extends ConsumerWidget {
                 subtitle: 'View past transactions',
                 color: ArgonColors.success,
                 onTap: () => navigateToTab(2),
+              ),
+              _MenuTile(
+                icon: Icons.storefront_rounded,
+                title: 'E-Commerce',
+                subtitle: 'Browse products and shop',
+                color: ArgonColors.label,
+                onTap: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
+                  if (!context.mounted) return;
+                  if (onboardingCompleted) {
+                    if (FeatureFlags.useOnboardingLogic) {
+                      context.push(AppRouter.ecommerce);
+                    } else {
+                      context.push(AppRouter.onboarding);
+                    }
+                  } else {
+                    context.push(AppRouter.onboarding);
+                  }
+                },
               ),
               _MenuTile(
                 icon: Icons.settings_rounded,

@@ -3,14 +3,15 @@ import 'package:flutter_course/features/auth/auth_injection.dart';
 import 'package:flutter_course/features/layouts/admin_layout_view.dart';
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dart';
-import 'package:flutter_course/features/pages/admin/product_detail/product_detail_view.dart';
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
 import 'package:flutter_course/features/pages/auth/login/login_view.dart';
-import 'package:flutter_course/features/pages/core/module_selector/module_selector_view.dart';
 import 'package:flutter_course/features/pages/core/onboarding/onboarding_view.dart';
 import 'package:flutter_course/features/pages/core/splash/splash_view.dart';
 import 'package:go_router/go_router.dart';
+
+/// Application router configuration using GoRouter.
+///
 /// Features:
 /// - Declarative route definitions
 /// - Auth redirect guard (protects private routes)
@@ -29,19 +30,14 @@ class AppRouter {
   static const String configuration = '/configuration';
   static const String profile = '/profile';
   static const String ecommerce = '/ecommerce';
-  static const String productDetail = '/product-detail';
-  static const String moduleSelector = '/module-selector';
 
   // ── Public routes (no auth required) ───────────────────────────────────────
 
   static const List<String> _publicRoutes = [
     splash,
-    moduleSelector,
     onboarding,
     login,
     forgotPassword,
-    ecommerce,
-    productDetail,
   ];
 
   // ── Router instance ────────────────────────────────────────────────────────
@@ -55,11 +51,6 @@ class AppRouter {
         path: splash,
         name: 'splash',
         builder: (context, state) => const SplashView(),
-      ),
-      GoRoute(
-        path: moduleSelector,
-        name: 'module-selector',
-        builder: (context, state) => const ModuleSelectorView(),
       ),
       GoRoute(
         path: onboarding,
@@ -96,17 +87,6 @@ class AppRouter {
         name: 'ecommerce',
         builder: (context, state) => const EcommerceView(),
       ),
-      GoRoute(
-        path: productDetail,
-        name: 'product-detail',
-        builder: (context, state) => state.extra is ProductDetailView
-            ? state.extra as ProductDetailView
-            : const Scaffold(
-                body: Center(
-                  child: Text('Product not found'),
-                ),
-              ),
-      ),
     ],
     errorBuilder: (context, state) => Scaffold(
       body: Center(
@@ -127,8 +107,8 @@ class AppRouter {
     // Check if user has valid tokens
     final isAuthenticated = await AuthInjection.repository.isAuthenticated();
 
-    // If authenticated and trying to access login → redirect to dashboard
-    if (isAuthenticated && (currentPath == login)) {
+    // If authenticated and trying to access login/splash → redirect to dashboard
+    if (isAuthenticated && (currentPath == login || currentPath == splash)) {
       return dashboard;
     }
 
