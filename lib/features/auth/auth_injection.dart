@@ -32,4 +32,7 @@ class AuthInjection {
 
   // Expose repository for advanced use cases
   static AuthRepository get repository => _repository;
+
+  // Expose local data source for direct token management
+  static AuthLocalDataSource get localDataSource => _localDataSource;
 }

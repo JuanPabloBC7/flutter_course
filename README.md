@@ -13,6 +13,10 @@ DummyJSON: [DummyJSON - Auth](https://dummyjson.com/docs/auth)
 - Username: `emilys`
 - Password: `emilyspass`
 
+### Feature Flags
+Note: This project uses feature flags to control environment-specific behavior. All flags are centralized in feature_flags.dart. Ensure the correct flags are enabled for the production environment before deploying.
+flutter_course/lib/core/config/feature_flags.dart
+
 ## Project Structure
 ```
 flutter_course/

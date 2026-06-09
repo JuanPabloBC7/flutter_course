@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/core/config/feature_flags.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
@@ -18,11 +19,19 @@ class ModuleSelectorView extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    context.go(
-      onboardingCompleted
-        ? AppRouter.ecommerce
-        : AppRouter.onboarding,
-    );
+    if (FeatureFlags.useOnboardingLogic) {
+      context.go(
+        onboardingCompleted
+          ? AppRouter.ecommerce
+          : AppRouter.onboarding,
+      );
+    } else {
+      context.go(
+        onboardingCompleted
+          ? AppRouter.onboarding
+          : AppRouter.onboarding,
+      );
+    }
   }
 
   @override

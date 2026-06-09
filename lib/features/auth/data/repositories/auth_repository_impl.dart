@@ -1,3 +1,4 @@
+import 'package:flutter_course/core/config/feature_flags.dart';
 import 'package:flutter_course/core/network/app_exceptions.dart';
 import 'package:flutter_course/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:flutter_course/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -84,23 +85,25 @@ class AuthRepositoryImpl implements AuthRepository {
     final hasTokens = await _localDataSource.hasTokens();
     if (!hasTokens) return false;
 
-    // Validate the token by calling auth/me
-    try {
-      final token = await _localDataSource.getAccessToken();
-      if (token == null) return false;
-
-      await _remoteDataSource.getCurrentUser(token: token);
-      return true;
-    } catch (_) {
-      // Token is invalid or expired, try to refresh
+    if (FeatureFlags.useDummyJsonApi) {
+      // Validate the token by calling auth/me
       try {
-        await refreshSession();
+        final token = await _localDataSource.getAccessToken();
+        if (token == null) return false;
+        await _remoteDataSource.getCurrentUser(token: token);
         return true;
       } catch (_) {
-        // Refresh also failed, session is invalid
-        await _localDataSource.clearTokens();
-        return false;
+        try {
+          await refreshSession();
+          return true;
+        } catch (_) {
+          await _localDataSource.clearTokens();
+          return false;
+        }
       }
+    } else {
+      // Temporary: trust local tokens without API validation
+      return true;
     }
   }
 
