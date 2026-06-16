@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/core/config/feature_flags.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/network/app_exceptions.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
+import 'package:flutter_course/core/utils/validators.dart';
 import 'package:flutter_course/core/widgets/form_input.dart';
-import 'package:flutter_course/features/auth/auth_injection.dart';
-import 'package:flutter_course/features/auth/domain/usecases/reset_password_usecase.dart';
+import 'package:flutter_course/features/auth/data/datasources/auth_firebase_datasource.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,9 +22,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
   bool _isLoading = false;
   String? _errorMessage;
 
-  final ResetPasswordUseCase _resetPasswordUseCase = AuthInjection.resetPasswordUseCase;
-  final TextEditingController _usernameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
+  final AuthFirebaseDatasource _firebaseDatasource = AuthFirebaseDatasource();
 
   @override
   void initState() {
@@ -38,19 +39,14 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
   @override
   void dispose() {
     _animController.dispose();
-    _usernameController.dispose();
     _emailController.dispose();
     super.dispose();
   }
 
   Future<void> _handleResetPassword(AppLocalizations l10n) async {
-    final username = _usernameController.text.trim();
-    final email = _emailController.text.trim();
+    if (!_formKey.currentState!.validate()) return;
 
-    if (username.isEmpty || email.isEmpty) {
-      setState(() => _errorMessage = 'Please fill in all fields.');
-      return;
-    }
+    final email = _emailController.text.trim();
 
     setState(() {
       _isLoading = true;
@@ -58,17 +54,17 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
     });
 
     try {
-      await _resetPasswordUseCase.execute(username: username, email: email);
+      if (FeatureFlags.useFirebaseAuth) {
+        await _firebaseDatasource.sendPasswordResetEmail(email: email);
+      } else {
+        // Mock delay for non-Firebase mode
+        await Future.delayed(const Duration(milliseconds: 600));
+      }
+
       if (!mounted) return;
       setState(() => _isLoading = false);
       _showSuccessDialog(context, l10n);
     } on AppException catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _errorMessage = e.message;
-        _isLoading = false;
-      });
-    } on ArgumentError catch (e) {
       if (!mounted) return;
       setState(() {
         _errorMessage = e.message;
@@ -157,7 +153,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
 
               const SizedBox(height: 28),
 
-              // ── Header area ──
+              // ── Header ──
               _buildAnimatedItem(
                 index: 1,
                 child: Column(
@@ -187,7 +183,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Enter your username and email address to receive a password reset link.',
+                      'Enter your email address and we\'ll send you a link to reset your password.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -217,75 +213,66 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Username
-                      _buildLabel(l10n.commonUsername),
-                      const SizedBox(height: 8),
-                      FormInput(
-                        placeholder: l10n.commonUsername,
-                        controller: _usernameController,
-                        prefixIcon: const Icon(
-                          Icons.person_outline_rounded,
-                          color: ArgonColors.muted,
-                          size: 20,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Email
+                        _buildLabel(l10n.commonEmail),
+                        const SizedBox(height: 8),
+                        FormInput(
+                          placeholder: l10n.commonEmail,
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.done,
+                          prefixIcon: const Icon(
+                            Icons.email_outlined,
+                            color: ArgonColors.muted,
+                            size: 20,
+                          ),
+                          validator: Validators.email,
                         ),
-                      ),
-                      const SizedBox(height: 18),
+                        const SizedBox(height: 24),
 
-                      // Email
-                      _buildLabel(l10n.commonEmail),
-                      const SizedBox(height: 8),
-                      FormInput(
-                        placeholder: l10n.commonEmail,
-                        controller: _emailController,
-                        prefixIcon: const Icon(
-                          Icons.email_outlined,
-                          color: ArgonColors.muted,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(height: 28),
-
-                      // Error message
-                      if (_errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: ArgonColors.error.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.error_outline, color: ArgonColors.error, size: 18),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    _errorMessage!,
-                                    style: const TextStyle(fontSize: 13, color: ArgonColors.error),
+                        // Error message
+                        if (_errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: ArgonColors.error.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.error_outline, color: ArgonColors.error, size: 18),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      _errorMessage!,
+                                      style: const TextStyle(fontSize: 13, color: ArgonColors.error),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
 
-                      // Reset button
-                      ElevatedButton(
-                        onPressed: _isLoading ? null : () => _handleResetPassword(l10n),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: ArgonColors.white,
-                          backgroundColor: ArgonColors.primary,
-                          minimumSize: const Size(double.infinity, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        // Reset button
+                        ElevatedButton(
+                          onPressed: _isLoading ? null : () => _handleResetPassword(l10n),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: ArgonColors.white,
+                            backgroundColor: ArgonColors.primary,
+                            minimumSize: const Size(double.infinity, 52),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
                           ),
-                          elevation: 0,
-                        ),
-                        child: _isLoading
+                          child: _isLoading
                             ? const SizedBox(
                                 width: 22,
                                 height: 22,
@@ -301,32 +288,27 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                                   fontSize: 16,
                                 ),
                               ),
-                      ),
-                      const SizedBox(height: 14),
+                        ),
+                        const SizedBox(height: 14),
 
-                      // Go back button
-                      OutlinedButton(
-                        onPressed: () => context.pop(),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: ArgonColors.text,
-                          minimumSize: const Size(double.infinity, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        // Go back button
+                        OutlinedButton(
+                          onPressed: () => context.pop(),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: ArgonColors.text,
+                            minimumSize: const Size(double.infinity, 52),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            side: const BorderSide(
+                              color: ArgonColors.border,
+                              width: 1.5,
+                            ),
                           ),
-                          side: const BorderSide(
-                            color: ArgonColors.border,
-                            width: 1.5,
-                          ),
+                          child: Text(l10n.commonGoBack, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                         ),
-                        child: Text(
-                          l10n.commonGoBack,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -411,7 +393,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
               ),
               const SizedBox(height: 8),
               const Text(
-                'We\'ve sent a password reset link to your email address.',
+                'We\'ve sent a password reset link to your email address. Please check your inbox.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -422,7 +404,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context); // close dialog
+                  Navigator.pop(context);
                   context.go(AppRouter.login);
                 },
                 style: ElevatedButton.styleFrom(

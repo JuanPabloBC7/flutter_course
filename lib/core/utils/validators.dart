@@ -49,8 +49,8 @@ class Validators {
     if (value.trim().length < 3) {
       return 'Username must be at least 3 characters';
     }
-    if (value.trim().length > 20) {
-      return 'Username must be at most 20 characters';
+    if (value.trim().length > 25) {
+      return 'Username must be at most 25 characters';
     }
     final usernameRegex = RegExp(r'^[a-zA-Z0-9._@]+$');
     if (!usernameRegex.hasMatch(value.trim())) {
