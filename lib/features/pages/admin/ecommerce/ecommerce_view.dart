@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/widgets/ecommerce_top_bar.dart';
 import 'package:flutter_course/core/widgets/image_carousel.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_section.dart';
-import 'package:flutter_course/features/pages/admin/product_detail/product_detail_view.dart';
 import 'package:go_router/go_router.dart';
 
 class EcommerceView extends StatefulWidget {
@@ -117,7 +117,7 @@ class _EcommerceViewState extends State<EcommerceView> {
   void _handleProductTap(Product product) {
     context.push(
       '/product-detail',
-      extra: ProductDetailView(product: product),
+      extra: product,
     );
   }
 
@@ -157,6 +157,16 @@ class _EcommerceViewState extends State<EcommerceView> {
         backgroundColor: ArgonColors.white,
         elevation: 0,
         centerTitle: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: ArgonColors.text),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(AppRouter.dashboard);
+            }
+          },
+        ),
         title: const Text(
           'E-Commerce',
           style: TextStyle(
