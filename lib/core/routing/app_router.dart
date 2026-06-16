@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/core/config/feature_flags.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/features/auth/auth_injection.dart';
+import 'package:flutter_course/features/auth/data/datasources/auth_firebase_datasource.dart';
 import 'package:flutter_course/features/layouts/admin_layout_view.dart';
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dart';
@@ -120,8 +122,13 @@ class AppRouter {
     final currentPath = state.uri.path;
     final isPublicRoute = _publicRoutes.contains(currentPath);
 
-    // Check if user has valid tokens
-    final isAuthenticated = await AuthInjection.repository.isAuthenticated();
+    // Check if user has valid session
+    bool isAuthenticated;
+    if (FeatureFlags.useFirebaseAuth) {
+      isAuthenticated = await AuthFirebaseDatasource().isAuthenticated();
+    } else {
+      isAuthenticated = await AuthInjection.repository.isAuthenticated();
+    }
 
     // If authenticated and trying to access login/splash → redirect to dashboard
     if (isAuthenticated && (currentPath == login || currentPath == splash)) {

@@ -52,7 +52,7 @@ class Validators {
     if (value.trim().length > 20) {
       return 'Username must be at most 20 characters';
     }
-    final usernameRegex = RegExp(r'^[a-zA-Z0-9._]+$');
+    final usernameRegex = RegExp(r'^[a-zA-Z0-9._@]+$');
     if (!usernameRegex.hasMatch(value.trim())) {
       return 'Username can only contain letters, numbers, dots and underscores';
     }
