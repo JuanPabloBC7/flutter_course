@@ -22,7 +22,8 @@ samples, guidance on mobile development, and a full API reference.
 - Test code with [Try Dart in your browser](https://dart.dev/#try-dart).
 - Design your site with [Material components](https://docs.flutter.dev/ui/widgets/material).
 - Types of [variables](https://dart.dev/language/variables).
-- [Figma designs](https://www.figma.com/community/mobile-apps?resource_type=mixed&editor_type=all&price=all&sort_by=all_time&creators=all) for project.
+- [Figma designs General](https://www.figma.com/community/mobile-apps?resource_type=mixed&editor_type=all&price=all&sort_by=all_time&creators=all) for project.
+- [Figma designs 1]([https://www.figma.com/design/Gj5WThN6aqbaiew4eYZYnY/Fintech-Mobile-App-Update1.0--Community-?node-id=0-1&p=f&t=B17Pzikj4K4ClR27-0](https://www.figma.com/design/iwcJo6KyW1DcUgCuLJr7Yz/Mobile-Apps-%E2%80%93-Prototyping-Kit--Community-?node-id=101-306&p=f&t=FMw9fVgEsToPWS9N-0)) for project.
 - [Figma designs 2](https://www.figma.com/design/Gj5WThN6aqbaiew4eYZYnY/Fintech-Mobile-App-Update1.0--Community-?node-id=0-1&p=f&t=B17Pzikj4K4ClR27-0) for project.
 
 ### Run Dart File
