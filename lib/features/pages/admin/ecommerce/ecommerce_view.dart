@@ -5,103 +5,23 @@ import 'package:flutter_course/core/widgets/ecommerce_top_bar.dart';
 import 'package:flutter_course/core/widgets/image_carousel.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_section.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/providers/ecommerce_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class EcommerceView extends StatefulWidget {
+class EcommerceView extends ConsumerStatefulWidget {
   const EcommerceView({super.key});
 
   @override
-  State<EcommerceView> createState() => _EcommerceViewState();
+  ConsumerState<EcommerceView> createState() => _EcommerceViewState();
 }
 
-class _EcommerceViewState extends State<EcommerceView> {
-  // Sample carousel images
-  final List<String> carouselImages = [
-    '',
-    '',
-    '',
-  ];
+class _EcommerceViewState extends ConsumerState<EcommerceView> {
+  final List<String> carouselImages = ['', '', ''];
 
-  // Sample products for "Perfect for you" section
-  final List<Product> perfectForYouProducts = [
-    Product(
-      id: '1',
-      name: 'Amazing T-shirt',
-      price: '€ 12.00',
-      imageUrl:
-          '',
-    ),
-    Product(
-      id: '2',
-      name: 'Fabulous Pants',
-      price: '€ 15.00',
-      imageUrl:
-          '',
-    ),
-    Product(
-      id: '5',
-      name: 'Classic Jacket',
-      price: '€ 45.00',
-      imageUrl:
-          '',
-    ),
-    Product(
-      id: '6',
-      name: 'Trendy Sneakers',
-      price: '€ 80.00',
-      imageUrl:
-          '',
-    ),
-  ];
-
-  // Sample products for "For this summer" section
-  final List<Product> forThisSummerProducts = [
-    Product(
-      id: '3',
-      name: 'Summer Dress',
-      price: '€ 25.00',
-      imageUrl:
-          '',
-    ),
-    Product(
-      id: '4',
-      name: 'Beach Hat',
-      price: '€ 18.00',
-      imageUrl:
-          '',
-    ),
-    Product(
-      id: '7',
-      name: 'Sunglasses',
-      price: '€ 35.00',
-      imageUrl:
-          '',
-    ),
-    Product(
-      id: '8',
-      name: 'Beach Bag',
-      price: '€ 42.00',
-      imageUrl:
-          '',
-    ),
-  ];
-
-  // Track liked products and cart
-  late Map<String, bool> likedProducts = {};
+  Map<String, bool> likedProducts = {};
   int cartItemCount = 0;
   int favoriteItemCount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    // Initialize liked products
-    for (final product in perfectForYouProducts) {
-      likedProducts[product.id] = false;
-    }
-    for (final product in forThisSummerProducts) {
-      likedProducts[product.id] = false;
-    }
-  }
 
   void _handleProductLike(Product product, bool isLiked) {
     setState(() {
@@ -151,6 +71,9 @@ class _EcommerceViewState extends State<EcommerceView> {
 
   @override
   Widget build(BuildContext context) {
+    final perfectForYouAsync = ref.watch(perfectForYouProductsProvider);
+    final forThisSummerAsync = ref.watch(forThisSummerProductsProvider);
+
     return Scaffold(
       backgroundColor: ArgonColors.bgColorScreen,
       appBar: AppBar(
@@ -195,29 +118,49 @@ class _EcommerceViewState extends State<EcommerceView> {
             ),
             const SizedBox(height: 32),
             // Perfect for you section - Horizontal Carousel
-            ProductSection(
-              title: 'Perfect for you',
-              products: perfectForYouProducts,
-              likedProducts: likedProducts,
-              onProductTap: _handleProductTap,
-              onProductLike: _handleProductLike,
-              onSeeMore: () => _handleSeeMore('Perfect for you'),
+            perfectForYouAsync.when(
+              loading: () => const Padding(
+                padding: EdgeInsets.all(32),
+                child: Center(child: CircularProgressIndicator(color: ArgonColors.primary)),
+              ),
+              error: (error, _) => Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text('Error loading products: $error', style: const TextStyle(color: ArgonColors.error)),
+              ),
+              data: (products) => ProductSection(
+                title: 'Perfect for you',
+                products: products,
+                likedProducts: likedProducts,
+                onProductTap: _handleProductTap,
+                onProductLike: _handleProductLike,
+                onSeeMore: () => _handleSeeMore('Perfect for you'),
+              ),
             ),
             const SizedBox(height: 32),
-            // For this summer section - Horizontal Carousel
-            ProductSection(
-              title: 'For this summer',
-              products: forThisSummerProducts,
-              likedProducts: likedProducts,
-              onProductTap: _handleProductTap,
-              onProductLike: _handleProductLike,
-              onSeeMore: () => _handleSeeMore('For this summer'),
+
+            // For this summer section
+            forThisSummerAsync.when(
+              loading: () => const Padding(
+                padding: EdgeInsets.all(32),
+                child: Center(child: CircularProgressIndicator(color: ArgonColors.primary)),
+              ),
+              error: (error, _) => Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text('Error loading products: $error', style: const TextStyle(color: ArgonColors.error)),
+              ),
+              data: (products) => ProductSection(
+                title: 'For this summer',
+                products: products,
+                likedProducts: likedProducts,
+                onProductTap: _handleProductTap,
+                onProductLike: _handleProductLike,
+                onSeeMore: () => _handleSeeMore('For this summer'),
+              ),
             ),
             const SizedBox(height: 32),
           ],
         ),
       ),
-      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: ArgonColors.white,
         elevation: 8,
@@ -228,20 +171,22 @@ class _EcommerceViewState extends State<EcommerceView> {
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Categories',
+            icon: Icon(Icons.favorite_border),
+            label: 'Favorites',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.store),
-            label: 'Stores',
+            icon: Icon(Icons.shopping_bag_outlined),
+            label: 'Cart',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person_outline),
             label: 'Profile',
           ),
         ],
         selectedItemColor: ArgonColors.primary,
         unselectedItemColor: ArgonColors.muted,
+        currentIndex: 0,
+        onTap: (index) {},
       ),
     );
   }
