@@ -151,6 +151,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset Password'**
   String get commonResetPassword;
+
+  /// No description provided for @menuNavigation.
+  ///
+  /// In en, this message translates to:
+  /// **'NAVIGATION'**
+  String get menuNavigation;
 }
 
 class _AppLocalizationsDelegate

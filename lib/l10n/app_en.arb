@@ -7,5 +7,6 @@
   "commonForgotPassword": "Forgot password?",
   "commonLogin": "Login",
   "commonQuote": "Press the Forgot password? link or the Login button to navigate within the app.",
-  "commonResetPassword": "Reset Password"
+  "commonResetPassword": "Reset Password",
+  "menuNavigation": "NAVIGATION"
 }

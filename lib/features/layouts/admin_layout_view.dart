@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/config/feature_flags.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/providers/locale_provider.dart';
 import 'package:flutter_course/core/providers/user_provider.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
+import 'package:flutter_course/core/widgets/language_sheet.dart';
 import 'package:flutter_course/core/widgets/profile_card.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
 import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dart';
 import 'package:flutter_course/features/pages/admin/history/history_view.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,7 +129,7 @@ class _MenuView extends ConsumerWidget {
             initials: initials()
           ),
 
-          const _MenuSectionLabel(title: 'NAVIGATION'),
+          _MenuSectionLabel(title: AppLocalizations.of(context)?.menuNavigation ?? 'NAVIGATION'),
           _MenuGroup(
             children: [
               _MenuTile(
@@ -196,6 +199,13 @@ class _MenuView extends ConsumerWidget {
                 subtitle: 'Manage your alerts',
                 color: ArgonColors.info,
                 onTap: () {},
+              ),
+              _MenuTile(
+                icon: Icons.language_rounded,
+                title: 'Language',
+                subtitle: ref.watch(localeProvider.notifier).currentLanguageName,
+                color: ArgonColors.info,
+                onTap: () => LanguageSheet.show(context, ref),
               ),
               _MenuTile(
                 icon: Icons.shield_outlined,

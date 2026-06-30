@@ -35,4 +35,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonResetPassword => 'Reset Password';
+
+  @override
+  String get menuNavigation => 'NAVIGATION';
 }

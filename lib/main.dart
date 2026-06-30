@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/providers/locale_provider.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/firebase_options.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
@@ -16,15 +17,18 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(localeProvider);
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'BAM Wallet & Transfers',
       routerConfig: AppRouter.router,
+      locale: locale,
 
       // ── Material 3 Theme ──
       theme: ThemeData(

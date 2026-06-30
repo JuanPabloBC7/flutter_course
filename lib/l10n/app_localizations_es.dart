@@ -35,4 +35,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get commonResetPassword => 'Reiniciar Contraseña';
+
+  @override
+  String get menuNavigation => 'NAVEGACIÓN';
 }
