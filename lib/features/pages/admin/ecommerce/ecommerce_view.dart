@@ -6,6 +6,7 @@ import 'package:flutter_course/core/widgets/image_carousel.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_section.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/ecommerce_providers.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -71,6 +72,7 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final perfectForYouAsync = ref.watch(perfectForYouProductsProvider);
     final forThisSummerAsync = ref.watch(forThisSummerProductsProvider);
 
@@ -90,9 +92,9 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
             }
           },
         ),
-        title: const Text(
-          'E-Commerce',
-          style: TextStyle(
+        title: Text(
+          l10n.ecommerceTitle,
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: ArgonColors.text,
@@ -125,10 +127,10 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
               ),
               error: (error, _) => Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text('Error loading products: $error', style: const TextStyle(color: ArgonColors.error)),
+                child: Text('${l10n.errorLoadingProducts}: $error', style: const TextStyle(color: ArgonColors.error)),
               ),
               data: (products) => ProductSection(
-                title: 'Perfect for you',
+                title: l10n.sectionPerfectForYou,
                 products: products,
                 likedProducts: likedProducts,
                 onProductTap: _handleProductTap,
@@ -146,10 +148,10 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
               ),
               error: (error, _) => Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text('Error loading products: $error', style: const TextStyle(color: ArgonColors.error)),
+                child: Text('${l10n.errorLoadingProducts}: $error', style: const TextStyle(color: ArgonColors.error)),
               ),
               data: (products) => ProductSection(
-                title: 'For this summer',
+                title: l10n.sectionForThisSummer,
                 products: products,
                 likedProducts: likedProducts,
                 onProductTap: _handleProductTap,
@@ -165,22 +167,22 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
         backgroundColor: ArgonColors.white,
         elevation: 8,
         type: BottomNavigationBarType.fixed,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore',
+            icon: const Icon(Icons.explore),
+            label: l10n.navExplore,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Favorites',
+            icon: const Icon(Icons.favorite_border),
+            label: l10n.navFavorites,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag_outlined),
-            label: 'Cart',
+            icon: const Icon(Icons.shopping_bag_outlined),
+            label: l10n.navCart,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
+            icon: const Icon(Icons.person_outline),
+            label: l10n.navProfile,
           ),
         ],
         selectedItemColor: ArgonColors.primary,

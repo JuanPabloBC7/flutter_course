@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -58,6 +59,8 @@ class _SplashViewState extends ConsumerState<SplashView>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -96,9 +99,9 @@ class _SplashViewState extends ConsumerState<SplashView>
               ),
               const SizedBox(height: 24),
               // App name
-              const Text(
-                'BAM Wallet',
-                style: TextStyle(
+              Text(
+                l10n.bamWallet,
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
                   color: ArgonColors.white,
@@ -107,7 +110,7 @@ class _SplashViewState extends ConsumerState<SplashView>
               ),
               const SizedBox(height: 8),
               Text(
-                'Secure Banking',
+                l10n.secureBanking,
                 style: TextStyle(
                   fontSize: 14,
                   color: ArgonColors.white.withValues(alpha: 0.7),

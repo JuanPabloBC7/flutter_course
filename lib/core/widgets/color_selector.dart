@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 /// Color selector widget with circular color options
 class ColorSelector extends StatelessWidget {
@@ -23,12 +24,14 @@ class ColorSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Color',
-          style: TextStyle(
+        Text(
+          l10n.colorLabel,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
             color: ArgonColors.text,

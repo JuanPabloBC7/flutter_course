@@ -11,6 +11,7 @@ import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/stats_grid.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
 import 'package:flutter_course/features/pages/admin/dashboard/providers/dashboard_providers.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
@@ -45,6 +46,7 @@ class _DashboardViewState extends ConsumerState<DashboardView>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dashboardAsync = ref.watch(dashboardProvider);
 
     return Scaffold(
@@ -95,42 +97,42 @@ class _DashboardViewState extends ConsumerState<DashboardView>
                     items: [
                       QuickActionItem(
                         icon: Icons.arrow_upward_rounded,
-                        label: 'Send',
+                        label: l10n.quickActionSend,
                         color: ArgonColors.primary,
                         onTap: () => AppToast.success(
                           context,
-                          title: 'Send Money',
-                          message: 'Your transfer has been initiated successfully.',
+                          title: l10n.toastSendMoneyTitle,
+                          message: l10n.toastSendMoneyMessage,
                         ),
                       ),
                       QuickActionItem(
                         icon: Icons.arrow_downward_rounded,
-                        label: 'Receive',
+                        label: l10n.quickActionReceive,
                         color: ArgonColors.success,
                         onTap: () => AppToast.info(
                           context,
-                          title: 'Receive Money',
-                          message: 'Share your account details to receive funds.',
+                          title: l10n.toastReceiveMoneyTitle,
+                          message: l10n.toastReceiveMoneyMessage,
                         ),
                       ),
                       QuickActionItem(
                         icon: Icons.swap_horiz_rounded,
-                        label: 'Transfer',
+                        label: l10n.quickActionTransfer,
                         color: ArgonColors.info,
                         onTap: () => AppToast.warning(
                           context,
-                          title: 'Transfer Limit',
-                          message: 'Daily transfer limit is \$10,000. Contact support to increase.',
+                          title: l10n.toastTransferLimitTitle,
+                          message: l10n.toastTransferLimitMessage,
                         ),
                       ),
                       QuickActionItem(
                         icon: Icons.qr_code_scanner_rounded,
-                        label: 'Scan',
+                        label: l10n.quickActionScan,
                         color: ArgonColors.warning,
                         onTap: () => AppToast.error(
                           context,
-                          title: 'Camera Access',
-                          message: 'Camera permission is required to scan QR codes.',
+                          title: l10n.toastCameraAccessTitle,
+                          message: l10n.toastCameraAccessMessage,
                         ),
                       ),
                     ],
@@ -139,7 +141,7 @@ class _DashboardViewState extends ConsumerState<DashboardView>
                 AnimatedListItem(
                   index: 3,
                   controller: _animController,
-                  child: const SectionHeader(title: 'OVERVIEW'),
+                  child: SectionHeader(title: l10n.sectionOverview),
                 ),
                 AnimatedListItem(
                   index: 4,
@@ -147,11 +149,11 @@ class _DashboardViewState extends ConsumerState<DashboardView>
                   child: StatsGrid(
                     items: [
                       StatItem(
-                        title: 'Income',
+                        title: l10n.statIncome,
                         value: _formatCurrency((stats['income'] as num?) ?? 0),
                         icon: Icons.arrow_downward_rounded,
                         color: ArgonColors.success,
-                        subtitle: '+12.5% vs last month',
+                        subtitle: l10n.statIncomeSubtitle,
                         onTap: () => AppToast.success(
                           context,
                           title: 'On press',
@@ -159,11 +161,11 @@ class _DashboardViewState extends ConsumerState<DashboardView>
                         ),
                       ),
                       StatItem(
-                        title: 'Expenses',
+                        title: l10n.statExpenses,
                         value: _formatCurrency((stats['expenses'] as num?) ?? 0),
                         icon: Icons.arrow_upward_rounded,
                         color: ArgonColors.error,
-                        subtitle: '-3.2% vs last month',
+                        subtitle: l10n.statExpensesSubtitle,
                         onTap: () => AppToast.success(
                           context,
                           title: 'On press',
@@ -171,11 +173,11 @@ class _DashboardViewState extends ConsumerState<DashboardView>
                         ),
                       ),
                       StatItem(
-                        title: 'Savings',
+                        title: l10n.statSavings,
                         value: _formatCurrency((stats['savings'] as num?) ?? 0),
                         icon: Icons.savings_outlined,
                         color: ArgonColors.info,
-                        subtitle: 'Goal: \$5,000',
+                        subtitle: l10n.statSavingsSubtitle,
                         onTap: () => AppToast.success(
                           context,
                           title: 'On press',
@@ -183,11 +185,11 @@ class _DashboardViewState extends ConsumerState<DashboardView>
                         ),
                       ),
                       StatItem(
-                        title: 'Transactions',
+                        title: l10n.statTransactions,
                         value: '${(stats['transactionCount'] as num?) ?? 0}',
                         icon: Icons.receipt_long_outlined,
                         color: ArgonColors.warning,
-                        subtitle: 'This month',
+                        subtitle: l10n.statTransactionsSubtitle,
                         onTap: () => AppToast.success(
                           context,
                           title: 'On press',
@@ -200,7 +202,7 @@ class _DashboardViewState extends ConsumerState<DashboardView>
                 AnimatedListItem(
                   index: 5,
                   controller: _animController,
-                  child: const SectionHeader(title: 'RECENT TRANSACTIONS'),
+                  child: SectionHeader(title: l10n.sectionRecentTransactions),
                 ),
                 ...data.transactions.take(4).toList().asMap().entries.map((entry) {
                   final tx = entry.value;

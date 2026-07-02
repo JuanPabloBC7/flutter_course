@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/providers/locale_provider.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Reusable language selection bottom sheet.
@@ -22,6 +23,7 @@ class LanguageSheet {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -40,9 +42,9 @@ class LanguageSheet {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Select Language',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ArgonColors.text),
+                Text(
+                  l10n.selectLanguage,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ArgonColors.text),
                 ),
                 const SizedBox(height: 16),
                 ListTile(
@@ -58,7 +60,7 @@ class LanguageSheet {
                       child: Text('EN', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: ArgonColors.primary)),
                     ),
                   ),
-                  title: const Text('English (US)', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ArgonColors.text)),
+                  title: Text(l10n.languageEnglish, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ArgonColors.text)),
                   trailing: currentLocale.languageCode == 'en'
                       ? const Icon(Icons.check_rounded, color: ArgonColors.primary, size: 20)
                       : null,
@@ -80,7 +82,7 @@ class LanguageSheet {
                       child: Text('ES', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: ArgonColors.warning)),
                     ),
                   ),
-                  title: const Text('Español', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ArgonColors.text)),
+                  title: Text(l10n.languageSpanish, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ArgonColors.text)),
                   trailing: currentLocale.languageCode == 'es'
                       ? const Icon(Icons.check_rounded, color: ArgonColors.primary, size: 20)
                       : null,

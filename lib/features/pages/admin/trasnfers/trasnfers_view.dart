@@ -9,6 +9,7 @@ import 'package:flutter_course/core/widgets/options_grid.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transfer_card.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/providers/transfers_providers.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const List<Color> _avatarColors = [
@@ -61,6 +62,7 @@ class _TransfersViewState extends ConsumerState<TransfersView>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final transfersAsync = ref.watch(transfersProvider);
 
     return Scaffold(
@@ -70,9 +72,9 @@ class _TransfersViewState extends ConsumerState<TransfersView>
         elevation: 0,
         centerTitle: false,
         automaticallyImplyLeading: false,
-        title: const Text(
-          'Transfers',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: ArgonColors.text),
+        title: Text(
+          l10n.transfersTitle,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: ArgonColors.text),
         ),
         actions: [
           IconButton(
@@ -94,23 +96,21 @@ class _TransfersViewState extends ConsumerState<TransfersView>
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                // ── Hero card ──
                 AnimatedListItem(
                   index: 0,
                   controller: _animController,
                   child: GradientActionCard(
-                    title: 'Send Money',
-                    subtitle: 'Transfer to anyone, anywhere',
+                    title: l10n.sendMoney,
+                    subtitle: l10n.sendMoneySubtitle,
                     icon: Icons.send_rounded,
                     onTap: () {},
                   ),
                 ),
 
-                // ── Frequent contacts ──
                 AnimatedListItem(
                   index: 1,
                   controller: _animController,
-                  child: const SectionHeader(title: 'FREQUENT CONTACTS'),
+                  child: SectionHeader(title: l10n.sectionFrequentContacts),
                 ),
                 AnimatedListItem(
                   index: 2,
@@ -136,70 +136,28 @@ class _TransfersViewState extends ConsumerState<TransfersView>
                   ),
                 ),
 
-                // ── Transfer options ──
                 AnimatedListItem(
                   index: 3,
                   controller: _animController,
-                  child: const SectionHeader(title: 'TRANSFER OPTIONS'),
+                  child: SectionHeader(title: l10n.sectionTransferOptions),
                 ),
                 AnimatedListItem(
                   index: 4,
                   controller: _animController,
                   child: OptionsGrid(
                     items: [
-                      OptionItem(
-                        icon: Icons.account_balance_rounded, 
-                        title: 'Bank Transfer', 
-                        subtitle: 'To bank account', 
-                        color: ArgonColors.primary, 
-                        onTap: () => AppToast.success(
-                          context,
-                          title: 'On press',
-                          message: 'You on press successfully.',
-                        )
-                      ),
-                      OptionItem(
-                        icon: Icons.phone_android_rounded, 
-                        title: 'Mobile', 
-                        subtitle: 'To phone number', 
-                        color: ArgonColors.success, 
-                        onTap: () => AppToast.success(
-                          context,
-                          title: 'On press',
-                          message: 'You on press successfully.',
-                        )
-                      ),
-                      OptionItem(
-                        icon: Icons.qr_code_rounded, 
-                        title: 'QR Code', 
-                        subtitle: 'Scan to pay', 
-                        color: ArgonColors.info, 
-                        onTap: () => AppToast.success(
-                          context,
-                          title: 'On press',
-                          message: 'You on press successfully.',
-                        )
-                      ),
-                      OptionItem(
-                        icon: Icons.language_rounded, 
-                        title: 'International', 
-                        subtitle: 'Send abroad', 
-                        color: ArgonColors.warning, 
-                        onTap: () => AppToast.success(
-                          context,
-                          title: 'On press',
-                          message: 'You on press successfully.',
-                        )
-                      ),
+                      OptionItem(icon: Icons.account_balance_rounded, title: l10n.optionBankTransfer, subtitle: l10n.optionBankTransferSubtitle, color: ArgonColors.primary, onTap: () {}),
+                      OptionItem(icon: Icons.phone_android_rounded, title: l10n.optionMobile, subtitle: l10n.optionMobileSubtitle, color: ArgonColors.success, onTap: () {}),
+                      OptionItem(icon: Icons.qr_code_rounded, title: l10n.optionQRCode, subtitle: l10n.optionQRCodeSubtitle, color: ArgonColors.info, onTap: () {}),
+                      OptionItem(icon: Icons.language_rounded, title: l10n.optionInternational, subtitle: l10n.optionInternationalSubtitle, color: ArgonColors.warning, onTap: () {}),
                     ],
                   ),
                 ),
 
-                // ── Recent transfers ──
                 AnimatedListItem(
                   index: 5,
                   controller: _animController,
-                  child: const SectionHeader(title: 'RECENT TRANSFERS'),
+                  child: SectionHeader(title: l10n.sectionRecentTransfers),
                 ),
                 ...data.recentTransfers.asMap().entries.map((entry) {
                   final transfer = entry.value;
@@ -214,11 +172,7 @@ class _TransfersViewState extends ConsumerState<TransfersView>
                         amount: (transfer['amount'] as num).toDouble(),
                         status: _parseStatus(transfer['status'] as String?),
                         avatarColor: _avatarColors[entry.key % _avatarColors.length],
-                        onTap: () => AppToast.success(
-                          context,
-                          title: 'On press ${transfer['name'] as String}',
-                          message: 'You on press successfully.',
-                        ),
+                        onTap: () {},
                       ),
                     ),
                   );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/widgets/contact_avatar.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 /// Data model for a contact item.
 class ContactItem {
@@ -71,6 +72,8 @@ class _AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -91,12 +94,12 @@ class _AddButton extends StatelessWidget {
             child: const Icon(Icons.add_rounded, color: ArgonColors.muted, size: 24),
           ),
           const SizedBox(height: 8),
-          const SizedBox(
+          SizedBox(
             width: 68,
             child: Text(
-              'Add',
+              l10n.addContact,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: ArgonColors.muted),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: ArgonColors.muted),
             ),
           ),
         ],

@@ -12,6 +12,7 @@ import 'package:flutter_course/features/pages/auth/forgot_password/forgot_passwo
 import 'package:flutter_course/features/pages/auth/login/login_view.dart';
 import 'package:flutter_course/features/pages/core/onboarding/onboarding_view.dart';
 import 'package:flutter_course/features/pages/core/splash/splash_view.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// Application router configuration using GoRouter.
@@ -98,19 +99,23 @@ class AppRouter {
         builder: (context, state) {
           final product = state.extra as Product?;
           if (product == null) {
-            return const Scaffold(
-              body: Center(child: Text('Product not found')),
+            final l10n = AppLocalizations.of(context)!;
+            return Scaffold(
+              body: Center(child: Text(l10n.productNotFound)),
             );
           }
           return ProductDetailView(product: product);
         },
       ),
     ],
-    errorBuilder: (context, state) => Scaffold(
-      body: Center(
-        child: Text('Route not found: ${state.uri}'),
-      ),
-    ),
+    errorBuilder: (context, state) {
+      final l10n = AppLocalizations.of(context)!;
+      return Scaffold(
+        body: Center(
+          child: Text(l10n.routeNotFound(state.uri.toString())),
+        ),
+      );
+    },
   );
 
   // ── Auth redirect guard ────────────────────────────────────────────────────

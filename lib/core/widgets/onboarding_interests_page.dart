@@ -3,6 +3,7 @@ import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/widgets/interest_tile.dart';
 import 'package:flutter_course/core/widgets/progress_bar.dart';
 import 'package:flutter_course/features/pages/core/onboarding/providers/onboarding_providers.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The interests selection page of the onboarding flow.
@@ -24,6 +25,7 @@ class OnboardingInterestsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final selectedInterests = ref.watch(selectedInterestsProvider);
 
     return Padding(
@@ -38,9 +40,9 @@ class OnboardingInterestsPage extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // Title
-          const Text(
-            'Personalise your\nexperience',
-            style: TextStyle(
+          Text(
+            l10n.onboardingInterestsTitle,
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w700,
               color: ArgonColors.text,
@@ -50,9 +52,9 @@ class OnboardingInterestsPage extends ConsumerWidget {
           const SizedBox(height: 8),
 
           // Subtitle
-          const Text(
-            'Choose your interests.',
-            style: TextStyle(fontSize: 15, color: ArgonColors.muted),
+          Text(
+            l10n.onboardingInterestsSubtitle,
+            style: const TextStyle(fontSize: 15, color: ArgonColors.muted),
           ),
           const SizedBox(height: 24),
 

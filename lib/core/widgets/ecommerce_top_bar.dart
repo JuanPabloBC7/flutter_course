@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 /// A reusable top bar widget for e-commerce screens with search, favorites, and cart
 class EcommerceTopBar extends StatelessWidget {
@@ -29,6 +30,8 @@ class EcommerceTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -50,19 +53,19 @@ class EcommerceTopBar extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.search,
                         size: 20,
                         color: ArgonColors.muted,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        'Search products...',
-                        style: TextStyle(
+                        l10n.searchProductsPlaceholder,
+                        style: const TextStyle(
                           color: ArgonColors.muted,
                           fontSize: 14,
                         ),

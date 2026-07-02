@@ -7,6 +7,7 @@ import 'package:flutter_course/core/widgets/error_state.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
 import 'package:flutter_course/features/pages/admin/history/providers/history_providers.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HistoryView extends ConsumerStatefulWidget {
@@ -52,6 +53,7 @@ class _HistoryViewState extends ConsumerState<HistoryView>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final transactionsAsync = ref.watch(historyTransactionsProvider);
     final accountAsync = ref.watch(historyAccountProvider);
     final activeFilter = ref.watch(historyFilterProvider);
@@ -63,9 +65,9 @@ class _HistoryViewState extends ConsumerState<HistoryView>
         elevation: 0,
         centerTitle: false,
         automaticallyImplyLeading: false,
-        title: const Text(
-          'History',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: ArgonColors.text),
+        title: Text(
+          l10n.historyTitle,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: ArgonColors.text),
         ),
         actions: [
           IconButton(
@@ -84,9 +86,9 @@ class _HistoryViewState extends ConsumerState<HistoryView>
           if (transactions.isEmpty) {
             return EmptyState(
               icon: Icons.receipt_long_outlined,
-              title: 'No transactions yet',
-              subtitle: activeFilter != null ? 'No $activeFilter transactions found' : 'Your transaction history will appear here',
-              actionLabel: activeFilter != null ? 'Show all transactions' : null,
+              title: l10n.noTransactionsYet,
+              subtitle: activeFilter != null ? l10n.noFilteredTransactions(activeFilter) : l10n.transactionHistoryWillAppear,
+              actionLabel: activeFilter != null ? l10n.showAllTransactions : null,
               onAction: activeFilter != null ? () => ref.read(historyFilterProvider.notifier).state = null : null,
             );
           }
@@ -188,6 +190,7 @@ class _HistoryViewState extends ConsumerState<HistoryView>
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -203,11 +206,11 @@ class _HistoryViewState extends ConsumerState<HistoryView>
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text('Filter Transactions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ArgonColors.text)),
+                Text(l10n.filterTransactions, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ArgonColors.text)),
                 const SizedBox(height: 16),
-                _FilterOption(label: 'All', icon: Icons.list, isActive: activeFilter == null, onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = null; }),
-                _FilterOption(label: 'Income', icon: Icons.arrow_downward, iconColor: ArgonColors.success, isActive: activeFilter == 'income', onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = 'income'; }),
-                _FilterOption(label: 'Expenses', icon: Icons.arrow_upward, iconColor: ArgonColors.error, isActive: activeFilter == 'expense', onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = 'expense'; }),
+                _FilterOption(label: l10n.filterAll, icon: Icons.list, isActive: activeFilter == null, onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = null; }),
+                _FilterOption(label: l10n.filterIncome, icon: Icons.arrow_downward, iconColor: ArgonColors.success, isActive: activeFilter == 'income', onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = 'income'; }),
+                _FilterOption(label: l10n.filterExpenses, icon: Icons.arrow_upward, iconColor: ArgonColors.error, isActive: activeFilter == 'expense', onTap: () { Navigator.pop(context); ref.read(historyFilterProvider.notifier).state = 'expense'; }),
                 const SizedBox(height: 8),
               ],
             ),

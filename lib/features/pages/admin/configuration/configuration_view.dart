@@ -4,6 +4,7 @@ import 'package:flutter_course/core/providers/user_provider.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/widgets/profile_card.dart';
 import 'package:flutter_course/features/auth/presentation/providers/auth_providers.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -64,6 +65,8 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: ArgonColors.bgColorScreen,
       appBar: AppBar(
@@ -71,9 +74,9 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
         elevation: 0,
         centerTitle: false,
         automaticallyImplyLeading: true,
-        title: const Text(
-          'Configuration',
-          style: TextStyle(
+        title: Text(
+          l10n.configTitle,
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: ArgonColors.text,
@@ -96,7 +99,7 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
           // ── General section ──
           _buildAnimatedItem(
             index: 1,
-            child: const _SectionLabel(title: 'GENERAL'),
+            child: _SectionLabel(title: l10n.configGeneral),
           ),
           _buildAnimatedItem(
             index: 2,
@@ -104,8 +107,8 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
               children: [
                 _SettingsToggleTile(
                   icon: Icons.notifications_none_rounded,
-                  title: 'Notifications',
-                  subtitle: 'Push and in-app alerts',
+                  title: l10n.configNotifications,
+                  subtitle: l10n.configNotificationsSubtitle,
                   color: ArgonColors.primary,
                   value: _notificationsEnabled,
                   onChanged: (v) =>
@@ -113,8 +116,8 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
                 ),
                 _SettingsToggleTile(
                   icon: Icons.dark_mode_outlined,
-                  title: 'Dark Mode',
-                  subtitle: 'Switch appearance theme',
+                  title: l10n.configDarkMode,
+                  subtitle: l10n.configDarkModeSubtitle,
                   color: ArgonColors.initial,
                   value: _darkModeEnabled,
                   onChanged: (v) =>
@@ -122,15 +125,15 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
                 ),
                 _SettingsNavTile(
                   icon: Icons.language_rounded,
-                  title: 'Language',
-                  subtitle: 'English (US)',
+                  title: l10n.configLanguage,
+                  subtitle: l10n.languageEnglish,
                   color: ArgonColors.info,
                   onTap: () {},
                 ),
                 _SettingsNavTile(
                   icon: Icons.palette_outlined,
-                  title: 'Appearance',
-                  subtitle: 'Colors and layout',
+                  title: l10n.configAppearance,
+                  subtitle: l10n.configAppearanceSubtitle,
                   color: ArgonColors.warning,
                   onTap: () {},
                 ),
@@ -141,7 +144,7 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
           // ── Security section ──
           _buildAnimatedItem(
             index: 3,
-            child: const _SectionLabel(title: 'SECURITY'),
+            child: _SectionLabel(title: l10n.configSecurity),
           ),
           _buildAnimatedItem(
             index: 4,
@@ -149,8 +152,8 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
               children: [
                 _SettingsToggleTile(
                   icon: Icons.fingerprint_rounded,
-                  title: 'Biometric Login',
-                  subtitle: 'Use fingerprint or face ID',
+                  title: l10n.configBiometricLogin,
+                  subtitle: l10n.configBiometricLoginSubtitle,
                   color: ArgonColors.success,
                   value: _biometricEnabled,
                   onChanged: (v) =>
@@ -158,15 +161,15 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
                 ),
                 _SettingsNavTile(
                   icon: Icons.lock_outline_rounded,
-                  title: 'Change Password',
-                  subtitle: 'Update your credentials',
+                  title: l10n.configChangePassword,
+                  subtitle: l10n.configChangePasswordSubtitle,
                   color: ArgonColors.error,
                   onTap: () {},
                 ),
                 _SettingsNavTile(
                   icon: Icons.shield_outlined,
-                  title: 'Two-Factor Auth',
-                  subtitle: 'Extra layer of security',
+                  title: l10n.configTwoFactorAuth,
+                  subtitle: l10n.configTwoFactorAuthSubtitle,
                   color: ArgonColors.primary,
                   onTap: () {},
                 ),
@@ -177,7 +180,7 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
           // ── Data & Storage section ──
           _buildAnimatedItem(
             index: 5,
-            child: const _SectionLabel(title: 'DATA & STORAGE'),
+            child: _SectionLabel(title: l10n.configDataStorage),
           ),
           _buildAnimatedItem(
             index: 6,
@@ -185,8 +188,8 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
               children: [
                 _SettingsToggleTile(
                   icon: Icons.save_outlined,
-                  title: 'Auto-Save',
-                  subtitle: 'Save transactions automatically',
+                  title: l10n.configAutoSave,
+                  subtitle: l10n.configAutoSaveSubtitle,
                   color: ArgonColors.info,
                   value: _autoSaveEnabled,
                   onChanged: (v) =>
@@ -194,15 +197,15 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
                 ),
                 _SettingsNavTile(
                   icon: Icons.storage_rounded,
-                  title: 'Storage Usage',
-                  subtitle: '24.5 MB used',
+                  title: l10n.configStorageUsage,
+                  subtitle: l10n.configStorageUsageSubtitle,
                   color: ArgonColors.warning,
                   onTap: () {},
                 ),
                 _SettingsNavTile(
                   icon: Icons.download_outlined,
-                  title: 'Export Data',
-                  subtitle: 'Download your information',
+                  title: l10n.configExportData,
+                  subtitle: l10n.configExportDataSubtitle,
                   color: ArgonColors.success,
                   onTap: () {},
                 ),
@@ -213,7 +216,7 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
           // ── Support section ──
           _buildAnimatedItem(
             index: 7,
-            child: const _SectionLabel(title: 'SUPPORT'),
+            child: _SectionLabel(title: l10n.configSupport),
           ),
           _buildAnimatedItem(
             index: 8,
@@ -221,22 +224,22 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
               children: [
                 _SettingsNavTile(
                   icon: Icons.help_outline_rounded,
-                  title: 'Help Center',
-                  subtitle: 'FAQ and guides',
+                  title: l10n.configHelpCenter,
+                  subtitle: l10n.configHelpCenterSubtitle,
                   color: ArgonColors.primary,
                   onTap: () {},
                 ),
                 _SettingsNavTile(
                   icon: Icons.chat_bubble_outline_rounded,
-                  title: 'Contact Support',
-                  subtitle: 'Get in touch with us',
+                  title: l10n.configContactSupport,
+                  subtitle: l10n.configContactSupportSubtitle,
                   color: ArgonColors.info,
                   onTap: () {},
                 ),
                 _SettingsNavTile(
                   icon: Icons.info_outline_rounded,
-                  title: 'About',
-                  subtitle: 'Version 1.0.0',
+                  title: l10n.configAbout,
+                  subtitle: l10n.configAboutSubtitle,
                   color: ArgonColors.muted,
                   onTap: () {},
                 ),
@@ -264,14 +267,14 @@ class _ConfigurationViewState extends ConsumerState<ConfigurationView>
                   ),
                   elevation: 0,
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.logout_rounded, size: 20),
-                    SizedBox(width: 8),
+                    const Icon(Icons.logout_rounded, size: 20),
+                    const SizedBox(width: 8),
                     Text(
-                      'Log Out',
-                      style: TextStyle(
+                      l10n.logOut,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),

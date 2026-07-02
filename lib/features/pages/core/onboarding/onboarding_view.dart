@@ -3,6 +3,7 @@ import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/widgets/onboarding_image_page.dart';
 import 'package:flutter_course/core/widgets/onboarding_interests_page.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,17 +24,6 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   static const int _totalPages = 3;
-
-  static const List<String> _interests = [
-    'User Interface',
-    'User Experience',
-    'User Research',
-    'UX Writing',
-    'User Testing',
-    'Service Design',
-    'Strategy',
-    'Design Systems',
-  ];
 
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
@@ -61,6 +51,19 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    final interests = [
+      l10n.interestUI,
+      l10n.interestUX,
+      l10n.interestResearch,
+      l10n.interestUXWriting,
+      l10n.interestTesting,
+      l10n.interestServiceDesign,
+      l10n.interestStrategy,
+      l10n.interestDesignSystems,
+    ];
+
     return Scaffold(
       backgroundColor: ArgonColors.white,
       body: SafeArea(
@@ -71,29 +74,29 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
             // Page 1: Image page
             OnboardingImagePage(
               imageUrl: 'https://dummyjson.com/image/400x400',
-              title: 'Create a prototype in just a few minutes',
-              subtitle: 'Enjoy these pre-made components and worry only about creating the best product ever.',
+              title: l10n.onboardingTitle1,
+              subtitle: l10n.onboardingSubtitle1,
               currentPage: 0,
               totalPages: _totalPages,
-              button: _buildNextButton(),
+              button: _buildNextButton(l10n),
             ),
 
             // Page 2: Interests selection
             OnboardingInterestsPage(
               currentPage: 1,
               totalPages: _totalPages,
-              interests: _interests,
-              button: _buildNextButton(),
+              interests: interests,
+              button: _buildNextButton(l10n),
             ),
 
             // Page 3: Image page
             OnboardingImagePage(
               imageUrl: 'https://dummyjson.com/image/400x400',
-              title: 'Secure and reliable banking',
-              subtitle: 'Your data is protected with industry-standard encryption and biometric authentication.',
+              title: l10n.onboardingTitle3,
+              subtitle: l10n.onboardingSubtitle3,
               currentPage: 2,
               totalPages: _totalPages,
-              button: _buildNextButton(),
+              button: _buildNextButton(l10n),
             ),
           ],
         ),
@@ -101,7 +104,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     );
   }
 
-  Widget _buildNextButton() {
+  Widget _buildNextButton(AppLocalizations l10n) {
     return SizedBox(
       width: double.infinity,
       height: 52,
@@ -114,7 +117,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           elevation: 0,
         ),
         child: Text(
-          _currentPage < _totalPages - 1 ? 'Next' : 'Get Started',
+          _currentPage < _totalPages - 1 ? l10n.next : l10n.getStarted,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),

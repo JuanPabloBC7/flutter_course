@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 class BalanceSummary extends StatelessWidget {
   final double totalBalance;
@@ -13,6 +14,7 @@ class BalanceSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isPositive = percentChange >= 0;
     final changeColor = isPositive ? ArgonColors.success : ArgonColors.error;
     final changeIcon = isPositive ? Icons.trending_up : Icons.trending_down;
@@ -42,9 +44,9 @@ class BalanceSummary extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Total Balance',
-            style: TextStyle(
+          Text(
+            l10n.totalBalance,
+            style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
               color: Colors.white70,
@@ -73,7 +75,7 @@ class BalanceSummary extends StatelessWidget {
                 Icon(changeIcon, color: ArgonColors.white, size: 16),
                 const SizedBox(width: 4),
                 Text(
-                  '$changePrefix${percentChange.toStringAsFixed(1)}% this month',
+                  '$changePrefix${percentChange.toStringAsFixed(1)}% ${l10n.thisMonth}',
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,

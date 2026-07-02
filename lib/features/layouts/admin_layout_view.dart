@@ -40,6 +40,8 @@ class _AdminLayoutViewState extends State<AdminLayoutView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -54,26 +56,26 @@ class _AdminLayoutViewState extends State<AdminLayoutView> {
         backgroundColor: ArgonColors.white,
         selectedFontSize: 12,
         unselectedFontSize: 12,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            icon: const Icon(Icons.dashboard_outlined),
+            activeIcon: const Icon(Icons.dashboard),
+            label: l10n.navDashboard,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.swap_horiz_outlined),
-            activeIcon: Icon(Icons.swap_horiz),
-            label: 'Transfers',
+            icon: const Icon(Icons.swap_horiz_outlined),
+            activeIcon: const Icon(Icons.swap_horiz),
+            label: l10n.navTransfers,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.history_outlined),
-            activeIcon: Icon(Icons.history),
-            label: 'History',
+            icon: const Icon(Icons.history_outlined),
+            activeIcon: const Icon(Icons.history),
+            label: l10n.navHistory,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_outlined),
-            activeIcon: Icon(Icons.menu),
-            label: 'Menu',
+            icon: const Icon(Icons.menu_outlined),
+            activeIcon: const Icon(Icons.menu),
+            label: l10n.navMenu,
           ),
         ],
       ),
@@ -88,6 +90,7 @@ class _MenuView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final userData = ref.watch(userProfileProvider).valueOrNull;
     final fullName = userData?['fullName'] as String? ?? 'User';
     final email = userData?['email'] as String? ?? 'email@example.com';
@@ -110,9 +113,9 @@ class _MenuView extends ConsumerWidget {
         elevation: 0,
         centerTitle: false,
         automaticallyImplyLeading: false,
-        title: const Text(
-          'Menu',
-          style: TextStyle(
+        title: Text(
+          l10n.menuTitle,
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: ArgonColors.text,
@@ -123,40 +126,36 @@ class _MenuView extends ConsumerWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          ProfileCard(
-            fullName: fullName,
-            email: email,
-            initials: initials()
-          ),
+          ProfileCard(fullName: fullName, email: email, initials: initials()),
 
-          _MenuSectionLabel(title: AppLocalizations.of(context)?.menuNavigation ?? 'NAVIGATION'),
+          _MenuSectionLabel(title: l10n.navigation),
           _MenuGroup(
             children: [
               _MenuTile(
                 icon: Icons.dashboard_rounded,
-                title: 'Dashboard',
-                subtitle: 'Overview and statistics',
+                title: l10n.menuDashboard,
+                subtitle: l10n.menuDashboardSubtitle,
                 color: ArgonColors.primary,
                 onTap: () => navigateToTab(0),
               ),
               _MenuTile(
                 icon: Icons.swap_horiz_rounded,
-                title: 'Transfers',
-                subtitle: 'Send and receive transfers',
+                title: l10n.menuTransfers,
+                subtitle: l10n.menuTransfersSubtitle,
                 color: ArgonColors.info,
                 onTap: () => navigateToTab(1),
               ),
               _MenuTile(
                 icon: Icons.history_rounded,
-                title: 'History',
-                subtitle: 'View past transactions',
+                title: l10n.menuHistory,
+                subtitle: l10n.menuHistorySubtitle,
                 color: ArgonColors.success,
                 onTap: () => navigateToTab(2),
               ),
               _MenuTile(
                 icon: Icons.storefront_rounded,
-                title: 'E-Commerce',
-                subtitle: 'Browse products and shop',
+                title: l10n.menuEcommerce,
+                subtitle: l10n.menuEcommerceSubtitle,
                 color: ArgonColors.label,
                 onTap: () async {
                   final prefs = await SharedPreferences.getInstance();
@@ -175,69 +174,69 @@ class _MenuView extends ConsumerWidget {
               ),
               _MenuTile(
                 icon: Icons.settings_rounded,
-                title: 'Configuration',
-                subtitle: 'App settings and preferences',
+                title: l10n.menuConfiguration,
+                subtitle: l10n.menuConfigurationSubtitle,
                 color: ArgonColors.warning,
                 onTap: () => context.push(AppRouter.configuration),
               ),
             ],
           ),
 
-          const _MenuSectionLabel(title: 'ACCOUNT'),
+          _MenuSectionLabel(title: l10n.accountSection),
           _MenuGroup(
             children: [
               _MenuTile(
                 icon: Icons.person_outline_rounded,
-                title: 'Profile',
-                subtitle: 'View and edit your profile',
+                title: l10n.menuProfile,
+                subtitle: l10n.menuProfileSubtitle,
                 color: ArgonColors.primary,
                 onTap: () => context.push(AppRouter.profile),
               ),
               _MenuTile(
                 icon: Icons.notifications_none_rounded,
-                title: 'Notifications',
-                subtitle: 'Manage your alerts',
+                title: l10n.menuNotifications,
+                subtitle: l10n.menuNotificationsSubtitle,
                 color: ArgonColors.info,
                 onTap: () {},
               ),
               _MenuTile(
                 icon: Icons.language_rounded,
-                title: 'Language',
+                title: l10n.menuLanguage,
                 subtitle: ref.watch(localeProvider.notifier).currentLanguageName,
                 color: ArgonColors.info,
                 onTap: () => LanguageSheet.show(context, ref),
               ),
               _MenuTile(
                 icon: Icons.shield_outlined,
-                title: 'Privacy & Security',
-                subtitle: 'Protect your account',
+                title: l10n.menuPrivacySecurity,
+                subtitle: l10n.menuPrivacySecuritySubtitle,
                 color: ArgonColors.success,
                 onTap: () {},
               ),
             ],
           ),
 
-          const _MenuSectionLabel(title: 'SUPPORT'),
+          _MenuSectionLabel(title: l10n.supportSection),
           _MenuGroup(
             children: [
               _MenuTile(
                 icon: Icons.help_outline_rounded,
-                title: 'Help Center',
-                subtitle: 'FAQ and guides',
+                title: l10n.menuHelpCenter,
+                subtitle: l10n.menuHelpCenterSubtitle,
                 color: ArgonColors.primary,
                 onTap: () {},
               ),
               _MenuTile(
                 icon: Icons.chat_bubble_outline_rounded,
-                title: 'Contact Us',
-                subtitle: 'Get in touch with support',
+                title: l10n.menuContactUs,
+                subtitle: l10n.menuContactUsSubtitle,
                 color: ArgonColors.info,
                 onTap: () {},
               ),
               _MenuTile(
                 icon: Icons.info_outline_rounded,
-                title: 'About',
-                subtitle: 'Version 1.0.0',
+                title: l10n.menuAbout,
+                subtitle: l10n.menuAboutSubtitle,
                 color: ArgonColors.muted,
                 onTap: () {},
               ),
@@ -256,23 +255,15 @@ class _MenuView extends ConsumerWidget {
                 foregroundColor: ArgonColors.white,
                 backgroundColor: ArgonColors.error,
                 minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.logout_rounded, size: 20),
-                  SizedBox(width: 8),
-                  Text(
-                    'Log Out',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  const Icon(Icons.logout_rounded, size: 20),
+                  const SizedBox(width: 8),
+                  Text(l10n.logOut, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
@@ -336,11 +327,7 @@ class _MenuGroup extends StatelessWidget {
             children: [
               children[index],
               if (index < children.length - 1)
-                Divider(
-                  height: 1,
-                  indent: 60,
-                  color: ArgonColors.border.withValues(alpha: 0.5),
-                ),
+                Divider(height: 1, indent: 60, color: ArgonColors.border.withValues(alpha: 0.5)),
             ],
           );
         }),
@@ -358,13 +345,7 @@ class _MenuTile extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _MenuTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.onTap,
-  });
+  const _MenuTile({required this.icon, required this.title, required this.subtitle, required this.color, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -379,10 +360,7 @@ class _MenuTile extends StatelessWidget {
               Container(
                 width: 38,
                 height: 38,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
                 child: Icon(icon, color: color, size: 20),
               ),
               const SizedBox(width: 14),
@@ -390,30 +368,13 @@ class _MenuTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: ArgonColors.text,
-                      ),
-                    ),
+                    Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: ArgonColors.text)),
                     const SizedBox(height: 1),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: ArgonColors.muted,
-                      ),
-                    ),
+                    Text(subtitle, style: const TextStyle(fontSize: 12, color: ArgonColors.muted)),
                   ],
                 ),
               ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: ArgonColors.muted,
-                size: 22,
-              ),
+              const Icon(Icons.chevron_right_rounded, color: ArgonColors.muted, size: 22),
             ],
           ),
         ),

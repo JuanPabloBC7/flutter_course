@@ -73,7 +73,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'An unexpected error occurred.';
+        _errorMessage = l10n.unexpectedError;
         _isLoading = false;
       });
     }
@@ -173,7 +173,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      l10n.commonResetPassword,
+                      l10n.resetPassword,
                       style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
@@ -183,7 +183,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Enter your email address and we\'ll send you a link to reset your password.',
+                      l10n.resetPasswordDescription,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -219,10 +219,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Email
-                        _buildLabel(l10n.commonEmail),
+                        _buildLabel(l10n.email),
                         const SizedBox(height: 8),
                         FormInput(
-                          placeholder: l10n.commonEmail,
+                          placeholder: l10n.email,
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.done,
@@ -282,7 +282,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                                 ),
                               )
                             : Text(
-                                l10n.commonResetPassword,
+                                l10n.resetPassword,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
@@ -305,7 +305,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                               width: 1.5,
                             ),
                           ),
-                          child: Text(l10n.commonGoBack, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                          child: Text(l10n.goBack, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                         ),
                       ],
                     ),
@@ -328,7 +328,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'Check your spam folder if you don\'t see the email',
+                      l10n.checkSpamFolder,
                       style: TextStyle(
                         fontSize: 12,
                         color: ArgonColors.muted.withValues(alpha: 0.7),
@@ -383,19 +383,19 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Email Sent!',
-                style: TextStyle(
+              Text(
+                l10n.emailSent,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: ArgonColors.text,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'We\'ve sent a password reset link to your email address. Please check your inbox.',
+              Text(
+                l10n.emailSentDescription,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: ArgonColors.muted,
                   height: 1.4,
@@ -417,7 +417,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                   elevation: 0,
                 ),
                 child: Text(
-                  l10n.commonGoBack,
+                  l10n.goBack,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 15,

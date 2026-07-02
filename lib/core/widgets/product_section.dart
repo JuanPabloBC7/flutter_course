@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 /// A reusable section widget that displays a horizontal scrollable list of products with a title and "See more" button
 class ProductSection extends StatelessWidget {
@@ -42,6 +43,8 @@ class ProductSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -62,9 +65,9 @@ class ProductSection extends StatelessWidget {
               if (showSeeMore)
                 GestureDetector(
                   onTap: onSeeMore,
-                  child: const Text(
-                    'See more',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.seeMore,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: ArgonColors.primary,

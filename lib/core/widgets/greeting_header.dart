@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 /// Header widget that displays a time-based greeting and the user's name.
 ///
@@ -10,15 +11,17 @@ class GreetingHeader extends StatelessWidget {
 
   const GreetingHeader({super.key, required this.username});
 
-  String get _greeting {
+  String _greeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return l10n.goodMorning;
+    if (hour < 18) return l10n.goodAfternoon;
+    return l10n.goodEvening;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SafeArea(
       bottom: false,
       child: Padding(
@@ -30,7 +33,7 @@ class GreetingHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '$_greeting,',
+                    '${_greeting(l10n)},',
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

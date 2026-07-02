@@ -5,6 +5,7 @@ import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_detail_image_carousel.dart';
 import 'package:flutter_course/core/widgets/size_selector.dart';
 import 'package:flutter_course/features/pages/admin/product_detail/providers/product_detail_provider.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,6 +19,7 @@ class ProductDetailView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final detailState = ref.watch(productDetailProvider(product));
 
     return Scaffold(
@@ -102,18 +104,18 @@ class ProductDetailView extends ConsumerWidget {
                     ),
                     const SizedBox(height: 24),
                     // Description
-                    const Text(
-                      'Description',
-                      style: TextStyle(
+                    Text(
+                      l10n.productDescription,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: ArgonColors.text,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'The perfect T-shirt for when you want to feel comfortable but still stylish. Amazing for all occasions. Made of 100% cotton fabric in your colours. Its modern style gives a lighter look to the outfit. Perfect for the warmest days.',
-                      style: TextStyle(
+                    Text(
+                      l10n.productDescriptionText,
+                      style: const TextStyle(
                         fontSize: 14,
                         color: ArgonColors.header,
                         height: 1.5,
@@ -152,7 +154,7 @@ class ProductDetailView extends ConsumerWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                '${product.name} added to cart!',
+                                l10n.productAddedToCart(product.name),
                               ),
                               backgroundColor: ArgonColors.success,
                               duration: const Duration(milliseconds: 1500),
@@ -160,7 +162,7 @@ class ProductDetailView extends ConsumerWidget {
                           );
                         },
                         icon: const Icon(Icons.shopping_bag_outlined),
-                        label: const Text('Add to bag'),
+                        label: Text(l10n.addToBag),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ArgonColors.primary,
                           foregroundColor: ArgonColors.white,

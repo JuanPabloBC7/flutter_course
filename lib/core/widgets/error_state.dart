@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/l10n/app_localizations.dart';
 
 /// Reusable error state widget shown when data loading fails.
 ///
@@ -16,6 +17,8 @@ class ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -39,7 +42,7 @@ class ErrorState extends StatelessWidget {
             const SizedBox(height: 8),
             TextButton(
               onPressed: onRetry,
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),

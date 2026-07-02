@@ -142,7 +142,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      l10n.commonWelcome,
+                      l10n.welcome,
                       style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
@@ -152,7 +152,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      l10n.commonQuote,
+                      l10n.welcomeQuote,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -187,18 +187,18 @@ class _LoginViewState extends ConsumerState<LoginView>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Sign In',
-                          style: TextStyle(
+                        Text(
+                          l10n.signIn,
+                          style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
                             color: ArgonColors.text,
                           ),
                         ),
                         const SizedBox(height: 6),
-                        const Text(
-                          'Enter your credentials to continue',
-                          style: TextStyle(
+                        Text(
+                          l10n.signInSubtitle,
+                          style: const TextStyle(
                             fontSize: 13,
                             color: ArgonColors.muted,
                           ),
@@ -206,10 +206,10 @@ class _LoginViewState extends ConsumerState<LoginView>
                         const SizedBox(height: 24),
 
                         // Username
-                        _buildLabel(l10n.commonUsername),
+                        _buildLabel(l10n.username),
                         const SizedBox(height: 8),
                         FormInput(
-                          placeholder: l10n.commonUsername,
+                          placeholder: l10n.username,
                           controller: _usernameController,
                           textInputAction: TextInputAction.next,
                           prefixIcon: const Icon(
@@ -226,10 +226,10 @@ class _LoginViewState extends ConsumerState<LoginView>
                         const SizedBox(height: 18),
 
                         // Password
-                        _buildLabel(l10n.commonPassword),
+                        _buildLabel(l10n.password),
                         const SizedBox(height: 8),
                         FormInput(
-                          placeholder: l10n.commonPassword,
+                          placeholder: l10n.password,
                           controller: _passwordController,
                           textInputAction: TextInputAction.done,
                           obscureText: _obscurePassword,
@@ -262,7 +262,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                           child: GestureDetector(
                             onTap: () => context.push(AppRouter.forgotPassword),
                             child: Text(
-                              l10n.commonForgotPassword,
+                              l10n.forgotPassword,
                               style: const TextStyle(
                                 color: ArgonColors.primary,
                                 fontSize: 13,
@@ -282,7 +282,7 @@ class _LoginViewState extends ConsumerState<LoginView>
 
                         // Success banner
                         if (isAuthenticated)
-                          const _SuccessBanner(),
+                          _SuccessBanner(l10n),
 
                         // Login button
                         SizedBox(
@@ -325,7 +325,7 @@ class _LoginViewState extends ConsumerState<LoginView>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'or continue with',
+                        l10n.orContinueWith,
                         style: TextStyle(
                           fontSize: 13,
                           color: ArgonColors.muted.withValues(alpha: 0.8),
@@ -392,7 +392,7 @@ class _LoginViewState extends ConsumerState<LoginView>
       );
     }
     return Text(
-      l10n.commonLogin,
+      l10n.signIn,
       style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
     );
   }
@@ -452,7 +452,8 @@ class _ErrorBanner extends StatelessWidget {
 // ── Success Banner ───────────────────────────────────────────────────────────
 
 class _SuccessBanner extends StatelessWidget {
-  const _SuccessBanner();
+  final AppLocalizations l10n;
+  const _SuccessBanner(this.l10n);
 
   @override
   Widget build(BuildContext context) {
@@ -465,14 +466,14 @@ class _SuccessBanner extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: ArgonColors.success.withValues(alpha: 0.2)),
         ),
-        child: const Row(
+        child: Row(
           children: [
-            Icon(Icons.check_circle_outline_rounded, color: ArgonColors.success, size: 18),
-            SizedBox(width: 10),
+            const Icon(Icons.check_circle_outline_rounded, color: ArgonColors.success, size: 18),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
-                'Login successful! Redirecting...',
-                style: TextStyle(fontSize: 13, color: ArgonColors.success, height: 1.3),
+                l10n.loginSuccessRedirecting,
+                style: const TextStyle(fontSize: 13, color: ArgonColors.success, height: 1.3),
               ),
             ),
           ],
