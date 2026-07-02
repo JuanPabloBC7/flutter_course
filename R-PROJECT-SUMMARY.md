@@ -93,3 +93,6 @@ Este proyecto demuestra una arquitectura de aplicación Flutter de grado profesi
 4. **l10n Completo** traducción de EN/ES.
 5. **Integración Firebase** proporciona autenticación y base de datos reales
 6. **Librería de Componentes Reutilizables** con widgets para asegurar la consistencia de UI/UX.
+
+### 7. Entregas
+Sigue el siguiente link para ver las entregas por sprint de este proyecto, [click aquí](https://github.com/JuanPabloBC7/flutter_course/blob/feature/transversal_project/R-DELIVERIES.md)
