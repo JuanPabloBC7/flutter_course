@@ -57,7 +57,10 @@ class _DashboardViewState extends ConsumerState<DashboardView>
         ),
         error: (error, _) => ErrorState(
           message: 'Error: $error',
-          onRetry: () => ref.invalidate(dashboardProvider),
+          onRetry: () {
+            DashboardCache.clear();
+            ref.invalidate(dashboardProvider);
+          },
         ),
         data: (data) {
           _animController.forward(from: 0);
@@ -69,7 +72,10 @@ class _DashboardViewState extends ConsumerState<DashboardView>
 
           return RefreshIndicator(
             color: ArgonColors.primary,
-            onRefresh: () async => ref.invalidate(dashboardProvider),
+            onRefresh: () async {
+              await DashboardCache.clear();
+              ref.invalidate(dashboardProvider);
+            },
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 16),
