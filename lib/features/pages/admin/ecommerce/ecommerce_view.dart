@@ -168,14 +168,29 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
             label: l10n.navCart,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.person_outline),
-            label: l10n.navProfile,
+            icon: const Icon(Icons.home_outlined),
+            label: l10n.navDashboard,
           ),
         ],
         selectedItemColor: ArgonColors.primary,
         unselectedItemColor: ArgonColors.muted,
         currentIndex: 0,
-        onTap: (index) {},
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              // Ya estamos en Explore
+              break;
+            case 1:
+              context.push(AppRouter.favorites);
+              break;
+            case 2:
+              context.push(AppRouter.cart);
+              break;
+            case 3:
+              context.go(AppRouter.dashboard);
+              break;
+          }
+        },
       ),
     );
   }
