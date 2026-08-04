@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/core/config/feature_flags.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/providers/locale_provider.dart';
+import 'package:flutter_course/core/providers/role_provider.dart';
 import 'package:flutter_course/core/providers/user_provider.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/widgets/language_sheet.dart';
@@ -11,19 +12,21 @@ import 'package:flutter_course/features/pages/admin/dashboard/dashboard_view.dar
 import 'package:flutter_course/features/pages/admin/history/history_view.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/trasnfers_view.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
+import 'package:flutter_course/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AdminLayoutView extends StatefulWidget {
+class AdminLayoutView extends ConsumerStatefulWidget {
   const AdminLayoutView({super.key});
 
   @override
-  State<AdminLayoutView> createState() => _AdminLayoutViewState();
+  ConsumerState<AdminLayoutView> createState() => _AdminLayoutViewState();
 }
 
-class _AdminLayoutViewState extends State<AdminLayoutView> {
+class _AdminLayoutViewState extends ConsumerState<AdminLayoutView> {
   int _currentIndex = 0;
+  bool _notificationStarted = false;
 
   final List<Widget> _pages = const [
     DashboardView(),
@@ -31,6 +34,31 @@ class _AdminLayoutViewState extends State<AdminLayoutView> {
     HistoryView(),
     _MenuView(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _initNotifications();
+  }
+
+  /// Inicia el servicio de notificaciones de órdenes según el rol del usuario.
+  Future<void> _initNotifications() async {
+    if (_notificationStarted) return;
+    _notificationStarted = true;
+
+    // Esperar a que el rol se cargue
+    final role = await ref.read(userRoleProvider.future);
+    orderNotificationService.startListening(
+      role: role,
+      messengerKey: scaffoldMessengerKey,
+    );
+  }
+
+  @override
+  void dispose() {
+    orderNotificationService.stop();
+    super.dispose();
+  }
 
   void _onTabTapped(int index) {
     setState(() {
