@@ -8,6 +8,7 @@ import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
 import 'package:flutter_course/features/pages/admin/history/providers/history_providers.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
+import 'package:flutter_course/scripts/seed_transactions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HistoryView extends ConsumerStatefulWidget {
@@ -20,6 +21,9 @@ class HistoryView extends ConsumerStatefulWidget {
 class _HistoryViewState extends ConsumerState<HistoryView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
+  final ScrollController _scrollController = ScrollController();
+
+  bool _seeded = false;
 
   @override
   void initState() {
@@ -28,12 +32,36 @@ class _HistoryViewState extends ConsumerState<HistoryView>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
+    _scrollController.addListener(_onScroll);
+    _runSeed();
+  }
+
+  /// Ejecuta el seed una sola vez al entrar a History.
+  /// TODO: Eliminar después de poblar Firestore.
+  Future<void> _runSeed() async {
+    if (_seeded) return;
+    _seeded = true;
+    try {
+      await seedTransactions();
+      debugPrint('✅ Seed transactions completed');
+    } catch (e) {
+      debugPrint('⚠️ Seed failed (may already exist): $e');
+    }
   }
 
   @override
   void dispose() {
     _animController.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  /// Detecta cuando el usuario llega al final de la lista para cargar más.
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      ref.read(historyTransactionsProvider.notifier).loadNextPage();
+    }
   }
 
   List<dynamic> _buildGroupedList(List<Map<String, dynamic>> transactions) {
@@ -54,7 +82,7 @@ class _HistoryViewState extends ConsumerState<HistoryView>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final transactionsAsync = ref.watch(historyTransactionsProvider);
+    final historyAsync = ref.watch(historyTransactionsProvider);
     final accountAsync = ref.watch(historyAccountProvider);
     final activeFilter = ref.watch(historyFilterProvider);
 
@@ -76,13 +104,15 @@ class _HistoryViewState extends ConsumerState<HistoryView>
           ),
         ],
       ),
-      body: transactionsAsync.when(
+      body: historyAsync.when(
         loading: () => const Center(child: CircularProgressIndicator(color: ArgonColors.primary)),
         error: (error, _) => ErrorState(
           message: error.toString(),
-          onRetry: () => ref.invalidate(historyTransactionsProvider),
+          onRetry: () => ref.read(historyTransactionsProvider.notifier).refresh(),
         ),
-        data: (transactions) {
+        data: (historyState) {
+          final transactions = historyState.transactions;
+
           if (transactions.isEmpty) {
             return EmptyState(
               icon: Icons.receipt_long_outlined,
@@ -101,24 +131,41 @@ class _HistoryViewState extends ConsumerState<HistoryView>
           return RefreshIndicator(
             color: ArgonColors.primary,
             onRefresh: () async {
-              ref.invalidate(historyTransactionsProvider);
+              ref.read(historyTransactionsProvider.notifier).refresh();
               ref.invalidate(historyAccountProvider);
             },
-            child: _buildTransactionList(transactions, totalBalance.toDouble(), percentChange.toDouble()),
+            child: _buildTransactionList(
+              transactions,
+              totalBalance.toDouble(),
+              percentChange.toDouble(),
+              historyState.hasMore,
+              historyState.isLoadingMore,
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildTransactionList(List<Map<String, dynamic>> transactions, double totalBalance, double percentChange) {
+  Widget _buildTransactionList(
+    List<Map<String, dynamic>> transactions,
+    double totalBalance,
+    double percentChange,
+    bool hasMore,
+    bool isLoadingMore,
+  ) {
     final groupedItems = _buildGroupedList(transactions);
 
+    // +1 para el balance header, +1 para el indicador de carga al final
+    final itemCount = groupedItems.length + 1 + (hasMore || isLoadingMore ? 1 : 0);
+
     return ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: groupedItems.length + 1,
+      itemCount: itemCount,
       itemBuilder: (context, index) {
+        // Primer item: Balance summary
         if (index == 0) {
           return FadeTransition(
             opacity: CurvedAnimation(parent: _animController, curve: Curves.easeOut),
@@ -132,8 +179,28 @@ class _HistoryViewState extends ConsumerState<HistoryView>
           );
         }
 
+        // Último item: indicador de carga para paginación
+        if (index == itemCount - 1 && (hasMore || isLoadingMore)) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Center(
+              child: isLoadingMore
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: ArgonColors.primary,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          );
+        }
+
         final item = groupedItems[index - 1];
 
+        // Encabezado de sección (Today, Yesterday, etc.)
         if (item is String) {
           return FadeTransition(
             opacity: CurvedAnimation(parent: _animController, curve: Curves.easeOut),
@@ -141,6 +208,7 @@ class _HistoryViewState extends ConsumerState<HistoryView>
           );
         }
 
+        // Tarjeta de transacción
         final tx = item as Map<String, dynamic>;
         final isIncome = tx['type'] == 'income';
         final itemIndex = groupedItems.sublist(0, index - 1).whereType<Map>().length;
