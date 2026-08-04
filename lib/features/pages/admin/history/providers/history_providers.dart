@@ -12,6 +12,12 @@ final transactionFirestoreServiceProvider =
 
 final historyFilterProvider = StateProvider<String?>((ref) => null);
 
+// ── Account ID Provider ──────────────────────────────────────────────────────
+
+/// Provider que expone el accountId activo del usuario.
+/// TODO: Obtener dinámicamente de Firestore cuando haya múltiples cuentas.
+final activeAccountIdProvider = StateProvider<String>((ref) => 'dQoefdO5RFYzk5yZdL7E');
+
 // ── Paginated Transactions State ─────────────────────────────────────────────
 
 /// Estado que mantiene las transacciones acumuladas y el cursor de paginación.
@@ -63,7 +69,11 @@ class HistoryNotifier extends StateNotifier<AsyncValue<HistoryState>> {
 
     try {
       final filter = _ref.read(historyFilterProvider);
-      final page = await _service.fetchFirstPage(filter: filter);
+      final accountId = _ref.read(activeAccountIdProvider);
+      final page = await _service.fetchFirstPage(
+        accountId: accountId,
+        filter: filter,
+      );
 
       state = AsyncValue.data(HistoryState(
         transactions: page.transactions,
@@ -88,7 +98,9 @@ class HistoryNotifier extends StateNotifier<AsyncValue<HistoryState>> {
 
     try {
       final filter = _ref.read(historyFilterProvider);
+      final accountId = _ref.read(activeAccountIdProvider);
       final page = await _service.fetchNextPage(
+        accountId: accountId,
         lastDocument: currentState.lastDocument!,
         filter: filter,
       );

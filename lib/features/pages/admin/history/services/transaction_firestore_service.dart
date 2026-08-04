@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 /// Servicio para consultar transacciones desde Firestore con paginación.
 ///
 /// Estructura de la colección:
 /// transactions/
 ///   {documentId}/
-///     - id: String (UID del usuario)
 ///     - accountId: String
 ///     - title: String
-///     - amount: double
+///     - amount: String
 ///     - type: String ("income" | "expense")
 ///     - category: String
 ///     - date: Timestamp
@@ -19,25 +17,25 @@ class TransactionFirestoreService {
   static const String _collection = 'transactions';
   static const int _pageSize = 10;
 
-  /// Obtiene la primera página de transacciones del usuario actual.
+  /// Obtiene la primera página de transacciones para una cuenta específica.
   /// Opcionalmente filtra por tipo (income/expense).
-  Future<TransactionPage> fetchFirstPage({String? filter}) async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) {
-      throw Exception('User not authenticated');
-    }
-
-    Query query = _firestore
-        .collection(_collection)
-        .where('id', isEqualTo: userId)
-        .orderBy('date', descending: true)
-        .limit(_pageSize);
+  Future<TransactionPage> fetchFirstPage({
+    required String accountId,
+    String? filter,
+  }) async {
+    Query query;
 
     if (filter != null) {
       query = _firestore
           .collection(_collection)
-          .where('id', isEqualTo: userId)
+          .where('accountId', isEqualTo: accountId)
           .where('type', isEqualTo: filter)
+          .orderBy('date', descending: true)
+          .limit(_pageSize);
+    } else {
+      query = _firestore
+          .collection(_collection)
+          .where('accountId', isEqualTo: accountId)
           .orderBy('date', descending: true)
           .limit(_pageSize);
     }
@@ -57,26 +55,24 @@ class TransactionFirestoreService {
 
   /// Obtiene la siguiente página de transacciones a partir del último documento.
   Future<TransactionPage> fetchNextPage({
+    required String accountId,
     required DocumentSnapshot lastDocument,
     String? filter,
   }) async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) {
-      throw Exception('User not authenticated');
-    }
-
-    Query query = _firestore
-        .collection(_collection)
-        .where('id', isEqualTo: userId)
-        .orderBy('date', descending: true)
-        .startAfterDocument(lastDocument)
-        .limit(_pageSize);
+    Query query;
 
     if (filter != null) {
       query = _firestore
           .collection(_collection)
-          .where('id', isEqualTo: userId)
+          .where('accountId', isEqualTo: accountId)
           .where('type', isEqualTo: filter)
+          .orderBy('date', descending: true)
+          .startAfterDocument(lastDocument)
+          .limit(_pageSize);
+    } else {
+      query = _firestore
+          .collection(_collection)
+          .where('accountId', isEqualTo: accountId)
           .orderBy('date', descending: true)
           .startAfterDocument(lastDocument)
           .limit(_pageSize);
@@ -102,10 +98,16 @@ class TransactionFirestoreService {
       final timestamp = data['date'] as Timestamp?;
       final date = timestamp?.toDate() ?? DateTime.now();
 
+      // El amount viene como String desde Firestore
+      final amountRaw = data['amount'];
+      final amount = amountRaw is num
+          ? amountRaw.toDouble()
+          : double.tryParse(amountRaw?.toString() ?? '0') ?? 0.0;
+
       return {
         'docId': doc.id,
         'title': data['title'] as String? ?? '',
-        'amount': (data['amount'] as num?)?.toDouble() ?? 0.0,
+        'amount': amount,
         'type': data['type'] as String? ?? 'expense',
         'category': data['category'] as String? ?? '',
         'date': date.toIso8601String(),
