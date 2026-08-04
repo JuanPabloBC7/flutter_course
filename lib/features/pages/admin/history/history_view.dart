@@ -8,7 +8,6 @@ import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transaction_card.dart';
 import 'package:flutter_course/features/pages/admin/history/providers/history_providers.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
-import 'package:flutter_course/scripts/seed_transactions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HistoryView extends ConsumerStatefulWidget {
@@ -23,8 +22,6 @@ class _HistoryViewState extends ConsumerState<HistoryView>
   late AnimationController _animController;
   final ScrollController _scrollController = ScrollController();
 
-  bool _seeded = false;
-
   @override
   void initState() {
     super.initState();
@@ -33,20 +30,6 @@ class _HistoryViewState extends ConsumerState<HistoryView>
       duration: const Duration(milliseconds: 600),
     );
     _scrollController.addListener(_onScroll);
-    _runSeed();
-  }
-
-  /// Ejecuta el seed una sola vez al entrar a History.
-  /// TODO: Eliminar después de poblar Firestore.
-  Future<void> _runSeed() async {
-    if (_seeded) return;
-    _seeded = true;
-    try {
-      await seedTransactions();
-      debugPrint('✅ Seed transactions completed');
-    } catch (e) {
-      debugPrint('⚠️ Seed failed (may already exist): $e');
-    }
   }
 
   @override
