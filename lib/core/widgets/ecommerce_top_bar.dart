@@ -81,6 +81,7 @@ class EcommerceTopBar extends StatelessWidget {
           GestureDetector(
             onTap: onFavoriteTap,
             child: Stack(
+              clipBehavior: Clip.none,
               children: [
                 Container(
                   height: 40,
@@ -133,6 +134,7 @@ class EcommerceTopBar extends StatelessWidget {
           GestureDetector(
             onTap: onCartTap,
             child: Stack(
+              clipBehavior: Clip.none,
               children: [
                 Container(
                   height: 40,
