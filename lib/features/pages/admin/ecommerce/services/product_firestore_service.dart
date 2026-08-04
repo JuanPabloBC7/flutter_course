@@ -59,4 +59,22 @@ class ProductFirestoreService {
   Future<List<Product>> fetchForThisSummer() async {
     return fetchProductsByCategory('for_this_summer');
   }
+
+  /// Actualiza un producto en Firestore (solo admin).
+  Future<void> updateProduct({
+    required String productId,
+    required String name,
+    required String price,
+    String? imageUrl,
+    String? category,
+  }) async {
+    final data = <String, dynamic>{
+      'name': name,
+      'price': price,
+    };
+    if (imageUrl != null) data['imageUrl'] = imageUrl;
+    if (category != null) data['category'] = category;
+
+    await _firestore.collection(_collection).doc(productId).update(data);
+  }
 }

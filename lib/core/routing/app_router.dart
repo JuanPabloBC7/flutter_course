@@ -7,6 +7,7 @@ import 'package:flutter_course/features/layouts/admin_layout_view.dart';
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/views/cart_view.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/views/edit_products_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/views/favorites_view.dart';
 import 'package:flutter_course/features/pages/admin/product_detail/product_detail_view.dart';
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
@@ -40,6 +41,7 @@ class AppRouter {
   static const String productDetail = '/product-detail';
   static const String favorites = '/favorites';
   static const String cart = '/cart';
+  static const String editProducts = '/edit-products';
 
   // ── Public routes (no auth required) ───────────────────────────────────────
 
@@ -120,6 +122,11 @@ class AppRouter {
         path: cart,
         name: 'cart',
         builder: (context, state) => const CartView(),
+      ),
+      GoRoute(
+        path: editProducts,
+        name: 'edit-products',
+        builder: (context, state) => const EditProductsView(),
       ),
     ],
     errorBuilder: (context, state) {

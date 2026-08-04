@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/providers/role_provider.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/widgets/ecommerce_top_bar.dart';
 import 'package:flutter_course/core/widgets/image_carousel.dart';
@@ -167,6 +168,11 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
             icon: const Icon(Icons.shopping_bag_outlined),
             label: l10n.navCart,
           ),
+          if (ref.watch(isAdminProvider))
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.edit_rounded),
+              label: 'Edit',
+            ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.home_outlined),
             label: l10n.navDashboard,
@@ -176,19 +182,17 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
         unselectedItemColor: ArgonColors.muted,
         currentIndex: 0,
         onTap: (index) {
-          switch (index) {
-            case 0:
-              // Ya estamos en Explore
-              break;
-            case 1:
-              context.push(AppRouter.favorites);
-              break;
-            case 2:
-              context.push(AppRouter.cart);
-              break;
-            case 3:
-              context.go(AppRouter.dashboard);
-              break;
+          final isAdmin = ref.read(isAdminProvider);
+          if (index == 0) {
+            // Ya estamos en Explore
+          } else if (index == 1) {
+            context.push(AppRouter.favorites);
+          } else if (index == 2) {
+            context.push(AppRouter.cart);
+          } else if (isAdmin && index == 3) {
+            context.push(AppRouter.editProducts);
+          } else {
+            context.go(AppRouter.dashboard);
           }
         },
       ),
