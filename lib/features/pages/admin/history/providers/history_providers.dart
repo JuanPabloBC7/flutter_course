@@ -64,8 +64,17 @@ class HistoryNotifier extends StateNotifier<AsyncValue<HistoryState>> {
   }
 
   /// Carga la primera página de transacciones.
-  Future<void> loadFirstPage() async {
-    state = const AsyncValue.loading();
+  Future<void> loadFirstPage({bool showFullLoading = true}) async {
+    // Solo mostrar loading completo en la carga inicial (sin datos previos)
+    if (showFullLoading && state.valueOrNull?.transactions.isEmpty != false) {
+      state = const AsyncValue.loading();
+    } else {
+      // Mantener datos actuales visibles mientras recarga
+      final current = state.valueOrNull;
+      if (current != null) {
+        state = AsyncValue.data(current.copyWith(isLoadingMore: true));
+      }
+    }
 
     try {
       final filter = _ref.read(historyFilterProvider);
@@ -126,14 +135,14 @@ class HistoryNotifier extends StateNotifier<AsyncValue<HistoryState>> {
 // ── Providers ────────────────────────────────────────────────────────────────
 
 final historyTransactionsProvider =
-    StateNotifierProvider.autoDispose<HistoryNotifier, AsyncValue<HistoryState>>(
+    StateNotifierProvider<HistoryNotifier, AsyncValue<HistoryState>>(
         (ref) {
   final service = ref.read(transactionFirestoreServiceProvider);
   final notifier = HistoryNotifier(service, ref);
 
   // Recargar cuando cambia el filtro
   ref.listen(historyFilterProvider, (previous, next) {
-    notifier.loadFirstPage();
+    notifier.loadFirstPage(showFullLoading: false);
   });
 
   return notifier;

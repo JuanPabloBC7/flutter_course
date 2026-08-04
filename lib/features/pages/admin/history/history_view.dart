@@ -96,7 +96,7 @@ class _HistoryViewState extends ConsumerState<HistoryView>
         data: (historyState) {
           final transactions = historyState.transactions;
 
-          if (transactions.isEmpty) {
+          if (transactions.isEmpty && !historyState.isLoadingMore) {
             return EmptyState(
               icon: Icons.receipt_long_outlined,
               title: l10n.noTransactionsYet,
@@ -106,7 +106,9 @@ class _HistoryViewState extends ConsumerState<HistoryView>
             );
           }
 
-          _animController.forward(from: 0);
+          if (!_animController.isAnimating && _animController.status != AnimationStatus.completed) {
+            _animController.forward(from: 0);
+          }
 
           final totalBalance = accountAsync.valueOrNull?['totalBalance'] as num? ?? 0;
           final percentChange = accountAsync.valueOrNull?['percentChange'] as num? ?? 0;
