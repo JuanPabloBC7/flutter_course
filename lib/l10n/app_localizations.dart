@@ -132,7 +132,19 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Cart - {count} items'**
-  String cartCount(Object count);
+  String cartCount(int count);
+
+  /// No description provided for @emptyCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty'**
+  String get emptyCart;
+
+  /// No description provided for @noFavoritesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No favorites yet'**
+  String get noFavoritesYet;
 
   /// No description provided for @checkSpamFolder.
   ///

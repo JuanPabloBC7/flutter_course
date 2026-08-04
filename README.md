@@ -16,6 +16,11 @@ DummyJSON: [DummyJSON - Auth](https://dummyjson.com/docs/auth)
 FirebaseAPI: [Farebase](https://firebase.google.com/?hl=es-419)
 - Username: `juan.balan@bam.com.gt`
 - Password: `prueba123`
+- role: `admin`
+
+- Username: `juanpablobc7@gmail.com`
+- Password: `prueba123`
+- role: `user`
 
 ### Feature Flags
 Note: This project uses feature flags to control environment-specific behavior. All flags are centralized in feature_flags.dart. Ensure the correct flags are enabled for the production environment before deploying.

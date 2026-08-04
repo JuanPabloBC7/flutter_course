@@ -7,6 +7,7 @@ import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_section.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/cart_provider.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/ecommerce_providers.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/providers/favorites_provider.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,18 +22,8 @@ class EcommerceView extends ConsumerStatefulWidget {
 class _EcommerceViewState extends ConsumerState<EcommerceView> {
   final List<String> carouselImages = ['', '', ''];
 
-  Map<String, bool> likedProducts = {};
-  int favoriteItemCount = 0;
-
   void _handleProductLike(Product product, bool isLiked) {
-    setState(() {
-      likedProducts[product.id] = isLiked;
-      if (isLiked) {
-        favoriteItemCount++;
-      } else if (favoriteItemCount > 0) {
-        favoriteItemCount--;
-      }
-    });
+    ref.read(favoritesProvider.notifier).toggle(product);
   }
 
   void _handleProductTap(Product product) {
@@ -55,20 +46,11 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
   }
 
   void _handleFavoriteTap() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Favorites - $favoriteItemCount items'),
-      ),
-    );
+    context.push(AppRouter.favorites);
   }
 
   void _handleCartTap() {
-    final count = ref.read(cartItemCountProvider);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Cart - $count items'),
-      ),
-    );
+    context.push(AppRouter.cart);
   }
 
   @override
@@ -77,6 +59,9 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
     final perfectForYouAsync = ref.watch(perfectForYouProductsProvider);
     final forThisSummerAsync = ref.watch(forThisSummerProductsProvider);
     final cartItemCount = ref.watch(cartItemCountProvider);
+    final favoriteItemCount = ref.watch(favoriteCountProvider);
+    final favorites = ref.watch(favoritesProvider);
+    final likedProducts = {for (final p in favorites) p.id: true};
 
     return Scaffold(
       backgroundColor: ArgonColors.bgColorScreen,

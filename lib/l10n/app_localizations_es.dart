@@ -24,9 +24,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cancel => 'Cancelar';
 
   @override
-  String cartCount(Object count) {
+  String cartCount(int count) {
     return 'Carrito - $count artículos';
   }
+
+  @override
+  String get emptyCart => 'Tu carrito está vacío';
+
+  @override
+  String get noFavoritesYet => 'Aún no tienes favoritos';
 
   @override
   String get checkSpamFolder => 'Revisa tu carpeta de spam si no ves el correo';

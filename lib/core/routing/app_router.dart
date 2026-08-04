@@ -6,6 +6,8 @@ import 'package:flutter_course/features/auth/data/datasources/auth_firebase_data
 import 'package:flutter_course/features/layouts/admin_layout_view.dart';
 import 'package:flutter_course/features/pages/admin/configuration/configuration_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/views/cart_view.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/views/favorites_view.dart';
 import 'package:flutter_course/features/pages/admin/product_detail/product_detail_view.dart';
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
@@ -36,6 +38,8 @@ class AppRouter {
   static const String profile = '/profile';
   static const String ecommerce = '/ecommerce';
   static const String productDetail = '/product-detail';
+  static const String favorites = '/favorites';
+  static const String cart = '/cart';
 
   // ── Public routes (no auth required) ───────────────────────────────────────
 
@@ -106,6 +110,16 @@ class AppRouter {
           }
           return ProductDetailView(product: product);
         },
+      ),
+      GoRoute(
+        path: favorites,
+        name: 'favorites',
+        builder: (context, state) => const FavoritesView(),
+      ),
+      GoRoute(
+        path: cart,
+        name: 'cart',
+        builder: (context, state) => const CartView(),
       ),
     ],
     errorBuilder: (context, state) {

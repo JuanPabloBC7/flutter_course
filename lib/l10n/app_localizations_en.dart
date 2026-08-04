@@ -24,9 +24,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
-  String cartCount(Object count) {
+  String cartCount(int count) {
     return 'Cart - $count items';
   }
+
+  @override
+  String get emptyCart => 'Your cart is empty';
+
+  @override
+  String get noFavoritesYet => 'No favorites yet';
 
   @override
   String get checkSpamFolder =>
