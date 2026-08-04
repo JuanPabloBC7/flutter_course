@@ -1,4 +1,5 @@
 import 'package:flutter_course/core/widgets/product_card.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/providers/cart_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State for product detail
@@ -36,7 +37,9 @@ class ProductDetailState {
 
 /// Notifier for product detail state
 class ProductDetailNotifier extends StateNotifier<ProductDetailState> {
-  ProductDetailNotifier(Product product)
+  final CartNotifier _cartNotifier;
+
+  ProductDetailNotifier(Product product, this._cartNotifier)
       : super(ProductDetailState(product: product));
 
   void toggleFavorite() {
@@ -57,8 +60,14 @@ class ProductDetailNotifier extends StateNotifier<ProductDetailState> {
     }
   }
 
+  /// Agrega el producto al carrito con la talla, color y cantidad seleccionados.
   void addToCart() {
-    // TODO: Implement add to cart logic
+    _cartNotifier.addItem(
+      product: state.product,
+      quantity: state.quantity,
+      selectedSize: state.selectedSize,
+      selectedColor: state.selectedColor,
+    );
   }
 }
 
@@ -69,5 +78,8 @@ final selectedProductProvider =
 /// Provider for product detail state
 final productDetailProvider =
     StateNotifierProvider.family<ProductDetailNotifier, ProductDetailState, Product>(
-  (ref, product) => ProductDetailNotifier(product),
+  (ref, product) => ProductDetailNotifier(
+    product,
+    ref.read(cartProvider.notifier),
+  ),
 );
