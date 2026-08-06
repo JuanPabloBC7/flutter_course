@@ -9,6 +9,7 @@ import 'package:flutter_course/core/widgets/options_grid.dart';
 import 'package:flutter_course/core/widgets/section_header.dart';
 import 'package:flutter_course/core/widgets/transfer_card.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/providers/transfers_providers.dart';
+import 'package:flutter_course/features/pages/admin/trasnfers/widgets/transfer_form.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -177,6 +178,18 @@ class _TransfersViewState extends ConsumerState<TransfersView>
                     ),
                   );
                 }),
+
+                // ── Formulario de nueva transferencia ──
+                AnimatedListItem(
+                  index: 6 + data.recentTransfers.length,
+                  controller: _animController,
+                  child: const SectionHeader(title: 'NEW TRANSFER'),
+                ),
+                AnimatedListItem(
+                  index: 7 + data.recentTransfers.length,
+                  controller: _animController,
+                  child: const TransferForm(),
+                ),
                 const SizedBox(height: 24),
               ],
             ),
