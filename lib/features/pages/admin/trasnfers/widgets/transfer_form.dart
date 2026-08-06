@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/widgets/top_notification.dart';
 import 'package:flutter_course/features/pages/admin/trasnfers/providers/transfer_form_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,11 +35,10 @@ class _TransferFormState extends ConsumerState<TransferForm> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedAccountId == null || _selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select an account and category'),
-          backgroundColor: ArgonColors.error,
-        ),
+      TopNotification.show(
+        context,
+        message: 'Please select an account and category',
+        type: NotificationType.error,
       );
       return;
     }
@@ -63,24 +63,18 @@ class _TransferFormState extends ConsumerState<TransferForm> {
           _selectedCategory = null;
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Transfer completed!'),
-            backgroundColor: ArgonColors.success,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+        TopNotification.show(
+          context,
+          message: 'Transfer completed!',
+          type: NotificationType.success,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: ArgonColors.error,
-          ),
+        TopNotification.show(
+          context,
+          message: 'Error: $e',
+          type: NotificationType.error,
         );
       }
     } finally {

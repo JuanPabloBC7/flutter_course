@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/providers/role_provider.dart';
+import 'package:flutter_course/core/widgets/top_notification.dart';
 
 /// Servicio de notificaciones in-app para órdenes de compra.
 ///
@@ -16,12 +16,10 @@ class OrderNotificationService {
   bool _isFirstSnapshot = true;
 
   /// Inicia el stream de escucha de órdenes.
-  /// Debe llamarse después de la autenticación.
   void startListening({
     required UserRole role,
     required GlobalKey<ScaffoldMessengerState> messengerKey,
   }) {
-    // Cancelar stream anterior si existe
     stop();
     _isFirstSnapshot = true;
 
@@ -76,58 +74,19 @@ class OrderNotificationService {
     });
   }
 
-  /// Muestra la notificación in-app como un MaterialBanner.
+  /// Muestra la notificación usando el widget TopNotification.
   void _showNotification(
     GlobalKey<ScaffoldMessengerState> messengerKey,
     String message,
   ) {
-    messengerKey.currentState?.showMaterialBanner(
-      MaterialBanner(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: ArgonColors.success.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Icon(
-            Icons.shopping_bag_rounded,
-            color: ArgonColors.success,
-            size: 20,
-          ),
-        ),
-        content: Text(
-          message,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: ArgonColors.text,
-          ),
-        ),
-        backgroundColor: ArgonColors.white,
-        elevation: 4,
-        actions: [
-          TextButton(
-            onPressed: () {
-              messengerKey.currentState?.hideCurrentMaterialBanner();
-            },
-            child: const Text(
-              'OK',
-              style: TextStyle(
-                color: ArgonColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    final context = messengerKey.currentContext;
+    if (context == null) return;
 
-    // Auto-dismiss después de 5 segundos
-    Future.delayed(const Duration(seconds: 5), () {
-      messengerKey.currentState?.hideCurrentMaterialBanner();
-    });
+    TopNotification.show(
+      context,
+      message: message,
+      type: NotificationType.success,
+    );
   }
 
   /// Detiene el stream de escucha.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
+import 'package:flutter_course/core/widgets/top_notification.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/ecommerce_providers.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/services/product_firestore_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -278,11 +279,10 @@ class _EditableProductCard extends StatelessWidget {
 
                 if (context.mounted) {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Product updated!'),
-                      backgroundColor: ArgonColors.success,
-                    ),
+                  TopNotification.show(
+                    context,
+                    message: 'Product updated!',
+                    type: NotificationType.success,
                   );
                 }
                 onSaved();

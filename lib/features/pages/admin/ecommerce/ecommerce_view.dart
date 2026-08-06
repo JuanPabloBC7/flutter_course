@@ -6,6 +6,7 @@ import 'package:flutter_course/core/widgets/ecommerce_top_bar.dart';
 import 'package:flutter_course/core/widgets/image_carousel.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_section.dart';
+import 'package:flutter_course/core/widgets/top_notification.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/cart_provider.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/ecommerce_providers.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/favorites_provider.dart';
@@ -35,14 +36,18 @@ class _EcommerceViewState extends ConsumerState<EcommerceView> {
   }
 
   void _handleSeeMore(String section) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('See more tapped for $section')),
+    TopNotification.show(
+      context,
+      message: 'See more tapped for $section',
+      type: NotificationType.info,
     );
   }
 
   void _handleSearchTap() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Search tapped')),
+    TopNotification.show(
+      context,
+      message: 'Search tapped',
+      type: NotificationType.info,
     );
   }
 

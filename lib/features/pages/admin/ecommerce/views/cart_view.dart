@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/widgets/top_notification.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/cart_provider.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,25 +63,19 @@ class _CartViewState extends ConsumerState<CartView> {
       ref.read(cartProvider.notifier).clear();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Order placed successfully!'),
-            backgroundColor: ArgonColors.success,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+        TopNotification.show(
+          context,
+          message: 'Order placed successfully!',
+          type: NotificationType.success,
         );
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: ArgonColors.error,
-          ),
+        TopNotification.show(
+          context,
+          message: 'Error: $e',
+          type: NotificationType.error,
         );
       }
     } finally {

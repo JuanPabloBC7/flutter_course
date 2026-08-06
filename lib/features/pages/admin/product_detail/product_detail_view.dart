@@ -4,6 +4,7 @@ import 'package:flutter_course/core/widgets/color_selector.dart';
 import 'package:flutter_course/core/widgets/product_card.dart';
 import 'package:flutter_course/core/widgets/product_detail_image_carousel.dart';
 import 'package:flutter_course/core/widgets/size_selector.dart';
+import 'package:flutter_course/core/widgets/top_notification.dart';
 import 'package:flutter_course/features/pages/admin/product_detail/providers/product_detail_provider.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -151,14 +152,10 @@ class ProductDetailView extends ConsumerWidget {
                           ref
                               .read(productDetailProvider(product).notifier)
                               .addToCart();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                l10n.productAddedToCart(product.name),
-                              ),
-                              backgroundColor: ArgonColors.success,
-                              duration: const Duration(milliseconds: 1500),
-                            ),
+                          TopNotification.show(
+                            context,
+                            message: l10n.productAddedToCart(product.name),
+                            type: NotificationType.success,
                           );
                         },
                         icon: const Icon(Icons.shopping_bag_outlined),
