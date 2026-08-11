@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/core/services/local_notification_service.dart';
 import 'package:flutter_course/core/widgets/top_notification.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/cart_provider.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
@@ -61,6 +62,12 @@ class _CartViewState extends ConsumerState<CartView> {
 
       // Limpiar el carrito
       ref.read(cartProvider.notifier).clear();
+
+      // Mostrar notificación local del sistema
+      await LocalNotificationService().showOrderPlaced(
+        itemCount: items.length,
+        total: total.toStringAsFixed(2),
+      );
 
       if (mounted) {
         TopNotification.show(
