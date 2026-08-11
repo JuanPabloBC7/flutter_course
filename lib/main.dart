@@ -5,6 +5,7 @@ import 'package:flutter_course/core/providers/locale_provider.dart';
 import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_course/core/services/local_notification_service.dart';
 import 'package:flutter_course/core/services/order_notification_service.dart';
+import 'package:flutter_course/core/services/push_notification_service.dart';
 import 'package:flutter_course/firebase_options.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -24,6 +25,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await LocalNotificationService().initialize();
+  await PushNotificationService().initialize();
   runApp(const ProviderScope(child: MyApp()));
 }
 
