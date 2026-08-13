@@ -63,17 +63,30 @@ class PushNotificationService {
   /// Este token es el que se usa en Firebase Console para enviar push
   /// a un dispositivo específico.
   Future<void> _getToken() async {
-    final token = await _messaging.getToken();
-    debugPrint('═══════════════════════════════════════════');
-    debugPrint('📱 FCM Token: $token');
-    debugPrint('═══════════════════════════════════════════');
-    debugPrint('👆 Usa este token en Firebase Console → Messaging');
-    debugPrint('   para enviar un push a este dispositivo.');
+    try {
+      // En iOS, esperar a que el APNs token esté disponible
+      final apnsToken = await _messaging.getAPNSToken();
+      if (apnsToken == null) {
+        debugPrint('⚠️ APNs token not available (iOS simulator or no Apple Developer account)');
+        debugPrint('   Push notifications will not work on iOS until APNs is configured.');
+        return;
+      }
 
-    // Escuchar cambios de token (por refresh)
-    _messaging.onTokenRefresh.listen((newToken) {
-      debugPrint('🔄 FCM Token refreshed: $newToken');
-    });
+      final token = await _messaging.getToken();
+      debugPrint('═══════════════════════════════════════════');
+      debugPrint('📱 FCM Token: $token');
+      debugPrint('═══════════════════════════════════════════');
+      debugPrint('👆 Usa este token en Firebase Console → Messaging');
+      debugPrint('   para enviar un push a este dispositivo.');
+
+      // Escuchar cambios de token (por refresh)
+      _messaging.onTokenRefresh.listen((newToken) {
+        debugPrint('🔄 FCM Token refreshed: $newToken');
+      });
+    } catch (e) {
+      debugPrint('⚠️ Could not get FCM token: $e');
+      debugPrint('   This is expected on iOS simulator without APNs configuration.');
+    }
   }
 
   /// Escucha mensajes que llegan mientras la app está en foreground.

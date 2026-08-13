@@ -1,0 +1,9 @@
+{
+  "configurations": [
+    {
+      "name": "flutter_course",
+      "request": "launch",
+      "type": "dart",
+    }
+  ]
+}
