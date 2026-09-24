@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_course/core/network/app_exceptions.dart';
+import 'package:flutter_course/core/services/push_notification_service.dart';
 
 /// Firebase Authentication data source.
 ///
@@ -27,6 +28,10 @@ class AuthFirebaseDatasource {
         throw const UnauthorizedException(message: 'Login failed. No user returned.');
       }
 
+      // Persistir el FCM token en Firestore para que el backend pueda encontrarlo.
+      // Best-effort: no interrumpe el login si falla.
+      await PushNotificationService().saveTokenForUser(user.uid);
+
       final token = await user.getIdToken();
 
       return {
@@ -45,6 +50,8 @@ class AuthFirebaseDatasource {
 
   /// Signs out the current user.
   Future<void> logout() async {
+    // Limpiar el uid en memoria para dejar de persistir refresh de token
+    PushNotificationService().clearCurrentUser();
     await _firebaseAuth.signOut();
   }
 
@@ -84,6 +91,9 @@ class AuthFirebaseDatasource {
       if (displayName != null) {
         await user.updateDisplayName(displayName);
       }
+
+      // Persistir el FCM token en Firestore tras el registro exitoso.
+      await PushNotificationService().saveTokenForUser(user.uid);
 
       final token = await user.getIdToken();
 

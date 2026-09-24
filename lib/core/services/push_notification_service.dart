@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_course/core/services/local_notification_service.dart';
@@ -23,7 +24,12 @@ class PushNotificationService {
   PushNotificationService._internal();
 
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _initialized = false;
+
+  // UID del usuario autenticado actualmente. Se usa para persistir el token
+  // cuando FCM lo refresca mientras hay sesión activa.
+  String? _currentUserId;
 
   /// Inicializa el servicio de push notifications.
   /// Debe llamarse después de Firebase.initializeApp().
@@ -82,6 +88,11 @@ class PushNotificationService {
       // Escuchar cambios de token (por refresh)
       _messaging.onTokenRefresh.listen((newToken) {
         debugPrint('🔄 FCM Token refreshed: $newToken');
+        // Si hay una sesión activa, persistir el nuevo token en Firestore
+        final uid = _currentUserId;
+        if (uid != null) {
+          _persistToken(uid, newToken);
+        }
       });
     } catch (e) {
       debugPrint('⚠️ Could not get FCM token: $e');
@@ -121,5 +132,55 @@ class PushNotificationService {
         debugPrint('🚀 App opened from notification: ${message.notification?.title}');
       }
     });
+  }
+
+  /// Guarda el FCM token del dispositivo en Firestore para el usuario dado.
+  ///
+  /// Debe llamarse tras un login exitoso. El documento en la colección `users`
+  /// se identifica por el campo `userId` (no por el ID del documento), por eso
+  /// se busca/actualiza el documento donde `userId == uid`.
+  ///
+  /// Es best-effort: si algo falla, se registra pero no interrumpe el flujo.
+  Future<void> saveTokenForUser(String uid) async {
+    // Recordar el uid para persistir futuros refresh de token
+    _currentUserId = uid;
+
+    try {
+      final token = await _messaging.getToken();
+      if (token == null || token.isEmpty) {
+        debugPrint('⚠️ FCM token not available yet; skipping Firestore save.');
+        return;
+      }
+      await _persistToken(uid, token);
+    } catch (e) {
+      debugPrint('⚠️ Could not save FCM token for user $uid: $e');
+    }
+  }
+
+  /// Limpia el uid en memoria (por ejemplo, al cerrar sesión).
+  void clearCurrentUser() {
+    _currentUserId = null;
+  }
+
+  /// Persiste el token en el documento de `users` donde `userId == uid`.
+  Future<void> _persistToken(String uid, String token) async {
+    try {
+      final snapshot = await _firestore
+          .collection('users')
+          .where('userId', isEqualTo: uid)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        debugPrint('⚠️ No user document found with userId == $uid; token not saved.');
+        return;
+      }
+
+      // Actualizar el fcmToken en el documento encontrado
+      await snapshot.docs.first.reference.update({'fcmToken': token});
+      debugPrint('✅ FCM token saved to Firestore for user $uid');
+    } catch (e) {
+      debugPrint('⚠️ Could not persist FCM token for user $uid: $e');
+    }
   }
 }
