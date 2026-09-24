@@ -201,6 +201,13 @@ class _MenuView extends ConsumerWidget {
                 },
               ),
               _MenuTile(
+                icon: Icons.receipt_long_rounded,
+                title: l10n.menuSalesHistory,
+                subtitle: l10n.menuSalesHistorySubtitle,
+                color: ArgonColors.success,
+                onTap: () => context.push(AppRouter.salesHistory),
+              ),
+              _MenuTile(
                 icon: Icons.settings_rounded,
                 title: l10n.menuConfiguration,
                 subtitle: l10n.menuConfigurationSubtitle,

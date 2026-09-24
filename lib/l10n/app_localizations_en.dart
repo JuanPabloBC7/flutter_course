@@ -268,6 +268,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuEcommerceSubtitle => 'Browse products and shop';
 
   @override
+  String get menuSalesHistory => 'Sales History';
+
+  @override
+  String get menuSalesHistorySubtitle => 'View your purchase orders';
+
+  @override
+  String get salesHistoryTitle => 'Sales History';
+
+  @override
+  String get noOrdersYet => 'No orders yet';
+
+  @override
+  String get ordersWillAppear => 'Your purchase orders will appear here';
+
+  @override
   String get menuHelpCenter => 'Help Center';
 
   @override

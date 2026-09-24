@@ -9,6 +9,7 @@ import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dar
 import 'package:flutter_course/features/pages/admin/ecommerce/views/cart_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/views/edit_products_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/views/favorites_view.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/views/sales_history_view.dart';
 import 'package:flutter_course/features/pages/admin/product_detail/product_detail_view.dart';
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
 import 'package:flutter_course/features/pages/auth/forgot_password/forgot_password_view.dart';
@@ -42,6 +43,7 @@ class AppRouter {
   static const String favorites = '/favorites';
   static const String cart = '/cart';
   static const String editProducts = '/edit-products';
+  static const String salesHistory = '/sales-history';
 
   // ── Public routes (no auth required) ───────────────────────────────────────
 
@@ -127,6 +129,11 @@ class AppRouter {
         path: editProducts,
         name: 'edit-products',
         builder: (context, state) => const EditProductsView(),
+      ),
+      GoRoute(
+        path: salesHistory,
+        name: 'sales-history',
+        builder: (context, state) => const SalesHistoryView(),
       ),
     ],
     errorBuilder: (context, state) {

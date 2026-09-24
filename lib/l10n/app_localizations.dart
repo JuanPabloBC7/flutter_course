@@ -602,6 +602,36 @@ abstract class AppLocalizations {
   /// **'Browse products and shop'**
   String get menuEcommerceSubtitle;
 
+  /// No description provided for @menuSalesHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales History'**
+  String get menuSalesHistory;
+
+  /// No description provided for @menuSalesHistorySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View your purchase orders'**
+  String get menuSalesHistorySubtitle;
+
+  /// No description provided for @salesHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales History'**
+  String get salesHistoryTitle;
+
+  /// No description provided for @noOrdersYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders yet'**
+  String get noOrdersYet;
+
+  /// No description provided for @ordersWillAppear.
+  ///
+  /// In en, this message translates to:
+  /// **'Your purchase orders will appear here'**
+  String get ordersWillAppear;
+
   /// No description provided for @menuHelpCenter.
   ///
   /// In en, this message translates to:

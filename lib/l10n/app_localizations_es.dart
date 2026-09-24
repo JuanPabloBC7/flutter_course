@@ -268,6 +268,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get menuEcommerceSubtitle => 'Explorar productos y comprar';
 
   @override
+  String get menuSalesHistory => 'Historial de Compras';
+
+  @override
+  String get menuSalesHistorySubtitle => 'Ver tus órdenes de compra';
+
+  @override
+  String get salesHistoryTitle => 'Historial de Compras';
+
+  @override
+  String get noOrdersYet => 'Aún no tienes compras';
+
+  @override
+  String get ordersWillAppear => 'Tus órdenes de compra aparecerán aquí';
+
+  @override
   String get menuHelpCenter => 'Centro de Ayuda';
 
   @override
