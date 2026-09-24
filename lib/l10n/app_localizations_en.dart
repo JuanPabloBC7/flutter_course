@@ -283,6 +283,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ordersWillAppear => 'Your purchase orders will appear here';
 
   @override
+  String get orderDetailTitle => 'Order Detail';
+
+  @override
+  String orderNumber(String id) {
+    return 'Order #$id';
+  }
+
+  @override
+  String get orderDate => 'Date';
+
+  @override
+  String get orderProducts => 'PRODUCTS';
+
+  @override
   String get menuHelpCenter => 'Help Center';
 
   @override

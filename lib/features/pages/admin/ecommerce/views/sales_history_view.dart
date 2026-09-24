@@ -3,11 +3,12 @@ import 'package:flutter_course/core/constants/Theme.dart';
 import 'package:flutter_course/core/widgets/empty_state.dart';
 import 'package:flutter_course/core/widgets/error_state.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/providers/sales_history_provider.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/views/order_detail_view.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Pantalla de historial de compras (órdenes) del usuario.
-/// Obtiene las órdenes de la colección `orders` en Firestore.
+/// Muestra una lista simplificada. Al tocar una orden abre el detalle.
 class SalesHistoryView extends ConsumerStatefulWidget {
   const SalesHistoryView({super.key});
 
@@ -34,15 +35,13 @@ class _SalesHistoryViewState extends ConsumerState<SalesHistoryView>
     super.dispose();
   }
 
-  /// Formatea la fecha en un texto legible.
+  /// Formatea la fecha en un texto corto y legible.
   String _formatDate(DateTime date) {
     final months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
     ];
-    final hour = date.hour.toString().padLeft(2, '0');
-    final minute = date.minute.toString().padLeft(2, '0');
-    return '${date.day} ${months[date.month - 1]} ${date.year} · $hour:$minute';
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
   @override
@@ -115,9 +114,17 @@ class _SalesHistoryViewState extends ConsumerState<SalesHistoryView>
                         curve: Curves.easeOut,
                       ),
                     ),
-                    child: _OrderCard(
+                    child: _OrderListItem(
                       order: order,
                       dateLabel: _formatDate(order['date'] as DateTime),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => OrderDetailView(order: order),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 );
@@ -130,14 +137,16 @@ class _SalesHistoryViewState extends ConsumerState<SalesHistoryView>
   }
 }
 
-/// Tarjeta que muestra una orden con sus productos.
-class _OrderCard extends StatelessWidget {
+/// Tarjeta compacta de una orden en la lista.
+class _OrderListItem extends StatelessWidget {
   final Map<String, dynamic> order;
   final String dateLabel;
+  final VoidCallback onTap;
 
-  const _OrderCard({
+  const _OrderListItem({
     required this.order,
     required this.dateLabel,
+    required this.onTap,
   });
 
   /// Retorna el color según el estado de la orden.
@@ -159,31 +168,32 @@ class _OrderCard extends StatelessWidget {
     final status = order['status'] as String;
     final total = order['total'] as String;
     final itemCount = order['itemCount'] as int;
-    final items = order['items'] as List<Map<String, dynamic>>;
     final statusColor = _statusColor(status);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: ArgonColors.white,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: ArgonColors.white,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header: icono + fecha + estado
-          Row(
+          child: Row(
             children: [
+              // Icono
               Container(
-                width: 40,
-                height: 40,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
                   color: ArgonColors.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
@@ -191,10 +201,11 @@ class _OrderCard extends StatelessWidget {
                 child: const Icon(
                   Icons.shopping_bag_rounded,
                   color: ArgonColors.primary,
-                  size: 20,
+                  size: 22,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 14),
+              // Fecha + items
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,104 +213,67 @@ class _OrderCard extends StatelessWidget {
                     Text(
                       dateLabel,
                       style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: ArgonColors.text,
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '$itemCount ${itemCount == 1 ? 'item' : 'items'}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: ArgonColors.muted,
-                      ),
+                    const SizedBox(height: 3),
+                    Row(
+                      children: [
+                        Text(
+                          '$itemCount ${itemCount == 1 ? 'item' : 'items'}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: ArgonColors.muted,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: const BoxDecoration(
+                            color: ArgonColors.muted,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          status[0].toUpperCase() + status.substring(1),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: statusColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              // Badge de estado
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  status[0].toUpperCase() + status.substring(1),
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: statusColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Divider(color: ArgonColors.border.withValues(alpha: 0.5), height: 1),
-          const SizedBox(height: 12),
-
-          // Lista de productos
-          ...items.map((item) {
-            final name = item['name'] as String? ?? '';
-            final quantity = item['quantity'] as int? ?? 1;
-            final price = item['price'] as String? ?? '';
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Row(
+              // Total + chevron
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Expanded(
-                    child: Text(
-                      '$quantity × $name',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: ArgonColors.text,
-                      ),
+                  Text(
+                    '\$$total',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: ArgonColors.primary,
                     ),
                   ),
-                  Text(
-                    price,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: ArgonColors.muted,
-                    ),
+                  const SizedBox(height: 4),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: ArgonColors.muted,
+                    size: 20,
                   ),
                 ],
               ),
-            );
-          }),
-
-          const SizedBox(height: 8),
-          Divider(color: ArgonColors.border.withValues(alpha: 0.5), height: 1),
-          const SizedBox(height: 12),
-
-          // Total
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: ArgonColors.text,
-                ),
-              ),
-              Text(
-                '\$$total',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: ArgonColors.primary,
-                ),
-              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -632,6 +632,30 @@ abstract class AppLocalizations {
   /// **'Your purchase orders will appear here'**
   String get ordersWillAppear;
 
+  /// No description provided for @orderDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Detail'**
+  String get orderDetailTitle;
+
+  /// No description provided for @orderNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{id}'**
+  String orderNumber(String id);
+
+  /// No description provided for @orderDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get orderDate;
+
+  /// No description provided for @orderProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'PRODUCTS'**
+  String get orderProducts;
+
   /// No description provided for @menuHelpCenter.
   ///
   /// In en, this message translates to:
