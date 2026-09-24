@@ -1,6 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/core/constants/Theme.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/services/order_firestore_service.dart';
 import 'package:flutter_course/l10n/app_localizations.dart';
+
+/// Pantalla que carga una orden por su ID y muestra su detalle.
+/// Usada cuando se navega desde una notificación (solo se tiene el orderId).
+class OrderDetailLoader extends StatelessWidget {
+  final String orderId;
+
+  const OrderDetailLoader({super.key, required this.orderId});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: OrderFirestoreService().fetchOrderById(orderId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            backgroundColor: ArgonColors.bgColorScreen,
+            body: Center(
+              child: CircularProgressIndicator(color: ArgonColors.primary),
+            ),
+          );
+        }
+
+        final order = snapshot.data;
+        if (order == null) {
+          return Scaffold(
+            backgroundColor: ArgonColors.bgColorScreen,
+            appBar: AppBar(backgroundColor: ArgonColors.white, elevation: 0),
+            body: const Center(child: Text('Order not found')),
+          );
+        }
+
+        return OrderDetailView(order: order);
+      },
+    );
+  }
+}
 
 /// Pantalla de detalle de una orden de compra.
 /// Muestra el listado completo de productos, total, fecha, estado, etc.

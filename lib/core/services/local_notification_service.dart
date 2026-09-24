@@ -1,9 +1,11 @@
+import 'package:flutter_course/core/routing/app_router.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// Servicio de notificaciones locales del sistema.
 ///
 /// Muestra notificaciones nativas del dispositivo (barra de notificaciones)
 /// cuando se realizan acciones importantes como compras.
+/// Al tocar la notificación de una compra, navega al detalle de la orden.
 class LocalNotificationService {
   static final LocalNotificationService _instance =
       LocalNotificationService._internal();
@@ -35,11 +37,24 @@ class LocalNotificationService {
       iOS: iosSettings,
     );
 
-    await _plugin.initialize(settings: initSettings);
+    await _plugin.initialize(
+      settings: initSettings,
+      onDidReceiveNotificationResponse: _onNotificationTap,
+    );
     _initialized = true;
 
     // Solicitar permisos en iOS
     await _requestPermissions();
+  }
+
+  /// Callback cuando el usuario toca la notificación.
+  /// Si el payload contiene un orderId, navega al detalle de la orden.
+  void _onNotificationTap(NotificationResponse response) {
+    final payload = response.payload;
+    if (payload != null && payload.isNotEmpty) {
+      // Navegar al detalle de la orden usando GoRouter
+      AppRouter.router.push('${AppRouter.orderDetail}/$payload');
+    }
   }
 
   /// Solicita permisos de notificación en iOS.
@@ -51,10 +66,12 @@ class LocalNotificationService {
   }
 
   /// Muestra una notificación local inmediata.
+  /// [payload] se pasa al callback cuando el usuario toca la notificación.
   Future<void> show({
     required String title,
     required String body,
     int id = 0,
+    String? payload,
   }) async {
     if (!_initialized) await initialize();
 
@@ -83,18 +100,22 @@ class LocalNotificationService {
       title: title,
       body: body,
       notificationDetails: details,
+      payload: payload,
     );
   }
 
   /// Notificación específica para cuando se realiza una compra.
+  /// El [orderId] se usa como payload para navegar al detalle al tocarla.
   Future<void> showOrderPlaced({
     required int itemCount,
     required String total,
+    required String orderId,
   }) async {
     await show(
       title: 'BAM Wallet',
       body: 'Your order was placed! $itemCount items - \$$total',
       id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      payload: orderId,
     );
   }
 }

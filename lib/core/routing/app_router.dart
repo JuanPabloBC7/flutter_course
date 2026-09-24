@@ -9,6 +9,7 @@ import 'package:flutter_course/features/pages/admin/ecommerce/ecommerce_view.dar
 import 'package:flutter_course/features/pages/admin/ecommerce/views/cart_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/views/edit_products_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/views/favorites_view.dart';
+import 'package:flutter_course/features/pages/admin/ecommerce/views/order_detail_view.dart';
 import 'package:flutter_course/features/pages/admin/ecommerce/views/sales_history_view.dart';
 import 'package:flutter_course/features/pages/admin/product_detail/product_detail_view.dart';
 import 'package:flutter_course/features/pages/admin/profile/profile_view.dart';
@@ -44,6 +45,7 @@ class AppRouter {
   static const String cart = '/cart';
   static const String editProducts = '/edit-products';
   static const String salesHistory = '/sales-history';
+  static const String orderDetail = '/order-detail';
 
   // ── Public routes (no auth required) ───────────────────────────────────────
 
@@ -134,6 +136,14 @@ class AppRouter {
         path: salesHistory,
         name: 'sales-history',
         builder: (context, state) => const SalesHistoryView(),
+      ),
+      GoRoute(
+        path: '$orderDetail/:orderId',
+        name: 'order-detail',
+        builder: (context, state) {
+          final orderId = state.pathParameters['orderId']!;
+          return OrderDetailLoader(orderId: orderId);
+        },
       ),
     ],
     errorBuilder: (context, state) {

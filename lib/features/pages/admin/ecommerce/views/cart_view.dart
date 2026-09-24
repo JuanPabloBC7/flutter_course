@@ -45,7 +45,8 @@ class _CartViewState extends ConsumerState<CartView> {
       final total = _calculateTotal(items);
 
       // Crear documento de la orden en Firestore
-      await FirebaseFirestore.instance.collection('orders').add({
+      final orderRef =
+          await FirebaseFirestore.instance.collection('orders').add({
         'userId': userId,
         'items': items.map((item) => {
           'productId': item.product.id,
@@ -63,10 +64,11 @@ class _CartViewState extends ConsumerState<CartView> {
       // Limpiar el carrito
       ref.read(cartProvider.notifier).clear();
 
-      // Mostrar notificación local del sistema
+      // Mostrar notificación local del sistema con el ID de la orden como payload
       await LocalNotificationService().showOrderPlaced(
         itemCount: items.length,
         total: total.toStringAsFixed(2),
+        orderId: orderRef.id,
       );
 
       if (mounted) {
