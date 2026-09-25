@@ -18,7 +18,7 @@ Backend: [flutter_course_backend - main (branch)](https://github.com/JuanPabloBC
 - [Summary](https://github.com/JuanPabloBC7/flutter_course/blob/feature/transversal_project/R-PROJECT-SUMMARY.md)
 
 ### Sprint 5 – Python Integrations
-- [Video](https://drive.google.com/drive/folders/12RJhdYWX_0CWs3CaP36xbJIIVicbb6vK?usp=drive_link)
+- [Video](https://drive.google.com/drive/folders/12RJhdYWX_0CWs3CaP36xbJIIVicbb6vK?usp=sharing)
 
 ### Sprint 6 – Backend with Node.js and TypeScript
 - Video

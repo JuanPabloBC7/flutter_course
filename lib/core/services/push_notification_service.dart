@@ -70,12 +70,16 @@ class PushNotificationService {
   /// a un dispositivo específico.
   Future<void> _getToken() async {
     try {
-      // En iOS, esperar a que el APNs token esté disponible
-      final apnsToken = await _messaging.getAPNSToken();
-      if (apnsToken == null) {
-        debugPrint('⚠️ APNs token not available (iOS simulator or no Apple Developer account)');
-        debugPrint('   Push notifications will not work on iOS until APNs is configured.');
-        return;
+      // La verificación de APNs aplica solo en iOS. En Android getAPNSToken()
+      // siempre retorna null, por lo que no se debe usar como guarda ahí.
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        // En iOS, esperar a que el APNs token esté disponible
+        final apnsToken = await _messaging.getAPNSToken();
+        if (apnsToken == null) {
+          debugPrint('⚠️ APNs token not available (iOS simulator or no Apple Developer account)');
+          debugPrint('   Push notifications will not work on iOS until APNs is configured.');
+          return;
+        }
       }
 
       final token = await _messaging.getToken();
